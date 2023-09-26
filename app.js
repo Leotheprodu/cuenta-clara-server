@@ -1,4 +1,5 @@
 require('dotenv').config({ override: true });
+const { dbConnectMySql } = require('./config/mysql');
 const express = require('express');
 const PORT = process.env.PORT || 5000;
 const cors = require('cors');
@@ -27,3 +28,4 @@ const server = app.listen(PORT, () => {
 });
 
 server.timeout = 30000;
+dbConnectMySql();
