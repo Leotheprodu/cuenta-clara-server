@@ -24,12 +24,12 @@ const Users = sequelize.define(
             select: false,
         },
         active: {
-            type: DataTypes.BOOLEAN, // Cambiamos TINYINT a BOOLEAN para representar un estado activo/inactivo de manera más clara
-            defaultValue: true, // Definimos un valor predeterminado para active, si no se especifica al crear un usuario, será true
+            type: DataTypes.BOOLEAN,
+            defaultValue: true,
         },
     },
     {
-        timestamps: true, // Esto generará automáticamente campos createdAt y updatedAt en la tabla
+        timestamps: true,
         defaultScope: {
             attributes: { exclude: ['password'] },
         },
@@ -37,10 +37,6 @@ const Users = sequelize.define(
 );
 
 Users.addScope('withPassword', {
-    attributes: { include: ['password'] }, // Incluye el campo `password` en este scope
-});
-Users.addScope('activos', {
-    where: { activo: 1 },
-    attributes: { exclude: ['activo'] },
+    attributes: { include: ['password'] },
 });
 module.exports = Users;
