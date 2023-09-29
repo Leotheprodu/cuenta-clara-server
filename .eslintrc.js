@@ -1,6 +1,7 @@
 module.exports = {
     globals: {
         process: true,
+        __dirname: 'readonly',
     },
     env: {
         browser: true,

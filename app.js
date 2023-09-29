@@ -10,6 +10,7 @@ const app = express();
 app.use(cors(corsConfig));
 app.use(session(sess));
 app.use(express.json());
+app.use('/api', require('./routes'));
 
 const server = app.listen(PORT, () => {
     console.log(`The server is listening on port ${PORT}...`);
