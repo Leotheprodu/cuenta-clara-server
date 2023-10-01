@@ -6,10 +6,12 @@
  */
 const resUsersSessionData = (req, res, message) => {
     res.send({
-        isLoggedIn: req.session.isLoggedIn,
-        user: req.session.user,
-        userMessage: {
-            message,
+        data: {
+            isLoggedIn: req.session.isLoggedIn,
+            user: req.session.user,
+            userMessage: {
+                message,
+            },
         },
     });
 };
@@ -19,7 +21,7 @@ const resUsersSessionData = (req, res, message) => {
  * @param {object} data
  */
 const resOkData = (res, data) => {
-    res.send(data);
+    res.send({ data });
 };
 
 module.exports = { resUsersSessionData, resOkData };
