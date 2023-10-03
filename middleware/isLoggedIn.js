@@ -1,4 +1,6 @@
 const { handleHttpError } = require('../utils/handleError');
+const { resUsersSessionData } = require('../utils/handleOkResponses');
+const { RefreshSessionData } = require('../utils/handleRefreshSessionData');
 
 const isLoggedInTrue = (req, res, next) => {
     const isLoggedIn = req.session.isLoggedIn;
@@ -10,13 +12,14 @@ const isLoggedInTrue = (req, res, next) => {
     }
 };
 
-const isLoggedInFalse = (req, res, next) => {
+const isLoggedInFalse = async (req, res, next) => {
     const isLoggedIn = req.session.isLoggedIn;
 
     if (isLoggedIn === false || isLoggedIn === undefined) {
         next();
     } else {
-        handleHttpError(res, 'The user should not be logged in');
+        await RefreshSessionData(req);
+        resUsersSessionData(req, res, 'User already authenticated');
     }
 };
 

@@ -5,6 +5,7 @@ const {
     signUpCtrl,
     logoutCtrl,
     emailVerifyCtrl,
+    ckeckSessCtrl,
 } = require('../controllers/auth');
 const {
     validatorLogin,
@@ -18,5 +19,5 @@ router.post('/login', isLoggedInFalse, validatorLogin, loginCtrl);
 router.post('/signup', checkEmailExist, validatorSignUp, signUpCtrl);
 router.get('/logout', isLoggedInTrue, logoutCtrl);
 router.get('/email-verification/:token', validatorGetToken, emailVerifyCtrl);
-
+router.get('/check-session', ckeckSessCtrl);
 module.exports = router;

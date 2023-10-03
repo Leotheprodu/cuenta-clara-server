@@ -9,6 +9,7 @@ const resUsersSessionData = (req, res, message) => {
         data: {
             isLoggedIn: req.session.isLoggedIn,
             user: req.session.user,
+            roles: req.session.roles,
             userMessage: {
                 message,
             },

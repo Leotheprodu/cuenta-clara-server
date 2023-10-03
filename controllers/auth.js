@@ -12,6 +12,7 @@ const {
 } = require('../utils/handleOkResponses');
 const { createTempToken, newToken } = require('../utils/handleTempToken');
 const { sendAEmail } = require('../utils/handleSendEmail');
+const { RefreshSessionData } = require('../utils/handleRefreshSessionData');
 
 const loginCtrl = async (req, res) => {
     try {
@@ -152,10 +153,30 @@ const emailVerifyCtrl = async (req, res) => {
         await tempTokenData.destroy();
         await unverifiedRole.destroy();
         await role_usersModel.create({ user_id: userData.id, role_id: 2 });
+
         res.send({ message: 'Email verified', email: userData.email });
     } catch (error) {
         console.log(error);
         handleHttpError(res, 'Error Verifying Email');
+    }
+};
+const ckeckSessCtrl = async (req, res) => {
+    try {
+        if (req.session.isLoggedIn) {
+            await RefreshSessionData(req);
+            resUsersSessionData(
+                req,
+                res,
+                'Session Iniciada, Datos Actualizados',
+            );
+        } else {
+            resOkData(res, {
+                message: 'El usuario no ha iniciado sesion',
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        handleHttpError(res, 'ERROR_CHECK_SESSION');
     }
 };
 module.exports = {
@@ -163,4 +184,5 @@ module.exports = {
     logoutCtrl,
     signUpCtrl,
     emailVerifyCtrl,
+    ckeckSessCtrl,
 };
