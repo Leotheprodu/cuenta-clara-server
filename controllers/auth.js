@@ -164,15 +164,9 @@ const ckeckSessCtrl = async (req, res) => {
     try {
         if (req.session.isLoggedIn) {
             await RefreshSessionData(req);
-            resUsersSessionData(
-                req,
-                res,
-                'Session Iniciada, Datos Actualizados',
-            );
+            resUsersSessionData(req, res, 'Session initiated, updated data');
         } else {
-            resOkData(res, {
-                message: 'El usuario no ha iniciado sesion',
-            });
+            handleHttpError(res, 'User not Logged In');
         }
     } catch (error) {
         console.error(error);

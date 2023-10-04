@@ -9,7 +9,7 @@ const handleHttpError = (
     message = 'Something has gone wrong',
     code = 403,
 ) => {
-    res.status(code).send({ message });
+    res.status(code).send({ data: { message } });
 };
 
 module.exports = { handleHttpError };
