@@ -26,18 +26,18 @@ const loginCtrl = async (req, res) => {
             where: { email },
         });
         if (!userData) {
-            handleHttpError(res, 'user does not exist', 404);
+            handleHttpError(res, 'El usuario no existe', 404);
             return;
         }
         if (userData.activo === 0) {
-            handleHttpError(res, 'user is not active', 401);
+            handleHttpError(res, 'El usuario esta desactivado', 401);
             return;
         }
         const hashPassword = await userData.password;
 
         const check = await compare(password, hashPassword);
         if (!check) {
-            handleHttpError(res, 'Invalid Password', 401);
+            handleHttpError(res, 'Contraseña Incorrecta', 401);
             return;
         }
         if (process.env.NODE_ENV === 'production') {
@@ -57,19 +57,19 @@ const loginCtrl = async (req, res) => {
         userData.set('password', undefined, { strict: false });
         req.session.user = userData;
         req.session.isLoggedIn = true;
-        resUsersSessionData(req, res, 'successful Login');
+        resUsersSessionData(req, res, 'El Usuario ha iniciado sesion');
     } catch (error) {
         console.error(error);
-        handleHttpError(res, 'error authenticating user');
+        handleHttpError(res, 'Error durante el inicio de sesion');
     }
 };
 const logoutCtrl = async (req, res) => {
     try {
         req.session.isLoggedIn = false;
-        resUsersSessionData(req, res, 'Successful logout');
+        resUsersSessionData(req, res, 'El Usuario ha cerrado sesion');
     } catch (error) {
         console.error(error);
-        handleHttpError(res, 'Error during logout');
+        handleHttpError(res, 'Error al cerrar sesion');
     }
 };
 const signUpCtrl = async (req, res) => {
@@ -126,7 +126,7 @@ const signUpCtrl = async (req, res) => {
         resOkData(res, data);
     } catch (error) {
         console.error(error);
-        handleHttpError(res, 'Error creating user');
+        handleHttpError(res, 'Error creando usuario');
     }
 };
 const emailVerifyCtrl = async (req, res) => {
@@ -137,7 +137,7 @@ const emailVerifyCtrl = async (req, res) => {
             });
             return result;
         } catch (error) {
-            handleHttpError(res, 'Invalid token');
+            handleHttpError(res, 'Token invalido');
         }
     }
     try {
@@ -154,23 +154,26 @@ const emailVerifyCtrl = async (req, res) => {
         await unverifiedRole.destroy();
         await role_usersModel.create({ user_id: userData.id, role_id: 2 });
 
-        res.send({ message: 'Email verified', email: userData.email });
+        res.send({
+            message: 'Correo electronico verificado',
+            email: userData.email,
+        });
     } catch (error) {
         console.log(error);
-        handleHttpError(res, 'Error Verifying Email');
+        handleHttpError(res, 'Error verificando correo electronico');
     }
 };
 const ckeckSessCtrl = async (req, res) => {
     try {
         if (req.session.isLoggedIn) {
             await RefreshSessionData(req);
-            resUsersSessionData(req, res, 'Session initiated, updated data');
+            resUsersSessionData(req, res, 'Sesion activa');
         } else {
-            handleHttpError(res, 'User not Logged In');
+            handleHttpError(res, 'El usuario no ha iniciado sesion');
         }
     } catch (error) {
         console.error(error);
-        handleHttpError(res, 'ERROR_CHECK_SESSION');
+        handleHttpError(res, 'Error al verificar sesion');
     }
 };
 module.exports = {
