@@ -4,11 +4,7 @@
  * @param {*} message
  * @param {*} code
  */
-const handleHttpError = (
-    res,
-    message = 'Something has gone wrong',
-    code = 403,
-) => {
+const handleHttpError = (res, message = 'Algo ha salido mal', code = 403) => {
     res.status(code).send({ data: { message } });
 };
 

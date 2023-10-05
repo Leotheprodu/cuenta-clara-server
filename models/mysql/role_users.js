@@ -1,5 +1,7 @@
 const { sequelize } = require('../../config/mysql');
 const { DataTypes } = require('sequelize');
+const Users = require('./users');
+const Roles = require('./roles');
 
 const Role_users = sequelize.define(
     'role_users',
@@ -8,15 +10,20 @@ const Role_users = sequelize.define(
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
-            allowNull: false,
         },
         user_id: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            references: {
+                model: Users,
+                key: 'id',
+            },
         },
         role_id: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            references: {
+                model: Roles,
+                key: 'id',
+            },
         },
     },
     {

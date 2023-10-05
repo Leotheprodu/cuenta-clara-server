@@ -8,7 +8,7 @@ const isLoggedInTrue = (req, res, next) => {
     if (isLoggedIn === true) {
         next();
     } else {
-        handleHttpError(res, 'User must be authenticated');
+        handleHttpError(res, 'El usuario no ha iniciado sesion');
     }
 };
 
@@ -19,7 +19,7 @@ const isLoggedInFalse = async (req, res, next) => {
         next();
     } else {
         await RefreshSessionData(req);
-        resUsersSessionData(req, res, 'User already authenticated');
+        resUsersSessionData(req, res, 'El Usuario ha iniciado sesion');
     }
 };
 

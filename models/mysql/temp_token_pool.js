@@ -1,5 +1,6 @@
 const { sequelize } = require('../../config/mysql');
 const { DataTypes } = require('sequelize');
+const Users = require('./users');
 
 const Temp_token_pool = sequelize.define(
     'temp_token_pool',
@@ -8,20 +9,21 @@ const Temp_token_pool = sequelize.define(
             type: DataTypes.SMALLINT,
             primaryKey: true,
             autoIncrement: true,
-            allowNull: false,
         },
         user_email: {
             type: DataTypes.STRING,
-            allowNull: false,
+            references: {
+                model: Users,
+                key: 'email',
+            },
         },
         token: {
             type: DataTypes.STRING,
-            allowNull: false,
+
             select: false,
         },
         type: {
             type: DataTypes.STRING,
-            allowNull: false,
         },
     },
     {

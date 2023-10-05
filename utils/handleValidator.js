@@ -9,7 +9,7 @@ const validateResults = (req, res, next) => {
         res.status(403);
         res.send({
             error: err.array(),
-            message: 'Check that the form fields meet the requirements',
+            message: 'Revisa que los datos sean correctos',
         });
     }
 };

@@ -5,13 +5,13 @@ const newToken = async () => {
     try {
         return crypto.randomBytes(32).toString('hex');
     } catch (error) {
-        throw new Error(`There was a problem generating the token`);
+        throw new Error(`Ha habido un error al generar el token: ${error}`);
     }
 };
 
 function generateRandomPin(length) {
     if (length <= 0) {
-        throw new Error('PIN length must be greater than zero');
+        throw new Error('PIN debe ser mayor a 0');
     }
 
     const min = 10 ** (length - 1); // Valor mínimo basado en la longitud

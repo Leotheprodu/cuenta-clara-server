@@ -10,7 +10,7 @@ const checkEmailExist = async (req, res, next) => {
     if (consultaBD === null) {
         next();
     } else {
-        handleHttpError(res, 'THE EMAIL IS ALREADY REGISTERED');
+        handleHttpError(res, 'El Correo ya esta registrado', 403);
     }
 };
 
