@@ -7,6 +7,7 @@ const clientsCtrl = async (req, res) => {
     const { activo } = matchedData(req);
     const filtro = {
         where: { related_parent_user: req.session.user.id },
+        order: [['username', 'ASC']],
     };
     if (activo === 'true') {
         filtro.where.activo = true;
