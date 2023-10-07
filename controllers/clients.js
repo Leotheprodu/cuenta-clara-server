@@ -22,6 +22,18 @@ const clientsCtrl = async (req, res) => {
         handleHttpError(res, 'Error al intentar mostrar clientes');
     }
 };
+const clientCtrl = async (req, res) => {
+    const { id } = matchedData(req);
+    try {
+        const clientsData = await clientsModel.findOne({
+            where: { related_parent_user: req.session.user.id, id },
+        });
+        resOkData(res, clientsData);
+    } catch (error) {
+        console.error(error);
+        handleHttpError(res, 'Error al intentar mostrar el cliente');
+    }
+};
 const createClientsCtrl = async (req, res) => {
     const data = matchedData(req);
 
@@ -30,6 +42,25 @@ const createClientsCtrl = async (req, res) => {
             ...data,
             related_parent_user: req.session.user.id,
         });
+        resOkData(res, clientData);
+    } catch (error) {
+        console.error(error);
+        handleHttpError(res, 'Error al intentar crear cliente');
+    }
+};
+const updateClientsCtrl = async (req, res) => {
+    const data = matchedData(req);
+
+    try {
+        const clientData = await clientsModel.update(
+            {
+                ...data,
+                related_parent_user: req.session.user.id,
+            },
+            {
+                where: { id: data.id },
+            },
+        );
         resOkData(res, clientData);
     } catch (error) {
         console.error(error);
@@ -63,4 +94,6 @@ module.exports = {
     clientsCtrl,
     createClientsCtrl,
     deleteClientsCtrl,
+    updateClientsCtrl,
+    clientCtrl,
 };

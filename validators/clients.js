@@ -9,10 +9,17 @@ const validatorCreateClients = [
         .notEmpty(),
     check('cellphone').optional().isInt(),
     check('token').exists().notEmpty().isString(),
-    check('related_parent_user').exists().notEmpty().isInt(),
-    check('related_user')
+    (req, res, next) => validateResults(req, res, next),
+];
+const validatorUpdateClients = [
+    check('id').exists().notEmpty(),
+    check('username').exists().notEmpty().isString(),
+    check('email')
         .optional({ nullable: true, checkFalsy: true })
-        .isInt(),
+        .isEmail()
+        .notEmpty(),
+    check('cellphone').optional().isInt(),
+    check('token').exists().notEmpty().isString(),
     (req, res, next) => validateResults(req, res, next),
 ];
 const validatorDeleteClient = [
@@ -21,7 +28,10 @@ const validatorDeleteClient = [
 ];
 const validatorQueryClients = [
     check('activo').optional().isBoolean(),
-    check('id').optional().isInt(),
+    (req, res, next) => validateResults(req, res, next),
+];
+const validatorGetClient = [
+    check('id').exists().notEmpty(),
     (req, res, next) => validateResults(req, res, next),
 ];
 
@@ -29,4 +39,6 @@ module.exports = {
     validatorCreateClients,
     validatorDeleteClient,
     validatorQueryClients,
+    validatorUpdateClients,
+    validatorGetClient,
 };
