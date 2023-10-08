@@ -2,6 +2,7 @@ const { sequelize } = require('../../config/mysql');
 const { DataTypes } = require('sequelize');
 const Users = require('./users');
 const Payment_methods = require('./payment_methods');
+const Business = require('./business');
 
 const User_payment_methods = sequelize.define(
     'user_payment_methods',
@@ -25,25 +26,32 @@ const User_payment_methods = sequelize.define(
                 key: 'id',
             },
         },
-        full_name: {
+        payment_method_full_name: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        cellphone: {
+        payment_method_cellphone: {
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-        iban: {
+        payment_method_iban: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        email: {
+        payment_method_email: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        description: {
+        payment_method_description: {
             type: DataTypes.STRING,
             allowNull: true,
+        },
+        business_id: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: Business,
+                key: 'id',
+            },
         },
     },
     {

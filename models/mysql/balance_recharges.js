@@ -1,23 +1,15 @@
 const { sequelize } = require('../../config/mysql');
 const { DataTypes } = require('sequelize');
-const Users = require('./users');
 const Clients = require('./clients');
-const Business = require('./business');
+const Balances = require('./balances');
 
-const Invoices = sequelize.define(
-    'invoices',
+const Balance_recharges = sequelize.define(
+    'balance_recharges',
     {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
-        },
-        parent_user_id: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: Users,
-                key: 'id',
-            },
         },
         client_id: {
             type: DataTypes.INTEGER,
@@ -26,19 +18,15 @@ const Invoices = sequelize.define(
                 key: 'id',
             },
         },
-        total_amount: {
-            type: DataTypes.DECIMAL(10, 2),
-        },
-        paid: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
-        },
-        business_id: {
+        balance_id: {
             type: DataTypes.INTEGER,
             references: {
-                model: Business,
+                model: Balances,
                 key: 'id',
             },
+        },
+        amount: {
+            type: DataTypes.DECIMAL(10, 2),
         },
     },
     {
@@ -46,4 +34,4 @@ const Invoices = sequelize.define(
     },
 );
 
-module.exports = Invoices;
+module.exports = Balance_recharges;

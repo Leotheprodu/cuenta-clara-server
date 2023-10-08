@@ -1,6 +1,7 @@
 const { sequelize } = require('../../config/mysql');
 const { DataTypes } = require('sequelize');
 const Invoices = require('./invoices');
+const Products_and_services = require('./products_and_services');
 
 const Invoice_details = sequelize.define(
     'invoice_details',
@@ -34,14 +35,14 @@ const Invoice_details = sequelize.define(
         subtotal: {
             type: DataTypes.DECIMAL(10, 2),
         },
-        /*  item_id: {
+        item_id: {
             type: DataTypes.INTEGER,
             references: {
                 model: Products_and_services,
                 key: 'id',
             },
             allowNull: true,
-        }, */
+        },
     },
     {
         timestamps: true,

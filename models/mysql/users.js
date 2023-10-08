@@ -21,6 +21,9 @@ const Users = sequelize.define(
             type: DataTypes.STRING,
             select: false,
         },
+        whatsapp: {
+            type: DataTypes.INTEGER,
+        },
         active: {
             type: DataTypes.BOOLEAN,
             defaultValue: true,

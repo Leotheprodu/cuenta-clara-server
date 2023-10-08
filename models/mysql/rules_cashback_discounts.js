@@ -1,15 +1,31 @@
 const { sequelize } = require('../../config/mysql');
 const { DataTypes } = require('sequelize');
 const Users = require('./users');
-const Business = require('./business');
 
-const Products_and_services = sequelize.define(
-    'products_and_services',
+const Rules_cashback_discounts = sequelize.define(
+    'rules_cashback_discounts',
     {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
+        },
+        name: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        description: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        max_days_payment: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
+
+        min_amount: {
+            type: DataTypes.DECIMAL(10, 2),
+            allowNull: true,
         },
         user_id: {
             type: DataTypes.INTEGER,
@@ -18,29 +34,9 @@ const Products_and_services = sequelize.define(
                 key: 'id',
             },
         },
-        name: {
-            type: DataTypes.STRING,
-        },
-        description: {
-            type: DataTypes.STRING,
-        },
-        unit: {
-            type: DataTypes.STRING,
-            defaultValue: 'unidad',
-        },
-        unit_price: {
+        min_quantity: {
             type: DataTypes.DECIMAL(10, 2),
-        },
-        default: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
-        },
-        business_id: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: Business,
-                key: 'id',
-            },
+            allowNull: true,
         },
     },
     {
@@ -48,4 +44,4 @@ const Products_and_services = sequelize.define(
     },
 );
 
-module.exports = Products_and_services;
+module.exports = Rules_cashback_discounts;

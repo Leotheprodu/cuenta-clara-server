@@ -28,7 +28,7 @@ const Transactions = sequelize.define(
             allowNull: true,
         },
         client_id: {
-            type: DataTypes.TINYINT,
+            type: DataTypes.INTEGER,
             references: {
                 model: Clients,
                 key: 'id',
@@ -42,7 +42,7 @@ const Transactions = sequelize.define(
             },
         },
         status_id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.TINYINT,
             references: {
                 model: Payment_status,
                 key: 'id',

@@ -26,11 +26,11 @@ const Clients = sequelize.define(
         },
         user_id: {
             type: DataTypes.INTEGER,
-            allowNull: true,
             references: {
                 model: Users,
                 key: 'id',
             },
+            allowNull: true,
         },
         parent_user_id: {
             type: DataTypes.INTEGER,
@@ -42,10 +42,6 @@ const Clients = sequelize.define(
         activo: {
             type: DataTypes.BOOLEAN,
             defaultValue: true,
-        },
-        balance: {
-            type: DataTypes.DECIMAL(10, 2),
-            defaultValue: 0,
         },
     },
     {

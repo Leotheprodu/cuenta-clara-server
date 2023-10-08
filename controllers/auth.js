@@ -1,6 +1,7 @@
 const { matchedData } = require('express-validator');
 const {
     usersModel,
+    clientsModel,
     role_usersModel,
     temp_token_poolModel,
 } = require('../models');
@@ -13,6 +14,7 @@ const {
 const { createTempToken, newToken } = require('../utils/handleTempToken');
 const { sendAEmail } = require('../utils/handleSendEmail');
 const { RefreshSessionData } = require('../utils/handleRefreshSessionData');
+const idGenerator = require('../utils/idGenerator');
 
 const loginCtrl = async (req, res) => {
     try {
@@ -74,21 +76,17 @@ const logoutCtrl = async (req, res) => {
 };
 const signUpCtrl = async (req, res) => {
     try {
-        //Importa la data suministrada por el cliente ya filtrada
         req = matchedData(req);
-
-        //Hashea el password del cliente
         const password = await encrypt(req.password);
-
-        // Con spread operator agregamos los datos de la solicitud cambiando el password por el password hasheado
         const body = { ...req, password };
-
-        // Aplica destructuring para tener a la mano estos valores
         const { username, email } = body;
 
         // Se agrega la info de body a la base de datos usuarios
         const data = await usersModel.create(body);
-
+        if (!data) {
+            handleHttpError(res, 'Error creando usuario');
+            return;
+        }
         //Se genera un token random
         const token = await newToken();
 
@@ -118,12 +116,20 @@ const signUpCtrl = async (req, res) => {
 
         // Con esta linea cuando se registra no devuelve en password en la respuesta
 
+        const AppClient = {
+            username,
+            email,
+            cellphone: data.cellphone,
+            token: `${data.username.slice(0, 2)}-${idGenerator()}`,
+            user_id: data.id,
+            parent_user_id: 9,
+        };
+
         data.set('password', undefined, { strict: false });
-        if (data) {
-            await role_usersModel.create({ user_id: data.id, role_id: 3 });
-        }
-        //Respuesta
+        await role_usersModel.create({ user_id: data.id, role_id: 3 });
+        await clientsModel.create(AppClient);
         resOkData(res, data);
+        //Respuesta
     } catch (error) {
         console.error(error);
         handleHttpError(res, 'Error creando usuario');
