@@ -6,7 +6,7 @@ const { resOkData } = require('../utils/handleOkResponses');
 const clientsCtrl = async (req, res) => {
     const { activo } = matchedData(req);
     const filtro = {
-        where: { related_parent_user: req.session.user.id },
+        where: { parent_user_id: req.session.user.id },
         order: [['username', 'ASC']],
     };
     if (activo === 'true') {
@@ -26,7 +26,7 @@ const clientCtrl = async (req, res) => {
     const { id } = matchedData(req);
     try {
         const clientsData = await clientsModel.findOne({
-            where: { related_parent_user: req.session.user.id, id },
+            where: { parent_user_id: req.session.user.id, id },
         });
         resOkData(res, clientsData);
     } catch (error) {
@@ -40,7 +40,7 @@ const createClientsCtrl = async (req, res) => {
     try {
         const clientData = await clientsModel.create({
             ...data,
-            related_parent_user: req.session.user.id,
+            parent_user_id: req.session.user.id,
         });
         resOkData(res, clientData);
     } catch (error) {
@@ -55,7 +55,7 @@ const updateClientsCtrl = async (req, res) => {
         const clientData = await clientsModel.update(
             {
                 ...data,
-                related_parent_user: req.session.user.id,
+                parent_user_id: req.session.user.id,
             },
             {
                 where: { id: data.id },

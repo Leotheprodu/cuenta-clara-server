@@ -9,7 +9,6 @@ const Clients = sequelize.define(
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
-            allowNull: false,
         },
         username: {
             type: DataTypes.STRING,
@@ -25,7 +24,7 @@ const Clients = sequelize.define(
         token: {
             type: DataTypes.STRING,
         },
-        related_user: {
+        user_id: {
             type: DataTypes.INTEGER,
             allowNull: true,
             references: {
@@ -33,7 +32,7 @@ const Clients = sequelize.define(
                 key: 'id',
             },
         },
-        related_parent_user: {
+        parent_user_id: {
             type: DataTypes.INTEGER,
             references: {
                 model: Users,
@@ -44,15 +43,19 @@ const Clients = sequelize.define(
             type: DataTypes.BOOLEAN,
             defaultValue: true,
         },
+        balance: {
+            type: DataTypes.DECIMAL(10, 2),
+            defaultValue: 0,
+        },
     },
     {
         timestamps: true,
         defaultScope: {
-            attributes: { exclude: ['related_parent_user'] },
+            attributes: { exclude: ['parent_user_id'] },
         },
     },
 );
-Clients.addScope('with_related_parent_user', {
-    attributes: { include: ['related_parent_user'] },
+Clients.addScope('with_parent_user_id', {
+    attributes: { include: ['parent_user_id'] },
 });
 module.exports = Clients;
