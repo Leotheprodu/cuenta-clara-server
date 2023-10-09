@@ -23,6 +23,7 @@ const Clients = sequelize.define(
         },
         token: {
             type: DataTypes.STRING,
+            unique: true,
         },
         user_id: {
             type: DataTypes.INTEGER,
