@@ -1,7 +1,7 @@
 const { sequelize } = require('../../config/mysql');
 const { DataTypes } = require('sequelize');
 const Users = require('./users');
-const Business = require('./business');
+const Users_business = require('./users_business');
 
 const Products_and_services = sequelize.define(
     'products_and_services',
@@ -38,7 +38,7 @@ const Products_and_services = sequelize.define(
         business_id: {
             type: DataTypes.INTEGER,
             references: {
-                model: Business,
+                model: Users_business,
                 key: 'id',
             },
         },
