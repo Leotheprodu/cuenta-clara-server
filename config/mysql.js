@@ -1,13 +1,10 @@
 const { Sequelize } = require('sequelize');
+const { port, host, user, password, database } = require('./credentials');
 
-const database = process.env.DB_NAME;
-const username = process.env.DB_USER;
-const password = process.env.DB_PASSWORD;
-const host = 'localhost';
-
-const sequelize = new Sequelize(database, username, password, {
+const sequelize = new Sequelize(database, user, password, {
     host,
     dialect: 'mysql',
+    port: port,
 });
 
 const dbConnectMySql = async () => {
