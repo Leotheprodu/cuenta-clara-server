@@ -4,6 +4,9 @@ const {
     clientsModel,
     role_usersModel,
     temp_token_poolModel,
+    users_businessModel,
+    balancesModel,
+    products_and_servicesModel,
 } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 const { compare, encrypt } = require('../utils/handlePassword');
@@ -15,6 +18,7 @@ const { createTempToken, newToken } = require('../utils/handleTempToken');
 const { sendAEmail } = require('../utils/handleSendEmail');
 const { RefreshSessionData } = require('../utils/handleRefreshSessionData');
 const idGenerator = require('../utils/idGenerator');
+const { Initialbalance } = require('../config/constants');
 
 const loginCtrl = async (req, res) => {
     try {
@@ -91,7 +95,7 @@ const signUpCtrl = async (req, res) => {
         const token = await newToken();
 
         //Crea el link que va a ser enviar al correo del nuevo usuario para verificar el email
-        const link = `${process.env.LINK_HOST}/verificar-email/${token}`;
+        const link = `${process.env.LINK_HOST}/sesion-de-usuario/verificar-email/${token}`;
 
         // Crea el objeto con el nombre y correo del remitente del correo a enviar
         const from = {
@@ -127,9 +131,30 @@ const signUpCtrl = async (req, res) => {
 
         data.set('password', undefined, { strict: false });
         await role_usersModel.create({ user_id: data.id, role_id: 3 });
-        await clientsModel.create(AppClient);
-        resOkData(res, data);
+        const newUserBusiness = await users_businessModel.create({
+            user_id: data.id,
+            name: 'Negocio principal',
+            default: true,
+        });
+        await products_and_servicesModel.create({
+            user_id: data.id,
+            name: 'Ingreso por defecto',
+            description:
+                'Producto o Servicio por defecto del Negocio Principal',
+            unit: 'unidad',
+            unit_price: 1,
+            default: true,
+            business_id: newUserBusiness.id,
+        });
+        //Importante para el negocio
+        const client = await clientsModel.create(AppClient);
+        await balancesModel.create({
+            client_id: client.id,
+            business_id: 1,
+            amount: Initialbalance,
+        });
         //Respuesta
+        resOkData(res, data);
     } catch (error) {
         console.error(error);
         handleHttpError(res, 'Error creando usuario');
@@ -153,9 +178,12 @@ const emailVerifyCtrl = async (req, res) => {
             where: { email: tempTokenData.user_email },
         });
         const unverifiedRole = await role_usersModel.findOne({
-            user_id: userData.id,
-            role_id: 3,
+            where: { user_id: userData.id, role_id: 3 },
         });
+        if (!userData) {
+            handleHttpError(res, 'El usuario no existe', 404);
+            return;
+        }
         await tempTokenData.destroy();
         await unverifiedRole.destroy();
         await role_usersModel.create({ user_id: userData.id, role_id: 2 });

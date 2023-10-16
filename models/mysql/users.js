@@ -21,7 +21,7 @@ const Users = sequelize.define(
             type: DataTypes.STRING,
             select: false,
         },
-        whatsapp: {
+        cellphone: {
             type: DataTypes.INTEGER,
         },
         active: {

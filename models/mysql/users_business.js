@@ -20,9 +20,14 @@ const Users_business = sequelize.define(
         name: {
             type: DataTypes.STRING,
         },
+        default: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
     },
     {
-        timestamps: true,
+        timestamps: false,
+        tableName: 'users_business',
     },
 );
 

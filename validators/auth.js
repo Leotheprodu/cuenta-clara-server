@@ -8,7 +8,7 @@ const validatorSignUp = [
 
     check('password').exists().notEmpty().isString(),
 
-    check('whatsapp').exists().notEmpty().isInt(),
+    check('cellphone').exists().notEmpty().isInt(),
 
     (req, res, next) => validateResults(req, res, next),
 ];
