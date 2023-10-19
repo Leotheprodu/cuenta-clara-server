@@ -174,23 +174,27 @@ const emailVerifyCtrl = async (req, res) => {
     try {
         const { token } = matchedData(req);
         const tempTokenData = await tempToken(token);
+        if (!tempTokenData) {
+            handleHttpError(res, 'Token invalido');
+            return;
+        }
         const userData = await usersModel.findOne({
             where: { email: tempTokenData.user_email },
-        });
-        const unverifiedRole = await role_usersModel.findOne({
-            where: { user_id: userData.id, role_id: 3 },
         });
         if (!userData) {
             handleHttpError(res, 'El usuario no existe', 404);
             return;
         }
+        const unverifiedRole = await role_usersModel.findOne({
+            where: { user_id: userData.id, role_id: 3 },
+        });
+
         await tempTokenData.destroy();
         await unverifiedRole.destroy();
         await role_usersModel.create({ user_id: userData.id, role_id: 2 });
 
         res.send({
             message: 'Correo electronico verificado',
-            email: userData.email,
         });
     } catch (error) {
         console.log(error);
