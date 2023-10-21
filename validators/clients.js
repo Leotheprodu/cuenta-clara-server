@@ -9,6 +9,7 @@ const validatorCreateClients = [
         .notEmpty(),
     check('cellphone').optional().isInt(),
     check('token').exists().notEmpty().isString(),
+    check('id_business').exists().notEmpty().isInt(),
     (req, res, next) => validateResults(req, res, next),
 ];
 const validatorUpdateClients = [
