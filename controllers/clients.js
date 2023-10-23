@@ -2,6 +2,12 @@ const { matchedData } = require('express-validator');
 const { clientsModel, balancesModel } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 const { resOkData } = require('../utils/handleOkResponses');
+const {
+    findBalancesToDelete,
+    findBalancesToCreate,
+    deleteBalances,
+    createBalances,
+} = require('../services/clients');
 
 const clientsCtrl = async (req, res) => {
     const { activo } = matchedData(req);
@@ -92,13 +98,11 @@ const updateClientsCtrl = async (req, res) => {
             existingBalances,
             id_business,
         );
-        console.log({ balancesToDelete });
         // Identificar los nuevos balances a crear
         const balancesToCreate = await findBalancesToCreate(
             existingBalances,
             id_business,
         );
-        console.log({ balancesToCreate });
         // Realizar la eliminación de balances (solo si amount es igual a 0)
         await deleteBalances(balancesToDelete);
 
@@ -112,42 +116,7 @@ const updateClientsCtrl = async (req, res) => {
     }
 };
 
-// Función para identificar los balances a borrar
-async function findBalancesToDelete(existingBalances, id_business) {
-    return existingBalances
-        .filter((balance) => !id_business.includes(balance.business_id))
-        .map((balance) => balance.id);
-}
-
-// Función para identificar los nuevos balances a crear
-async function findBalancesToCreate(existingBalances, id_business) {
-    return id_business.filter(
-        (id) =>
-            !existingBalances.some(
-                (existingBalance) => existingBalance.business_id === id,
-            ),
-    );
-}
-
-// Función para eliminar balances
-async function deleteBalances(balancesToDelete) {
-    await balancesModel.destroy({
-        where: { id: balancesToDelete, amount: 0 },
-    });
-}
-
-// Función para crear nuevos balances
-async function createBalances(clientId, balancesToCreate) {
-    for (const businessId of balancesToCreate) {
-        await balancesModel.create({
-            client_id: clientId,
-            business_id: businessId,
-            amount: 0,
-        });
-    }
-}
-
-const deleteClientsCtrl = async (req, res) => {
+const deactivateClientsCtrl = async (req, res) => {
     const { id } = matchedData(req);
 
     try {
@@ -158,21 +127,21 @@ const deleteClientsCtrl = async (req, res) => {
             { where: { id } },
         );
         if (updatedRowCount === 0) {
-            handleHttpError(res, 'No se ha eliminado ningun usuario');
+            handleHttpError(res, 'No se ha desactivado el usuario');
             return;
         } else {
-            resOkData(res, { message: 'Cliente eliminado' });
+            resOkData(res, { message: 'Cliente desactivado' });
         }
     } catch (error) {
         console.error(error);
-        handleHttpError(res, 'Error al intentar crear cliente');
+        handleHttpError(res, 'Error al intentar desactivar cliente');
     }
 };
 
 module.exports = {
     clientsCtrl,
     createClientsCtrl,
-    deleteClientsCtrl,
+    deactivateClientsCtrl,
     updateClientsCtrl,
     clientCtrl,
 };

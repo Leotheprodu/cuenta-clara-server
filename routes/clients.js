@@ -3,13 +3,13 @@ const router = express.Router();
 const {
     clientsCtrl,
     createClientsCtrl,
-    deleteClientsCtrl,
+    deactivateClientsCtrl,
     updateClientsCtrl,
     clientCtrl,
 } = require('../controllers/clients');
 const {
     validatorCreateClients,
-    validatorDeleteClient,
+    validatorDeactivateClient,
     validatorQueryClients,
     validatorUpdateClients,
     validatorGetClient,
@@ -21,12 +21,12 @@ router.get('/', isLoggedInTrue, validatorQueryClients, clientsCtrl);
 router.get('/:id', isLoggedInTrue, validatorGetClient, clientCtrl);
 router.post('/', isLoggedInTrue, validatorCreateClients, createClientsCtrl);
 router.put('/', isLoggedInTrue, validatorUpdateClients, updateClientsCtrl);
-router.delete(
-    '/:id',
+router.get(
+    '/deactivate/:id',
     isLoggedInTrue,
     checkClientOfUser,
-    validatorDeleteClient,
-    deleteClientsCtrl,
+    validatorDeactivateClient,
+    deactivateClientsCtrl,
 );
 
 module.exports = router;

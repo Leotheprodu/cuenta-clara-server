@@ -55,7 +55,7 @@ const validatorUpdateClients = [
         ),
     (req, res, next) => validateResults(req, res, next),
 ];
-const validatorDeleteClient = [
+const validatorDeactivateClient = [
     check('id').exists().notEmpty(),
     (req, res, next) => validateResults(req, res, next),
 ];
@@ -70,7 +70,7 @@ const validatorGetClient = [
 
 module.exports = {
     validatorCreateClients,
-    validatorDeleteClient,
+    validatorDeactivateClient,
     validatorQueryClients,
     validatorUpdateClients,
     validatorGetClient,
