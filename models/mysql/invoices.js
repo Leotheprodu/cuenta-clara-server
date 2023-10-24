@@ -40,6 +40,10 @@ const Invoices = sequelize.define(
                 key: 'id',
             },
         },
+        date: {
+            type: DataTypes.DATEONLY,
+            defaultValue: new Date().toISOString().slice(0, 10),
+        },
     },
     {
         timestamps: true,
