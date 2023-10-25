@@ -21,6 +21,20 @@ const balanceByClientCtrl = async (req, res) => {
         );
     }
 };
+const ClientBalancesCtrl = async (req, res) => {
+    try {
+        const defaultUserBusiness = req.session.userBusiness;
+        const balances = await balancesModel.findAll({
+            where: { business_id: defaultUserBusiness },
+        });
+
+        resOkData(res, balances);
+    } catch (error) {
+        console.error(error);
+        handleHttpError(res, 'Error al intentar mostrar los balances');
+    }
+};
 module.exports = {
     balanceByClientCtrl,
+    ClientBalancesCtrl,
 };

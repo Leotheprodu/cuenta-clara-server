@@ -120,21 +120,31 @@ const deactivateClientsCtrl = async (req, res) => {
     const { id } = matchedData(req);
 
     try {
-        await clientsModel.findOne({ where: { id } });
-
+        const client = await clientsModel.findOne({ where: { id } });
+        const activo = client.activo;
         const [updatedRowCount] = await clientsModel.update(
-            { activo: 0 },
+            { activo: activo == 0 ? 1 : 0 },
             { where: { id } },
         );
         if (updatedRowCount === 0) {
-            handleHttpError(res, 'No se ha desactivado el usuario');
+            handleHttpError(
+                res,
+                activo == 0
+                    ? 'No se pudo activar el cliente'
+                    : 'No se pudo desactivar el cliente',
+            );
             return;
         } else {
-            resOkData(res, { message: 'Cliente desactivado' });
+            resOkData(res, {
+                message:
+                    activo == 0
+                        ? 'Cliente activado correctamente'
+                        : 'Cliente desactivado correctamente',
+            });
         }
     } catch (error) {
         console.error(error);
-        handleHttpError(res, 'Error al intentar desactivar cliente');
+        handleHttpError(res, 'Error al intentar activar/desactivar cliente');
     }
 };
 

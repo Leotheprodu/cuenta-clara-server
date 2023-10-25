@@ -38,7 +38,6 @@ const favoriteBusinessCtrl = async (req, res) => {
         if (defaultBusiness) {
             await defaultBusiness.update({ default: false });
         }
-        console.log(defaultBusiness);
 
         // Encontrar el negocio correspondiente al ID de la solicitud
         const selectedBusiness = await businessSelected(business, id);
@@ -50,6 +49,7 @@ const favoriteBusinessCtrl = async (req, res) => {
 
         // Recuperar la lista actualizada de negocios
         business = await users_businessModel.findAll({ where: { user_id } });
+        req.session.userBusiness = business.map((item) => item.id);
 
         resOkData(res, business);
     } catch (error) {

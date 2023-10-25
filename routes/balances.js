@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { balanceByClientCtrl } = require('../controllers/balances');
+const {
+    balanceByClientCtrl,
+    ClientBalancesCtrl,
+} = require('../controllers/balances');
 const { isLoggedInTrue } = require('../middleware/isLoggedIn');
 const { validatorGetBalanceByClient } = require('../validators/balances');
 
@@ -10,5 +13,6 @@ router.get(
     validatorGetBalanceByClient,
     balanceByClientCtrl,
 );
+router.get('/', isLoggedInTrue, ClientBalancesCtrl);
 
 module.exports = router;
