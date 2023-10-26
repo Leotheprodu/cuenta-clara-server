@@ -19,6 +19,7 @@ const { sendAEmail } = require('../utils/handleSendEmail');
 const { RefreshSessionData } = require('../utils/handleRefreshSessionData');
 const idGenerator = require('../utils/idGenerator');
 const { Initialbalance } = require('../config/constants');
+const userBusinessChecker = require('../utils/userBusinessChecker');
 
 const loginCtrl = async (req, res) => {
     try {
@@ -61,6 +62,7 @@ const loginCtrl = async (req, res) => {
             });
         }
         userData.set('password', undefined, { strict: false });
+        await userBusinessChecker(req, userData.id);
         req.session.user = userData;
         req.session.isLoggedIn = true;
         resUsersSessionData(req, res, 'El Usuario ha iniciado sesion');

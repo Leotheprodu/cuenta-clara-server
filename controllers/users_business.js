@@ -2,6 +2,7 @@ const { users_businessModel } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 const { resOkData } = require('../utils/handleOkResponses');
 const { matchedData } = require('express-validator');
+const userBusinessChecker = require('../utils/userBusinessChecker');
 
 const businessByUserCtrl = async (req, res) => {
     try {
@@ -48,8 +49,7 @@ const favoriteBusinessCtrl = async (req, res) => {
         }
 
         // Recuperar la lista actualizada de negocios
-        business = await users_businessModel.findAll({ where: { user_id } });
-        req.session.userBusiness = business.map((item) => item.id);
+        business = await userBusinessChecker(req, user_id);
 
         resOkData(res, business);
     } catch (error) {
