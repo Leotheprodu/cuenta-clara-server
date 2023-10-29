@@ -18,14 +18,20 @@ const { isLoggedInTrue } = require('../middleware/isLoggedIn');
 const checkClientOfUser = require('../middleware/checkClientOfUser');
 
 router.get('/', isLoggedInTrue, validatorQueryClients, clientsCtrl);
-router.get('/:id', isLoggedInTrue, validatorGetClient, clientCtrl);
+router.get(
+    '/:id',
+    isLoggedInTrue,
+    validatorGetClient,
+    checkClientOfUser,
+    clientCtrl,
+);
 router.post('/', isLoggedInTrue, validatorCreateClients, createClientsCtrl);
 router.put('/', isLoggedInTrue, validatorUpdateClients, updateClientsCtrl);
 router.get(
     '/deactivate/:id',
     isLoggedInTrue,
-    checkClientOfUser,
     validatorDeactivateClient,
+    checkClientOfUser,
     deactivateClientsCtrl,
 );
 

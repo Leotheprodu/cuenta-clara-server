@@ -1,8 +1,10 @@
+const { matchedData } = require('express-validator');
 const { usersModel } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 
 const checkEmailExist = async (req, res, next) => {
-    const email = req.body.email;
+    const body = matchedData(req);
+    const { email } = body;
     const consultaBD = await usersModel.findOne({
         where: { email },
     });

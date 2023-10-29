@@ -16,7 +16,7 @@ const { isLoggedInTrue, isLoggedInFalse } = require('../middleware/isLoggedIn');
 const checkEmailExist = require('../middleware/checkEmailExist');
 
 router.post('/login', isLoggedInFalse, validatorLogin, loginCtrl);
-router.post('/signup', checkEmailExist, validatorSignUp, signUpCtrl);
+router.post('/signup', validatorSignUp, checkEmailExist, signUpCtrl);
 router.get('/logout', isLoggedInTrue, logoutCtrl);
 router.get('/email-verification/:token', validatorGetToken, emailVerifyCtrl);
 router.get('/check-session', ckeckSessCtrl);
