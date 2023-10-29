@@ -25,6 +25,10 @@ const Clients = sequelize.define(
             type: DataTypes.STRING,
             unique: true,
         },
+        pin: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
         user_id: {
             type: DataTypes.INTEGER,
             references: {
@@ -48,7 +52,7 @@ const Clients = sequelize.define(
     {
         timestamps: true,
         defaultScope: {
-            attributes: { exclude: ['parent_user_id'] },
+            attributes: { exclude: ['parent_user_id', 'pin'] },
         },
     },
 );
