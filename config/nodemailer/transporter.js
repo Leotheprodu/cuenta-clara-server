@@ -1,13 +1,19 @@
 const nodemailer = require('nodemailer');
-const { EmailSecure, EmailPort } = require('../constants');
+const {
+    emailHost,
+    emailPort,
+    emailSecure,
+    emailUser,
+    emailPass,
+} = require('../constants');
 
 const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST, // Coloca el host correspondiente a tu servidor SMTP
-    port: EmailPort, // Puerto SMTP
-    secure: EmailSecure, // Si es necesario el uso de SSL o TLS
+    host: emailHost, // Coloca el host correspondiente a tu servidor SMTP
+    port: emailPort, // Puerto SMTP
+    secure: emailSecure, // Si es necesario el uso de SSL o TLS
     auth: {
-        user: process.env.EMAIL_USER, // Coloca el correo desde el que enviarás los correos
-        pass: process.env.EMAIL_PASS, // Coloca la contraseña del correo desde el que enviarás los correos
+        user: emailUser, // Coloca el correo desde el que enviarás los correos
+        pass: emailPass, // Coloca la contraseña del correo desde el que enviarás los correos
     },
 });
 

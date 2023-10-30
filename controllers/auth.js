@@ -18,7 +18,13 @@ const { createTempToken, newToken } = require('../utils/handleTempToken');
 const { sendAEmail } = require('../utils/handleSendEmail');
 const { RefreshSessionData } = require('../utils/handleRefreshSessionData');
 const idGenerator = require('../utils/idGenerator');
-const { Initialbalance } = require('../config/constants');
+const {
+    initialBalance,
+    appName,
+    emailUser,
+    verifyEmailLink,
+    environment,
+} = require('../config/constants');
 const userBusinessChecker = require('../utils/userBusinessChecker');
 
 const loginCtrl = async (req, res) => {
@@ -47,7 +53,7 @@ const loginCtrl = async (req, res) => {
             handleHttpError(res, 'Contraseña Incorrecta', 401);
             return;
         }
-        if (process.env.NODE_ENV === 'production') {
+        if (environment === 'production') {
             res.cookie('sessionId', req.session.id, {
                 httpOnly: true,
                 secure: true,
@@ -97,12 +103,12 @@ const signUpCtrl = async (req, res) => {
         const token = await newToken();
 
         //Crea el link que va a ser enviar al correo del nuevo usuario para verificar el email
-        const link = `${process.env.LINK_HOST}/sesion-de-usuario/verificar-email/${token}`;
+        const link = `${verifyEmailLink}${token}`;
 
         // Crea el objeto con el nombre y correo del remitente del correo a enviar
         const from = {
-            name: 'CuentaFacil',
-            email: `${process.env.EMAIL_USER}`,
+            name: `${appName}`,
+            email: `${emailUser}`,
         };
 
         // Crea el objeto con la data que necesita la plantilla para ser renderizada y enviada
@@ -117,7 +123,7 @@ const signUpCtrl = async (req, res) => {
             dataToEJS,
             from,
             email,
-            `Bienvenido a CuentaFacil ${username}`,
+            `Bienvenido(a) a ${appName}`,
         );
 
         // Con esta linea cuando se registra no devuelve en password en la respuesta
@@ -153,7 +159,7 @@ const signUpCtrl = async (req, res) => {
         await balancesModel.create({
             client_id: client.id,
             business_id: 1,
-            amount: Initialbalance,
+            amount: initialBalance,
         });
         //Respuesta
         resOkData(res, data);

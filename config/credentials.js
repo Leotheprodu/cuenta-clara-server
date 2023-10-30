@@ -1,9 +1,10 @@
+const { user, password, database, host, port } = require('./constants.js');
 const credentials = {
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
+    user,
+    password,
+    database,
+    host,
+    port,
 };
 
 module.exports = credentials;

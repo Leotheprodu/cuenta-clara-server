@@ -1,5 +1,5 @@
 {
-    "name": "cuentaclara",
+    "name": "billeo",
     "version": "1.0.0",
     "description": "app web para controlar saldos de cuentas con clientes",
     "main": "app.js",
