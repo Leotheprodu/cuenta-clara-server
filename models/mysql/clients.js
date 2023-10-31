@@ -15,7 +15,7 @@ const Clients = sequelize.define(
         },
         email: {
             type: DataTypes.STRING,
-            allowNull: true,
+            defaultValue: '',
         },
         cellphone: {
             type: DataTypes.STRING,
@@ -44,9 +44,12 @@ const Clients = sequelize.define(
                 key: 'id',
             },
         },
-        activo: {
+        active: {
             type: DataTypes.BOOLEAN,
             defaultValue: true,
+        },
+        country: {
+            type: DataTypes.STRING,
         },
     },
     {

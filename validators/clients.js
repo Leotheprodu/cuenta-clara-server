@@ -60,7 +60,7 @@ const validatorDeactivateClient = [
     (req, res, next) => validateResults(req, res, next),
 ];
 const validatorQueryClients = [
-    check('activo').optional().isBoolean(),
+    check('active').optional().isBoolean(),
     (req, res, next) => validateResults(req, res, next),
 ];
 const validatorGetClient = [

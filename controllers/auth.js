@@ -42,7 +42,7 @@ const loginCtrl = async (req, res) => {
             handleHttpError(res, 'El usuario no existe', 404);
             return;
         }
-        if (userData.activo === 0) {
+        if (userData.active === 0) {
             handleHttpError(res, 'El usuario esta desactivado', 401);
             return;
         }

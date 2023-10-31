@@ -10,15 +10,15 @@ const {
 } = require('../services/clients');
 
 const clientsCtrl = async (req, res) => {
-    const { activo } = matchedData(req);
+    const { active } = matchedData(req);
     const filtro = {
         where: { parent_user_id: req.session.user.id },
         order: [['username', 'ASC']],
     };
-    if (activo === 'true') {
-        filtro.where.activo = true;
-    } else if (activo === 'false') {
-        filtro.where.activo = false;
+    if (active === 'true') {
+        filtro.where.active = true;
+    } else if (active === 'false') {
+        filtro.where.active = false;
     }
     try {
         const clientsData = await clientsModel.findAll(filtro);
@@ -75,7 +75,6 @@ const updateClientsCtrl = async (req, res) => {
     const data = matchedData(req);
     const { id_business } = data;
     const clientId = data.id;
-    console.log({ id_business });
     try {
         // Actualizar datos del cliente
         const updatedClient = await clientsModel.update(
@@ -121,15 +120,15 @@ const deactivateClientsCtrl = async (req, res) => {
 
     try {
         const client = await clientsModel.findOne({ where: { id } });
-        const activo = client.activo;
+        const active = client.active;
         const [updatedRowCount] = await clientsModel.update(
-            { activo: activo == 0 ? 1 : 0 },
+            { active: active == 0 ? 1 : 0 },
             { where: { id } },
         );
         if (updatedRowCount === 0) {
             handleHttpError(
                 res,
-                activo == 0
+                active == 0
                     ? 'No se pudo activar el cliente'
                     : 'No se pudo desactivar el cliente',
             );
@@ -137,7 +136,7 @@ const deactivateClientsCtrl = async (req, res) => {
         } else {
             resOkData(res, {
                 message:
-                    activo == 0
+                    active == 0
                         ? 'Cliente activado correctamente'
                         : 'Cliente desactivado correctamente',
             });
