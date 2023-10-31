@@ -26,11 +26,16 @@ const validatorCreateClients = [
     check('id_business')
         .exists()
         .isArray()
-        .withMessage('id_business debe ser un array.')
         .custom((values) => values.every(Number.isInteger))
         .withMessage(
-            'Todos los elementos en id_business deben ser números enteros.',
+            'Todos los elementos en id_business deben ser números enteros dentro de un array',
         ),
+    check('country')
+        .exists()
+        .isString()
+        .notEmpty()
+        .withMessage('country debe ser un string'),
+
     (req, res, next) => validateResults(req, res, next),
 ];
 const validatorUpdateClients = [
@@ -53,6 +58,11 @@ const validatorUpdateClients = [
         .withMessage(
             'Todos los elementos en id_business deben ser números enteros.',
         ),
+    check('country')
+        .exists()
+        .isString()
+        .notEmpty()
+        .withMessage('country debe ser un string'),
     (req, res, next) => validateResults(req, res, next),
 ];
 const validatorDeactivateClient = [
