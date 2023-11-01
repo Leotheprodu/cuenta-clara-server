@@ -51,6 +51,9 @@ const Clients = sequelize.define(
         country: {
             type: DataTypes.STRING,
         },
+        detail: {
+            type: DataTypes.STRING,
+        },
     },
     {
         timestamps: true,

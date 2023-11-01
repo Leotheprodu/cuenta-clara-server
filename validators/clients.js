@@ -35,6 +35,10 @@ const validatorCreateClients = [
         .isString()
         .notEmpty()
         .withMessage('country debe ser un string'),
+    check('detail')
+        .optional({ nullable: true, checkFalsy: true })
+        .isString()
+        .withMessage('detail debe ser un string'),
 
     (req, res, next) => validateResults(req, res, next),
 ];
@@ -63,6 +67,10 @@ const validatorUpdateClients = [
         .isString()
         .notEmpty()
         .withMessage('country debe ser un string'),
+    check('detail')
+        .optional({ nullable: true, checkFalsy: true })
+        .isString()
+        .withMessage('detail debe ser un string'),
     (req, res, next) => validateResults(req, res, next),
 ];
 const validatorDeactivateClient = [
