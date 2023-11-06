@@ -42,6 +42,13 @@ const Products_and_services = sequelize.define(
                 key: 'id',
             },
         },
+        code: {
+            type: DataTypes.STRING,
+            unique: true,
+        },
+        type: {
+            type: DataTypes.STRING,
+        },
     },
     {
         timestamps: true,

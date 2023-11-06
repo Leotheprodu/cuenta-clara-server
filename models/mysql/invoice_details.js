@@ -36,10 +36,10 @@ const Invoice_details = sequelize.define(
             type: DataTypes.DECIMAL(10, 2),
         },
         item_id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             references: {
                 model: Products_and_services,
-                key: 'id',
+                key: 'code',
             },
             allowNull: true,
         },

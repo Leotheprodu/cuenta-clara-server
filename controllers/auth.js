@@ -147,12 +147,13 @@ const signUpCtrl = async (req, res) => {
         await products_and_servicesModel.create({
             user_id: data.id,
             name: 'Ingreso por defecto',
-            description:
-                'Producto o Servicio por defecto del Negocio Principal',
+            description: 'Producto o servicio por defecto',
             unit: 'unidad',
             unit_price: 1,
             default: true,
             business_id: newUserBusiness.id,
+            code: `in-${data.id}${idGenerator(4)}`,
+            type: 'service',
         });
         //Importante para el negocio
         const client = await clientsModel.create(AppClient);
