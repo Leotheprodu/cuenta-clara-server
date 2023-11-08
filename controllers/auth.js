@@ -152,7 +152,7 @@ const signUpCtrl = async (req, res) => {
             unit_price: 1,
             default: true,
             business_id: newUserBusiness.id,
-            code: `in-${data.id}${idGenerator(4)}`,
+            code: `${data.id}-${newUserBusiness.id}-1`,
             type: 'service',
         });
         //Importante para el negocio
