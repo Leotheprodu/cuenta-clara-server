@@ -21,11 +21,6 @@ const Invoice_details = sequelize.define(
         description: {
             type: DataTypes.STRING,
         },
-        unit: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            defaultValue: 'unidad',
-        },
         quantity: {
             type: DataTypes.DECIMAL(10, 2),
         },
@@ -35,13 +30,12 @@ const Invoice_details = sequelize.define(
         subtotal: {
             type: DataTypes.DECIMAL(10, 2),
         },
-        item_id: {
+        code: {
             type: DataTypes.STRING,
             references: {
                 model: Products_and_services,
                 key: 'code',
             },
-            allowNull: true,
         },
     },
     {
