@@ -1,32 +1,54 @@
 const { matchedData } = require('express-validator');
-/* const { clientsModel, balancesModel } = require('../models'); */
+const { invoicesModel, invoice_detailsModel } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 const { resOkData } = require('../utils/handleOkResponses');
 
 const createInvoiceCtrl = async (req, res) => {
     const data = matchedData(req);
+    const { business_id, total, client_id, date, invoice_details } = data;
+    const user_id = req.session.user.id;
     try {
-        /* const clientData = await clientsModel.create({
-            ...data,
-            parent_user_id: req.session.user.id,
-        }); */
-
-        /* const createBalancesPromises = id_business.map(async (id) => {
-            try {
-                await balancesModel.create({
-                    client_id: clientData.id,
-                    business_id: id,
-                    amount: 0,
-                });
-            } catch (error) {
-                console.error(error);
-                handleHttpError(res, 'Error al crear balances en el negocio');
-            }
+        //por cada elemento del array invoice_details cambiar en code por la concatenacion de user_id, business_id y code
+        invoice_details.forEach((element) => {
+            element.code = `${user_id}-${business_id}-${element.code}`;
         });
 
-        await Promise.all(createBalancesPromises); */
+        const createInvoice = await invoicesModel.create({
+            parent_user_id: user_id,
+            business_id,
+            date,
+            client_id,
+            total_amount: total,
+            paid: false,
+        });
+        if (!createInvoice) {
+            handleHttpError(res, 'Error al crear factura');
+            return;
+        } else {
+            const createInvoicesDetailsPromises = invoice_details.map(
+                async (invoiceDetail) => {
+                    try {
+                        await invoice_detailsModel.create({
+                            invoice_id: createInvoice.id,
+                            description: invoiceDetail.description,
+                            quantity: invoiceDetail.quantity,
+                            unit_price: invoiceDetail.unit_price,
+                            code: invoiceDetail.code,
+                            subtotal: invoiceDetail.subtotal,
+                        });
+                    } catch (error) {
+                        console.error(error);
+                        handleHttpError(
+                            res,
+                            'Error al crear detalles de factura',
+                        );
+                    }
+                },
+            );
+            await Promise.all(createInvoicesDetailsPromises);
 
-        resOkData(res, { data });
+            resOkData(res, { createInvoice, invoice_details });
+        }
     } catch (error) {
         console.error(error);
         handleHttpError(res, 'Error al crear factura');

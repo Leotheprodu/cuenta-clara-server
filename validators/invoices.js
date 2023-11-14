@@ -19,6 +19,10 @@ const validatorCreateInvoice = [
         .withMessage(
             'El ID del negocio es requerido y debe ser un número entero.',
         ),
+    check('total')
+        .exists()
+        .isDecimal()
+        .withMessage('El total debe ser un número decimal.'),
     check('invoice_details')
         .isArray()
         .notEmpty()
