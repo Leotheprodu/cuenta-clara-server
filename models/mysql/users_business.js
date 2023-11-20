@@ -26,7 +26,7 @@ const Users_business = sequelize.define(
         },
     },
     {
-        timestamps: false,
+        timestamps: true,
         tableName: 'users_business',
     },
 );

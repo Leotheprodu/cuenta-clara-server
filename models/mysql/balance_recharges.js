@@ -33,5 +33,4 @@ const Balance_recharges = sequelize.define(
         timestamps: true,
     },
 );
-
 module.exports = Balance_recharges;

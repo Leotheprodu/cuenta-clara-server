@@ -15,6 +15,7 @@ const Payment_status = sequelize.define(
     },
     {
         timestamps: false,
+        tableName: 'payment_status',
     },
 );
 

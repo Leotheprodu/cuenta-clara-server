@@ -15,5 +15,16 @@ const dbConnectMySql = async () => {
         console.log('MYSQL Error Connection', e);
     }
 };
+const dbSync = async () => {
+    const env = process.env.NODE_ENV || 'development';
+    try {
+        if (env === 'development') {
+            await sequelize.sync();
+        }
 
-module.exports = { sequelize, dbConnectMySql };
+        console.log('All models were synchronized successfully.');
+    } catch (e) {
+        console.log('Error Synchronizing models', e);
+    }
+};
+module.exports = { sequelize, dbConnectMySql, dbSync };
