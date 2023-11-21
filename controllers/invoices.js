@@ -29,7 +29,7 @@ const createInvoiceCtrl = async (req, res) => {
         async (invoiceDetail) => {
           try {
             await invoice_detailsModel.create({
-              invoice_id: createInvoice.id,
+              invoiceId: createInvoice.id,
               description: invoiceDetail.description,
               quantity: invoiceDetail.quantity,
               unit_price: invoiceDetail.unit_price,
