@@ -4,33 +4,28 @@ const Clients = require('./clients');
 const Balances = require('./balances');
 
 const Balance_recharges = sequelize.define(
-    'balance_recharges',
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-        },
-        client_id: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: Clients,
-                key: 'id',
-            },
-        },
-        balance_id: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: Balances,
-                key: 'id',
-            },
-        },
-        amount: {
-            type: DataTypes.DECIMAL(10, 2),
-        },
+  'balance_recharges',
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
     },
-    {
-        timestamps: true,
+    amount: {
+      type: DataTypes.DECIMAL(10, 2),
     },
+  },
+  {
+    timestamps: true,
+  },
 );
+Balance_recharges.belongsTo(Clients, {
+  foreignKey: { name: 'client_id', allowNull: false },
+});
+Balance_recharges.belongsTo(Balances, {
+  foreignKey: { name: 'balance_id', allowNull: false },
+});
+Clients.hasMany(Balance_recharges, { foreignKey: { name: 'client_id' } });
+Balances.hasMany(Balance_recharges, { foreignKey: { name: 'balance_id' } });
+/* Balance_recharges.sync({ alter: true }); */
 module.exports = Balance_recharges;

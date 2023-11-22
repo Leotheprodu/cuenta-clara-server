@@ -11,13 +11,6 @@ const Invoice_details = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    invoiceId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: Invoices,
-        key: 'id',
-      },
-    },
     description: {
       type: DataTypes.STRING,
     },
@@ -30,18 +23,22 @@ const Invoice_details = sequelize.define(
     subtotal: {
       type: DataTypes.DECIMAL(10, 2),
     },
-    code: {
-      type: DataTypes.STRING,
-      references: {
-        model: Products_and_services,
-        key: 'code',
-      },
-    },
   },
   {
     timestamps: true,
   },
 );
-/* Invoice_details.belongsTo(Invoices, { foreignKey: 'invoiceId' }); */
+
+Invoice_details.belongsTo(Invoices, {
+  foreignKey: { name: 'invoiceId', allowNull: false },
+});
+Invoice_details.belongsTo(Products_and_services, {
+  foreignKey: { name: 'code', allowNull: false },
+  targetKey: 'code',
+});
+Invoices.hasMany(Invoice_details, { foreignKey: { name: 'invoiceId' } });
+Products_and_services.hasMany(Invoice_details, {
+  foreignKey: { name: 'code' },
+});
 /* Invoice_details.sync({ alter: true }); */
 module.exports = Invoice_details;

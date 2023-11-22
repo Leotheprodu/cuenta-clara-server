@@ -3,7 +3,6 @@ const { DataTypes } = require('sequelize');
 const Users = require('./users');
 const Clients = require('./clients');
 const Users_business = require('./users_business');
-const Invoice_details = require('./invoice_details');
 
 const Invoices = sequelize.define(
   'invoices',
@@ -13,33 +12,12 @@ const Invoices = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    parent_user_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: Users,
-        key: 'id',
-      },
-    },
-    client_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: Clients,
-        key: 'id',
-      },
-    },
     total_amount: {
       type: DataTypes.DECIMAL(10, 2),
     },
     paid: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
-    },
-    business_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: Users_business,
-        key: 'id',
-      },
     },
     date: {
       type: DataTypes.DATEONLY,
@@ -50,6 +28,17 @@ const Invoices = sequelize.define(
     timestamps: true,
   },
 );
-Invoices.hasMany(Invoice_details, { foreignKey: 'invoiceId' });
-/* Invoices.sync({ alter: true }); */
+Invoices.belongsTo(Users, {
+  foreignKey: { name: 'parent_user_id', allowNull: false },
+});
+Invoices.belongsTo(Clients, {
+  foreignKey: { name: 'client_id', allowNull: false },
+});
+Invoices.belongsTo(Users_business, {
+  foreignKey: { name: 'business_id', allowNull: false },
+});
+Users.hasMany(Invoices, { foreignKey: { name: 'parent_user_id' } });
+Clients.hasMany(Invoices, { foreignKey: { name: 'client_id' } });
+Users_business.hasMany(Invoices, { foreignKey: { name: 'business_id' } });
+Invoices.sync({ alter: true });
 module.exports = Invoices;
