@@ -9,9 +9,15 @@ const {
 const {
   validatorCreateInvoice,
   validateInvoiceClientId,
+  validateQueryInvoicesOfUser,
 } = require('../validators/invoices');
 const checkClientOfUser = require('../middleware/checkClientOfUser');
-router.get('/', isLoggedInTrue, getInvoicesOfUserCtrl);
+router.get(
+  '/',
+  isLoggedInTrue,
+  validateQueryInvoicesOfUser,
+  getInvoicesOfUserCtrl,
+);
 router.get(
   '/:id',
   isLoggedInTrue,

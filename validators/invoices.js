@@ -65,8 +65,15 @@ const validateInvoiceClientId = [
     .withMessage('El ID de la factura es requerido y debe ser un número.'),
   (req, res, next) => validateResults(req, res, next),
 ];
-
+const validateQueryInvoicesOfUser = [
+  check('is_paid')
+    .optional()
+    .isBoolean()
+    .withMessage('El campo is_paid debe ser un booleano.'),
+  (req, res, next) => validateResults(req, res, next),
+];
 module.exports = {
   validatorCreateInvoice,
   validateInvoiceClientId,
+  validateQueryInvoicesOfUser,
 };

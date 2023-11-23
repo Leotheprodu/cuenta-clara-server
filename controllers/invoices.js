@@ -1,5 +1,9 @@
 const { matchedData } = require('express-validator');
-const { invoicesModel, invoice_detailsModel } = require('../models');
+const {
+  invoicesModel,
+  invoice_detailsModel,
+  transactionsModel,
+} = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 const { resOkData } = require('../utils/handleOkResponses');
 
@@ -53,11 +57,15 @@ const createInvoiceCtrl = async (req, res) => {
 };
 const getInvoicesOfUserCtrl = async (req, res) => {
   const user_id = req.session.user.id;
+  const { is_paid } = matchedData(req);
+  const paid = is_paid === 'true' ? true : false;
   try {
     const invoices = await invoicesModel.findAll({
       where: {
         parent_user_id: user_id,
+        paid,
       },
+      include: [invoice_detailsModel, transactionsModel],
     });
     if (!invoices) {
       handleHttpError(res, 'Error al obtener facturas');
@@ -80,6 +88,7 @@ const getInvoicesByClientCtrl = async (req, res) => {
         client_id: id,
         parent_user_id: user_id,
       },
+      include: invoice_detailsModel,
     });
     if (!invoices) {
       handleHttpError(res, 'Error al obtener facturas');
