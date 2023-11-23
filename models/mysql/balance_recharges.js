@@ -3,22 +3,16 @@ const { DataTypes } = require('sequelize');
 const Clients = require('./clients');
 const Balances = require('./balances');
 
-const Balance_recharges = sequelize.define(
-  'balance_recharges',
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    amount: {
-      type: DataTypes.DECIMAL(10, 2),
-    },
+const Balance_recharges = sequelize.define('balance_recharges', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
   },
-  {
-    timestamps: true,
+  amount: {
+    type: DataTypes.DECIMAL(10, 2),
   },
-);
+});
 Balance_recharges.belongsTo(Clients, {
   foreignKey: { name: 'client_id', allowNull: false },
 });

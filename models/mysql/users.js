@@ -2,42 +2,44 @@ const { sequelize } = require('../../config/mysql');
 const { DataTypes } = require('sequelize');
 
 const Users = sequelize.define(
-    'users',
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-            allowNull: false,
-        },
-        username: {
-            type: DataTypes.STRING,
-        },
-        email: {
-            type: DataTypes.STRING,
-            unique: true,
-        },
-        password: {
-            type: DataTypes.STRING,
-            select: false,
-        },
-        cellphone: {
-            type: DataTypes.INTEGER,
-        },
-        active: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: true,
-        },
+  'users',
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
     },
-    {
-        timestamps: true,
-        defaultScope: {
-            attributes: { exclude: ['password'] },
-        },
+    username: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
     },
+    email: {
+      type: DataTypes.STRING(50),
+      unique: true,
+      allowNull: false,
+    },
+    password: {
+      type: DataTypes.STRING(100),
+      select: false,
+      allowNull: false,
+    },
+    cellphone: {
+      type: DataTypes.STRING(50),
+    },
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+  },
+  {
+    defaultScope: {
+      attributes: { exclude: ['password'] },
+    },
+  },
 );
 
 Users.addScope('withPassword', {
-    attributes: { include: ['password'] },
+  attributes: { include: ['password'] },
 });
+/* Users.sync({ alter: true }); */
 module.exports = Users;
