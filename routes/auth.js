@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const {
-    loginCtrl,
-    signUpCtrl,
-    logoutCtrl,
-    emailVerifyCtrl,
-    ckeckSessCtrl,
-} = require('../controllers/auth');
+  loginCtrl,
+  signUpCtrl,
+  logoutCtrl,
+  emailVerifyCtrl,
+  ckeckSessCtrl,
+} = require('../controllers/auth.controller');
 const {
-    validatorLogin,
-    validatorSignUp,
-    validatorGetToken,
+  validatorLogin,
+  validatorSignUp,
+  validatorGetToken,
 } = require('../validators/auth');
 const { isLoggedInTrue, isLoggedInFalse } = require('../middleware/isLoggedIn');
 const checkEmailExist = require('../middleware/checkEmailExist');

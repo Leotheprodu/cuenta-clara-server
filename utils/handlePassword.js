@@ -2,24 +2,24 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 /**
- * Constrasena sin encryptar
+ * Encriptar contrasena
  * @param {*} passwordPlain
  */
 
-const encrypt = async (passwordPlain) => {
-    const hash = await bcrypt.hash(passwordPlain, saltRounds);
+const PasswordEncrypt = async (passwordPlain) => {
+  const hash = await bcrypt.hash(passwordPlain, saltRounds);
 
-    return hash;
+  return hash;
 };
 
 /**
- * Pasar contrasena sin ecriptar y pasaron contrasena encriptada
+ * Compara la contrasena encriptada con la contrasena plana
  * @param {*} passwordPlain
  * @param {*} hashPassword
  */
 
-const compare = async (passwordPlain, hashPassword) => {
-    return await bcrypt.compare(passwordPlain, hashPassword);
+const PasswordCompare = async (passwordPlain, hashPassword) => {
+  return await bcrypt.compare(passwordPlain, hashPassword);
 };
 
-module.exports = { compare, encrypt };
+module.exports = { PasswordCompare, PasswordEncrypt };
