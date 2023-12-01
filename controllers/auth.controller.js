@@ -159,7 +159,9 @@ const signUpCtrl = async (req, res) => {
   }
 };
 const emailVerifyCtrl = async (req, res) => {
-  async function tempToken(token) {
+  const { token } = matchedData(req);
+
+  const tempToken = async (token) => {
     try {
       const result = await temp_token_poolModel.findOne({
         where: { token, type: 'sign_up' },
@@ -168,14 +170,9 @@ const emailVerifyCtrl = async (req, res) => {
     } catch (error) {
       handleHttpError(res, 'Token invalido');
     }
-  }
+  };
   try {
-    const { token } = matchedData(req);
     const tempTokenData = await tempToken(token);
-    if (!tempTokenData) {
-      handleHttpError(res, 'Token invalido');
-      return;
-    }
     const userData = await usersModel.findOne({
       where: { email: tempTokenData.user_email },
     });
@@ -191,9 +188,7 @@ const emailVerifyCtrl = async (req, res) => {
     await unverifiedRole.destroy();
     await role_usersModel.create({ user_id: userData.id, role_id: 2 });
 
-    res.send({
-      message: 'Correo electronico verificado',
-    });
+    resOkData(res, userData);
   } catch (error) {
     console.log(error);
     handleHttpError(res, 'Error verificando correo electronico');
