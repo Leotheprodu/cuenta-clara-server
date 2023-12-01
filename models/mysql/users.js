@@ -30,6 +30,10 @@ const Users = sequelize.define(
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
+    country: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+    },
   },
   {
     defaultScope: {

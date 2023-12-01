@@ -123,6 +123,7 @@ const signUpCtrl = async (req, res) => {
       token: `${data.username.slice(0, 2)}-${idGenerator()}`,
       user_id: data.id,
       parent_user_id: 9,
+      country: data.country,
     };
 
     data.set('password', undefined, { strict: false });
