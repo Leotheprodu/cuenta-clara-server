@@ -12,8 +12,7 @@ const {
   validateQueryInvoicesOfUser,
 } = require('../validators/invoices');
 const checkClientOfUser = require('../middleware/checkClientOfUser');
-// BUG este middleware no funciona, no deja registrar la factura
-/* const checkIfBalanceCoverInvoice = require('../middleware/checkIfBalanceCoverInvoice'); */
+const checkIfBalanceCoverInvoice = require('../middleware/checkIfBalanceCoverInvoice');
 router.get(
   '/',
   isLoggedInTrue,
@@ -31,6 +30,7 @@ router.post(
   '/create',
   isLoggedInTrue,
   validatorCreateInvoice,
+  checkIfBalanceCoverInvoice,
   createInvoiceCtrl,
 );
 
