@@ -6,7 +6,9 @@ const {
 } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 const { resOkData } = require('../utils/handleOkResponses');
+const Balances = require('../services/balances.service');
 
+const balances = new Balances();
 const createInvoiceCtrl = async (req, res) => {
   const data = matchedData(req);
   const { business_id, total, client_id, date, invoice_details } = data;
@@ -47,8 +49,8 @@ const createInvoiceCtrl = async (req, res) => {
         },
       );
       await Promise.all(createInvoicesDetailsPromises);
-
-      resOkData(res, { createInvoice, invoice_details });
+      const balance = await balances.updateBalance(user_id, total);
+      resOkData(res, { createInvoice, invoice_details, newBalance: balance });
     }
   } catch (error) {
     console.error(error);
