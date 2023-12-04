@@ -9,10 +9,15 @@ const checkIfBalanceCoverInvoice = (req, res, next) => {
     handleHttpError(res, 'El total de la factura no puede ser 0');
     return;
   }
-  if (balance.amount >= total * BalanceControlPrice) {
+  if (balance >= total * BalanceControlPrice) {
     next();
   } else {
-    handleHttpError(res, 'No tiene suficiente saldo para registrar la factura');
+    handleHttpError(
+      res,
+      `No tiene suficiente saldo para registrar la factura. Su saldo es de ${balance.toFixed(
+        2,
+      )} y el total a deducir es ${(total * BalanceControlPrice).toFixed(2)}`,
+    );
     return;
   }
 };

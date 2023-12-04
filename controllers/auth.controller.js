@@ -17,7 +17,6 @@ const {
 } = require('../utils/handleOkResponses');
 const { createTempToken, newToken } = require('../utils/handleTempToken');
 const { sendAEmail } = require('../utils/handleSendEmail');
-const { RefreshSessionData } = require('../utils/handleRefreshSessionData');
 const idGenerator = require('../utils/idGenerator');
 const {
   initialBalance,
@@ -197,7 +196,6 @@ const emailVerifyCtrl = async (req, res) => {
 const ckeckSessCtrl = async (req, res) => {
   try {
     if (req.session.isLoggedIn) {
-      await RefreshSessionData(req);
       resUsersSessionData(req, res, 'Sesion activa');
     } else {
       handleHttpError(res, 'El usuario no ha iniciado sesion');

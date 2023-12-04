@@ -1,22 +1,23 @@
-const { usersModel, clientsModel } = require('../models/');
+const { mainUserId } = require('../config/constants');
+const { clientsModel, balancesModel } = require('../models/');
 const { refreshUserRoles } = require('./handleRoles');
 const userBusinessChecker = require('./userBusinessChecker');
 const RefreshSessionData = async (req) => {
   const id = req.session.user.id;
-
-  const data = await usersModel.findByPk(id, {
-    attributes: { exclude: ['password'] },
-  });
-  const client =
-    (await clientsModel.findOne({
+  const clients =
+    (await clientsModel.findAll({
       where: { user_id: id },
+      include: [balancesModel],
     })) || null;
-  const balance = client ? await client.getBalance() : 0;
-  req.session.user = data;
-  req.session.roles = await refreshUserRoles(data.id);
-  req.session.client = client;
-  req.session.balance = balance;
-
+  const appClient = clients.find(
+    (client) => client.parent_user_id === mainUserId,
+  );
+  req.session.roles = await refreshUserRoles(id);
+  const balance = req.session.roles.includes(1)
+    ? 1000000
+    : appClient.balance.amount;
+  req.session.client = clients;
+  req.session.balance = balance * 1;
   await userBusinessChecker(req, id);
 };
 

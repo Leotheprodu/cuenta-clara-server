@@ -1,10 +1,13 @@
+const { RefreshSessionData } = require('./handleRefreshSessionData');
+
 /**
  * Respuesta para enviar toda la informacion de la sesion actual del usuario
  * @param {*} req
  * @param {*} res
  * @param {'mensaje de la respuesta'} message
  */
-const resUsersSessionData = (req, res, message) => {
+const resUsersSessionData = async (req, res, message) => {
+  await RefreshSessionData(req);
   res.send({
     data: {
       isLoggedIn: req.session.isLoggedIn,
