@@ -9,7 +9,12 @@ const checkIfBalanceCoverInvoice = (req, res, next) => {
     handleHttpError(res, 'El total de la factura no puede ser 0');
     return;
   }
-  if (balance >= total * BalanceControlPrice) {
+
+  if (
+    balance >= total * BalanceControlPrice ||
+    req.session.roles.includes(1) ||
+    req.session.roles.includes(4)
+  ) {
     next();
   } else {
     handleHttpError(
