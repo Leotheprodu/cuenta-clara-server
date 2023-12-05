@@ -17,16 +17,25 @@ class Balances {
       throw new Error('Error al obtener balance');
     }
   }
-
-  async rechargeBalance(user_id, amount) {
+  async createBalanceRecharge(balance, amount, status) {
     try {
-      const balance = await this.getBalance(user_id);
-      const newBalance = balance.amount * 1 + amount;
-      await balance_rechargesModel.create({
+      const newBalanceRecharge = await balance_rechargesModel.create({
         amount,
         balance_id: balance.id,
         client_id: balance.client_id,
+        status,
       });
+      return newBalanceRecharge;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Error al crear recarga de balance');
+    }
+  }
+
+  async updateBalance(balance, amount) {
+    try {
+      const newBalance = balance.amount * 1 + amount;
+
       await balancesModel.update(
         { amount: newBalance },
         { where: { id: balance.id } },
@@ -38,17 +47,19 @@ class Balances {
     }
   }
 
-  async updateBalance(user_id, total) {
+  async updateBalancebyInvoice(user_id, total, status) {
     try {
       const invoiceAmount = total * BalanceControlPrice;
-      const newBalance = await this.rechargeBalance(
-        user_id,
-        invoiceAmount * -1,
-      );
+      const balance = await this.getBalance(user_id);
+      await this.createBalanceRecharge(balance, invoiceAmount, status);
+
+      const newBalance = await this.updateBalance(balance, invoiceAmount);
+
       return newBalance;
     } catch (error) {
       console.error(error);
-      throw new Error('Error al actualizar balance');
+
+      throw new Error('Error al actualizar balance por factura');
     }
   }
 }

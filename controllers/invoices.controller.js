@@ -49,7 +49,11 @@ const createInvoiceCtrl = async (req, res) => {
         },
       );
       await Promise.all(createInvoicesDetailsPromises);
-      const balance = await balances.updateBalance(user_id, total);
+      const balance = await balances.updateBalancebyInvoice(
+        user_id,
+        total * -1,
+        'completed',
+      );
       req.session.balance = balance;
       resOkData(res, { createInvoice, invoice_details, newBalance: balance });
     }

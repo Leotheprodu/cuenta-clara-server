@@ -5,7 +5,7 @@ const {
   createInvoiceCtrl,
   getInvoicesByClientCtrl,
   getInvoicesOfUserCtrl,
-} = require('../controllers/invoices');
+} = require('../controllers/invoices.controller');
 const {
   validatorCreateInvoice,
   validateInvoiceClientId,
