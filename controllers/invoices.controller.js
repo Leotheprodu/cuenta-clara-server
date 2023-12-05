@@ -7,6 +7,7 @@ const {
 const { handleHttpError } = require('../utils/handleError');
 const { resOkData } = require('../utils/handleOkResponses');
 const Balances = require('../services/balances.service');
+const idGenerator = require('../utils/idGenerator');
 
 const balances = new Balances();
 const createInvoiceCtrl = async (req, res) => {
@@ -66,8 +67,8 @@ const createInvoiceCtrl = async (req, res) => {
       req.session.balance = balance;
 
       if (status === 'paid') {
-        await transactionsModel.create({
-          invoiceId: createInvoice.id,
+        const transaction = await transactionsModel.create({
+          id: idGenerator(12),
           amount: total,
           status_id: 2,
           payment_method_id,
@@ -76,6 +77,7 @@ const createInvoiceCtrl = async (req, res) => {
           date,
           description: 'Pago realizado inmediatamente al crear factura',
         });
+        await createInvoice.addTransaction(transaction);
       }
       resOkData(res, { createInvoice, invoice_details, newBalance: balance });
     }
@@ -86,13 +88,18 @@ const createInvoiceCtrl = async (req, res) => {
 };
 const getInvoicesOfUserCtrl = async (req, res) => {
   const user_id = req.session.user.id;
-  const { status = undefined } = matchedData(req);
+  const { status } = matchedData(req);
+  const whereClause = {
+    parent_user_id: user_id,
+  };
+
+  // Agregar la condición de status si está presente
+  if (status) {
+    whereClause.status = status;
+  }
   try {
     const invoices = await invoicesModel.findAll({
-      where: {
-        parent_user_id: user_id,
-        status,
-      },
+      where: whereClause,
       include: [invoice_detailsModel, transactionsModel],
     });
     if (!invoices) {

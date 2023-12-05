@@ -7,9 +7,8 @@ const Clients = require('./clients');
 
 const Transactions = sequelize.define('transactions', {
   id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING(20),
     primaryKey: true,
-    autoIncrement: true,
   },
   amount: {
     type: DataTypes.DECIMAL(10, 2),

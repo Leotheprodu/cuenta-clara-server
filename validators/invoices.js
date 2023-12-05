@@ -76,7 +76,7 @@ const validateInvoiceClientId = [
 const validateQueryInvoicesOfUser = [
   check('status')
     .optional()
-    .isBoolean()
+    .isString()
     .withMessage('El campo status debe ser un string.'),
   (req, res, next) => validateResults(req, res, next),
 ];
