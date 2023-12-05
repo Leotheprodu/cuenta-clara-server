@@ -1,4 +1,4 @@
-const { mainUserId, BalanceControlPrice } = require('../config/constants');
+const { mainUserId, billingPrice } = require('../config/constants');
 const {
   clientsModel,
   balancesModel,
@@ -50,7 +50,7 @@ class Balances {
 
   async updateBalancebyInvoice(user_id, total, status, invoiceId) {
     try {
-      const invoiceAmount = total * BalanceControlPrice;
+      const invoiceAmount = total * billingPrice;
       const balance = await this.getBalance(user_id);
       await this.createBalanceRecharge(
         balance,

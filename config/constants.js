@@ -6,16 +6,11 @@ const mainUserId = 9;
  * @description Initial balance for new users
  *  */
 const initialBalance = process.env.INITIAL_BALANCE;
-/*
- * @description Price for each paid invoice while Billing Process.
- * 2% of the invoice amount
- *  */
-const billingPrice = 0.02;
 /**
- * @description Billing price for each paid transaction while Client Paid a Invoice.
- * 5% of the invoice amount
+ * @description Billing price.
+ * 3% of the invoice amount
  *  */
-const BalanceControlPrice = 0.05;
+const billingPrice = 0.03;
 
 /* ------------------------------------ Email -------------------------------------------- */
 const emailPort = 587;
@@ -49,7 +44,6 @@ module.exports = {
   port,
   initialBalance,
   billingPrice,
-  BalanceControlPrice,
   appName,
   PORT,
   ORIGIN_CORS,
