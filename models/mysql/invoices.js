@@ -13,9 +13,9 @@ const Invoices = sequelize.define('invoices', {
   total_amount: {
     type: DataTypes.DECIMAL(10, 2),
   },
-  paid: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false,
+  status: {
+    type: DataTypes.STRING(20),
+    defaultValue: 'pending',
   },
   date: {
     type: DataTypes.DATEONLY,

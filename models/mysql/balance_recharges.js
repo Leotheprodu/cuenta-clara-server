@@ -2,6 +2,7 @@ const { sequelize } = require('../../config/mysql');
 const { DataTypes } = require('sequelize');
 const Clients = require('./clients');
 const Balances = require('./balances');
+const Invoices = require('./invoices');
 
 const Balance_recharges = sequelize.define('balance_recharges', {
   id: {
@@ -24,7 +25,9 @@ Balance_recharges.belongsTo(Clients, {
 Balance_recharges.belongsTo(Balances, {
   foreignKey: { name: 'balance_id', allowNull: false },
 });
+Balance_recharges.belongsTo(Invoices);
 Clients.hasMany(Balance_recharges, { foreignKey: { name: 'client_id' } });
 Balances.hasMany(Balance_recharges, { foreignKey: { name: 'balance_id' } });
+Invoices.hasOne(Balance_recharges);
 /* Balance_recharges.sync({ alter: true }); */
 module.exports = Balance_recharges;

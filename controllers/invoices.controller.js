@@ -11,7 +11,15 @@ const Balances = require('../services/balances.service');
 const balances = new Balances();
 const createInvoiceCtrl = async (req, res) => {
   const data = matchedData(req);
-  const { business_id, total, client_id, date, invoice_details } = data;
+  const {
+    business_id,
+    total,
+    client_id,
+    date,
+    invoice_details,
+    status = 'pending',
+    payment_method_id = 1,
+  } = data;
   const user_id = req.session.user.id;
   try {
     //por cada elemento del array invoice_details cambiar en code por la concatenacion de user_id, business_id y code
@@ -25,7 +33,7 @@ const createInvoiceCtrl = async (req, res) => {
       date,
       client_id,
       total_amount: total,
-      paid: false,
+      status,
     });
     if (!createInvoice) {
       handleHttpError(res, 'Error al crear factura');
@@ -53,8 +61,22 @@ const createInvoiceCtrl = async (req, res) => {
         user_id,
         total * -1,
         'completed',
+        createInvoice.id,
       );
       req.session.balance = balance;
+
+      if (status === 'paid') {
+        await transactionsModel.create({
+          invoiceId: createInvoice.id,
+          amount: total,
+          status_id: 2,
+          payment_method_id,
+          parent_user_id: user_id,
+          client_id,
+          date,
+          description: 'Pago realizado inmediatamente al crear factura',
+        });
+      }
       resOkData(res, { createInvoice, invoice_details, newBalance: balance });
     }
   } catch (error) {
@@ -64,13 +86,12 @@ const createInvoiceCtrl = async (req, res) => {
 };
 const getInvoicesOfUserCtrl = async (req, res) => {
   const user_id = req.session.user.id;
-  const { is_paid } = matchedData(req);
-  const paid = is_paid === 'true' ? true : false;
+  const { status = undefined } = matchedData(req);
   try {
     const invoices = await invoicesModel.findAll({
       where: {
         parent_user_id: user_id,
-        paid,
+        status,
       },
       include: [invoice_detailsModel, transactionsModel],
     });

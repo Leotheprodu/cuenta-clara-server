@@ -7,6 +7,14 @@ const validatorCreateInvoice = [
     .isString()
     .notEmpty()
     .withMessage('La fecha es requerida y debe ser un string.'),
+  check('status')
+    .optional()
+    .isString()
+    .withMessage('El campo status debe ser un string.'),
+  check('payment_method_id')
+    .optional()
+    .isInt()
+    .withMessage('El campo payment_method_id debe ser un número entero.'),
   check('client_id')
     .exists()
     .isInt()
@@ -66,10 +74,10 @@ const validateInvoiceClientId = [
   (req, res, next) => validateResults(req, res, next),
 ];
 const validateQueryInvoicesOfUser = [
-  check('is_paid')
+  check('status')
     .optional()
     .isBoolean()
-    .withMessage('El campo is_paid debe ser un booleano.'),
+    .withMessage('El campo status debe ser un string.'),
   (req, res, next) => validateResults(req, res, next),
 ];
 module.exports = {
