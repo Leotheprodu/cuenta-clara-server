@@ -7,7 +7,13 @@ const RefreshSessionData = async (req) => {
   const clients =
     (await clientsModel.findAll({
       where: { user_id: id },
-      include: [balancesModel],
+      include: [
+        {
+          model: balancesModel,
+          attributes: ['amount'],
+        },
+      ],
+      attributes: ['id', 'parent_user_id'],
     })) || null;
   const appClient = clients.find(
     (client) => client.parent_user_id === mainUserId,
