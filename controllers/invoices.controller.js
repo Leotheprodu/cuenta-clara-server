@@ -3,6 +3,10 @@ const {
   invoicesModel,
   invoice_detailsModel,
   transactionsModel,
+  users_businessModel,
+  clientsModel,
+  payment_methodsModel,
+  payment_statusModel,
 } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 const { resOkData } = require('../utils/handleOkResponses');
@@ -123,7 +127,61 @@ const getInvoicesByClientCtrl = async (req, res) => {
         client_id: id,
         parent_user_id: user_id,
       },
-      include: invoice_detailsModel,
+      attributes: {
+        exclude: [
+          'client_id',
+          'parent_user_id',
+          'createdAt',
+          'updatedAt',
+          'business_id',
+        ],
+      },
+      include: [
+        {
+          model: users_businessModel,
+          attributes: ['id', 'name'],
+        },
+        {
+          model: clientsModel,
+          attributes: ['id', 'username'],
+        },
+        {
+          model: invoice_detailsModel,
+          attributes: {
+            exclude: [
+              'description',
+              'default',
+              'createdAt',
+              'updatedAt',
+              'invoiceId',
+            ],
+          },
+        },
+        {
+          model: transactionsModel,
+          through: { attributes: [] },
+          attributes: {
+            exclude: [
+              'parent_user_id',
+              'createdAt',
+              'updatedAt',
+              'client_id',
+              'payment_method_id',
+              'status_id',
+            ],
+          },
+          include: [
+            {
+              model: payment_methodsModel,
+              attributes: ['id', 'name'],
+            },
+            {
+              model: payment_statusModel,
+              attributes: ['id', 'name'],
+            },
+          ],
+        },
+      ],
     });
     if (!invoices) {
       handleHttpError(res, 'Error al obtener facturas');
