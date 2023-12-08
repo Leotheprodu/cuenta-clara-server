@@ -36,6 +36,33 @@ const FrontendDomain = process.env.FRONTEND_DOMAIN;
 /* ------------------------------------ FrontendLinks --------------------------------------------------*/
 
 const verifyEmailLink = `${FrontendDomain}sesion/verificar-email/`;
+
+/* ------------------------------------ Dictionaries --------------------------------------------------*/
+
+const invoicesStatus = {
+  paid: 'paid',
+  pending: 'pending',
+  cancelled: 'cancelled',
+  inReview: 'inReview',
+};
+const balancesStatus = {
+  complete: 'complete',
+  pending: 'pending',
+  cancelled: 'cancelled',
+};
+const paymentStatus = {
+  complete: 2,
+  pending: 1,
+  cancelled: 3,
+};
+const paymentMethod = {
+  cash: 1,
+  sinpeMovil: 2,
+  bankTransfer: 3,
+  paypal: 4,
+  creditCard: 5,
+};
+
 module.exports = {
   user,
   password,
@@ -57,4 +84,8 @@ module.exports = {
   FrontendDomain,
   verifyEmailLink,
   mainUserId,
+  invoicesStatus,
+  balancesStatus,
+  paymentStatus,
+  paymentMethod,
 };

@@ -12,6 +12,12 @@ const { handleHttpError } = require('../utils/handleError');
 const { resOkData } = require('../utils/handleOkResponses');
 const Balances = require('../services/balances.service');
 const idGenerator = require('../utils/idGenerator');
+const {
+  invoicesStatus,
+  balancesStatus,
+  paymentStatus,
+  paymentMethod,
+} = require('../config/constants');
 
 const balances = new Balances();
 const createInvoiceCtrl = async (req, res) => {
@@ -22,8 +28,8 @@ const createInvoiceCtrl = async (req, res) => {
     client_id,
     date,
     invoice_details,
-    status = 'pending',
-    payment_method_id = 1,
+    status = invoicesStatus.pending,
+    payment_method_id = paymentMethod.cash,
   } = data;
   const user_id = req.session.user.id;
   try {
@@ -65,16 +71,16 @@ const createInvoiceCtrl = async (req, res) => {
       const balance = await balances.updateBalancebyInvoice(
         user_id,
         total * -1,
-        'completed',
+        balancesStatus.complete,
         createInvoice.id,
       );
       req.session.balance = balance;
 
-      if (status === 'paid') {
+      if (status === invoicesStatus.paid) {
         const transaction = await transactionsModel.create({
           id: idGenerator(12),
           amount: total,
-          status_id: 2,
+          status_id: paymentStatus.complete,
           payment_method_id,
           parent_user_id: user_id,
           client_id,
