@@ -43,12 +43,12 @@ const Clients = sequelize.define(
   },
   {
     defaultScope: {
-      attributes: { exclude: ['pin', 'token'] },
+      attributes: { exclude: ['pin'] },
     },
   },
 );
-Clients.addScope('withPinAndToken', {
-  attributes: { include: ['pin', 'token'] },
+Clients.addScope('withPin', {
+  attributes: { include: ['pin'] },
 });
 Clients.belongsTo(Users, {
   foreignKey: { name: 'user_id', allowNull: true },
