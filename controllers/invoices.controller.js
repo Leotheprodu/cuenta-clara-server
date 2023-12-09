@@ -7,6 +7,7 @@ const {
   clientsModel,
   payment_methodsModel,
   payment_statusModel,
+  products_and_servicesModel,
 } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 const { resOkData } = require('../utils/handleOkResponses');
@@ -154,14 +155,14 @@ const getInvoicesByClientCtrl = async (req, res) => {
         {
           model: invoice_detailsModel,
           attributes: {
-            exclude: [
-              'description',
-              'default',
-              'createdAt',
-              'updatedAt',
-              'invoiceId',
-            ],
+            exclude: ['default', 'createdAt', 'updatedAt', 'invoiceId'],
           },
+          include: [
+            {
+              model: products_and_servicesModel,
+              attributes: ['id', 'name'],
+            },
+          ],
         },
         {
           model: transactionsModel,

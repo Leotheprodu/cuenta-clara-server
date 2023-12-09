@@ -19,7 +19,7 @@ Balances.belongsTo(Clients, {
 Balances.belongsTo(Users_business, {
   foreignKey: { name: 'business_id', allowNull: false },
 });
-Clients.hasOne(Balances, { foreignKey: { name: 'client_id' } });
+Clients.hasMany(Balances, { foreignKey: { name: 'client_id' } });
 Users_business.hasMany(Balances, { foreignKey: { name: 'business_id' } });
 /* Balances.sync({ alter: true }); */
 module.exports = Balances;
