@@ -15,7 +15,7 @@ const validatorCreateInvoice = [
     .optional()
     .isInt()
     .withMessage('El campo payment_method_id debe ser un número entero.'),
-  check('client_id')
+  check('id')
     .exists()
     .isInt()
     .withMessage('El ID del cliente es requerido y debe ser un número entero.'),

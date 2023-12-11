@@ -27,9 +27,10 @@ router.get(
   getInvoicesByClientCtrl,
 );
 router.post(
-  '/create',
+  '/create/:id',
   isLoggedInTrue,
   validatorCreateInvoice,
+  checkClientOfUser,
   checkIfBalanceCoverInvoice,
   createInvoiceCtrl,
 );

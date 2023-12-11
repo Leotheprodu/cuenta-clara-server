@@ -1,4 +1,4 @@
-const { mainUserId } = require('../config/constants');
+const { BusinessConfigInfo } = require('../config/constants');
 const {
   clientsModel,
   balancesModel,
@@ -26,9 +26,8 @@ const RefreshSessionData = async (req) => {
       attributes: ['id', 'parent_user_id'],
     })) || null;
   const appClient = client.find(
-    (client) => client.parent_user_id === mainUserId,
+    (client) => client.parent_user_id === BusinessConfigInfo.userId,
   );
-  console.log(appClient);
   req.session.roles = await refreshUserRoles(id);
   const balance = req.session.roles.includes(1)
     ? 1000000

@@ -22,7 +22,7 @@ const createInvoiceCtrl = async (req, res) => {
   const {
     business_id,
     total,
-    client_id,
+    id,
     date,
     invoice_details,
     status = invoicesStatus.pending,
@@ -39,7 +39,7 @@ const createInvoiceCtrl = async (req, res) => {
       parent_user_id: user_id,
       business_id,
       date,
-      client_id,
+      client_id: id,
       total_amount: total,
       status,
     });
@@ -80,13 +80,24 @@ const createInvoiceCtrl = async (req, res) => {
           status_id: paymentStatus.complete,
           payment_method_id,
           parent_user_id: user_id,
-          client_id,
+          client_id: id,
           date,
           description: 'Pago realizado inmediatamente al crear factura',
         });
         await createInvoice.addTransaction(transaction);
       }
-      resOkData(res, { createInvoice, invoice_details, newBalance: balance });
+      if (invoicesStatus.pending) {
+        const clientBalance = await balances.getBalanceOfClient(
+          id,
+          business_id,
+        );
+        await balances.updateBalance(clientBalance, total * -1);
+      }
+      resOkData(res, {
+        createInvoice,
+        invoice_details,
+        newUserBalance: balance,
+      });
     }
   } catch (error) {
     console.error(error);

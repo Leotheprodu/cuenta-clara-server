@@ -1,6 +1,9 @@
 /* ----------------------------------Basic constants----------------------------------- */
 const appName = 'Billeo';
-const mainUserId = 9;
+const BusinessConfigInfo = {
+  userId: 9,
+  businessId: 1,
+};
 /* ----------------------------------Business logic constants----------------------------------- */
 /**
  * @description Initial balance for new users
@@ -83,7 +86,7 @@ module.exports = {
   emailPass,
   FrontendDomain,
   verifyEmailLink,
-  mainUserId,
+  BusinessConfigInfo,
   invoicesStatus,
   balancesStatus,
   paymentStatus,

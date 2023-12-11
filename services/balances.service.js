@@ -1,17 +1,33 @@
-const { mainUserId, billingPrice } = require('../config/constants');
+const { BusinessConfigInfo, billingPrice } = require('../config/constants');
 const {
   clientsModel,
   balancesModel,
   balance_rechargesModel,
 } = require('../models');
 class Balances {
-  async getBalance(user_id) {
+  async getBalanceOfUser(user_id) {
     try {
       const client = await clientsModel.findOne({
-        where: { user_id, parent_user_id: mainUserId },
+        where: { user_id, parent_user_id: BusinessConfigInfo.userId },
         include: [balancesModel],
       });
-      return client.balance;
+      return client.balances.find(
+        (balance) => balance.business_id === BusinessConfigInfo.businessId,
+      );
+    } catch (error) {
+      console.error(error);
+      throw new Error('Error al obtener balance');
+    }
+  }
+  async getBalanceOfClient(id, business_id) {
+    try {
+      const client = await clientsModel.findOne({
+        where: { id },
+        include: [balancesModel],
+      });
+      return client.balances.find(
+        (balance) => balance.business_id === business_id,
+      );
     } catch (error) {
       console.error(error);
       throw new Error('Error al obtener balance');
@@ -51,7 +67,7 @@ class Balances {
   async updateBalancebyInvoice(user_id, total, status, invoiceId) {
     try {
       const invoiceAmount = total * billingPrice;
-      const balance = await this.getBalance(user_id);
+      const balance = await this.getBalanceOfUser(user_id);
       await this.createBalanceRecharge(
         balance,
         invoiceAmount,
