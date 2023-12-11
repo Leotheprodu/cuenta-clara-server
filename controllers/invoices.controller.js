@@ -3,15 +3,11 @@ const {
   invoicesModel,
   invoice_detailsModel,
   transactionsModel,
-  users_businessModel,
-  clientsModel,
-  payment_methodsModel,
-  payment_statusModel,
-  products_and_servicesModel,
 } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 const { resOkData } = require('../utils/handleOkResponses');
 const Balances = require('../services/balances.service');
+const Invoices = require('../services/invoices.service');
 const idGenerator = require('../utils/idGenerator');
 const {
   invoicesStatus,
@@ -19,7 +15,7 @@ const {
   paymentStatus,
   paymentMethod,
 } = require('../config/constants');
-
+const invoices = new Invoices();
 const balances = new Balances();
 const createInvoiceCtrl = async (req, res) => {
   const data = matchedData(req);
@@ -129,72 +125,12 @@ const getInvoicesByClientCtrl = async (req, res) => {
   const { id } = matchedData(req);
   const user_id = req.session.user.id;
   try {
-    const invoices = await invoicesModel.findAll({
-      where: {
-        client_id: id,
-        parent_user_id: user_id,
-      },
-      attributes: {
-        exclude: [
-          'client_id',
-          'parent_user_id',
-          'createdAt',
-          'updatedAt',
-          'business_id',
-        ],
-      },
-      include: [
-        {
-          model: users_businessModel,
-          attributes: ['id', 'name'],
-        },
-        {
-          model: clientsModel,
-          attributes: ['id', 'username'],
-        },
-        {
-          model: invoice_detailsModel,
-          attributes: {
-            exclude: ['default', 'createdAt', 'updatedAt', 'invoiceId'],
-          },
-          include: [
-            {
-              model: products_and_servicesModel,
-              attributes: ['id', 'name'],
-            },
-          ],
-        },
-        {
-          model: transactionsModel,
-          through: { attributes: [] },
-          attributes: {
-            exclude: [
-              'parent_user_id',
-              'createdAt',
-              'updatedAt',
-              'client_id',
-              'payment_method_id',
-              'status_id',
-            ],
-          },
-          include: [
-            {
-              model: payment_methodsModel,
-              attributes: ['id', 'name'],
-            },
-            {
-              model: payment_statusModel,
-              attributes: ['id', 'name'],
-            },
-          ],
-        },
-      ],
-    });
-    if (!invoices) {
+    const result = await invoices.findInvoicesofUserByClient(id, user_id);
+    if (!result) {
       handleHttpError(res, 'Error al obtener facturas');
       return;
     } else {
-      resOkData(res, invoices);
+      resOkData(res, result);
     }
   } catch (error) {
     console.error(error);
