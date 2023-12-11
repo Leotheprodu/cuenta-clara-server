@@ -77,7 +77,7 @@ const createInvoiceCtrl = async (req, res) => {
         const transaction = await transactionsModel.create({
           id: idGenerator(12),
           amount: total,
-          status_id: paymentStatus.complete,
+          status_id: paymentStatus.completed,
           payment_method_id,
           parent_user_id: user_id,
           client_id: id,

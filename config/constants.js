@@ -49,12 +49,12 @@ const invoicesStatus = {
   inReview: 'inReview',
 };
 const balancesStatus = {
-  complete: 'complete',
+  completed: 'completed',
   pending: 'pending',
   cancelled: 'cancelled',
 };
 const paymentStatus = {
-  complete: 2,
+  completed: 2,
   pending: 1,
   cancelled: 3,
 };
