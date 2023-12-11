@@ -6,7 +6,7 @@ const {
 } = require('../validators/products_and_services');
 const {
   productsAndServicesByClientCtrl,
-} = require('../controllers/products_and_services');
+} = require('../controllers/products_and_services.controller');
 
 router.get(
   '/:business_id',
