@@ -68,7 +68,7 @@ const createInvoiceCtrl = async (req, res) => {
       const balance = await balances.updateBalancebyInvoice(
         user_id,
         total * -1,
-        balancesStatus.complete,
+        balancesStatus.completed,
         createInvoice.id,
       );
       req.session.balance = balance;
@@ -85,11 +85,16 @@ const createInvoiceCtrl = async (req, res) => {
           description: 'Pago realizado inmediatamente al crear factura',
         });
         await createInvoice.addTransaction(transaction);
-      }
-      if (invoicesStatus.pending) {
+      } else if (invoicesStatus.pending) {
         const clientBalance = await balances.getBalanceOfClient(
           id,
           business_id,
+        );
+        await balances.createBalanceRecharge(
+          clientBalance,
+          total * -1,
+          balancesStatus.completed,
+          createInvoice.id,
         );
         await balances.updateBalance(clientBalance, total * -1);
       }

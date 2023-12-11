@@ -2,7 +2,7 @@ const { BusinessConfigInfo, billingPrice } = require('../config/constants');
 const {
   clientsModel,
   balancesModel,
-  balance_rechargesModel,
+  balances_updatesModel,
 } = require('../models');
 class Balances {
   async getBalanceOfUser(user_id) {
@@ -35,7 +35,7 @@ class Balances {
   }
   async createBalanceRecharge(balance, amount, status, invoiceId = null) {
     try {
-      const newBalanceRecharge = await balance_rechargesModel.create({
+      const newBalanceRecharge = await balances_updatesModel.create({
         amount,
         balance_id: balance.id,
         client_id: balance.client_id,

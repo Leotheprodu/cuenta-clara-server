@@ -4,7 +4,7 @@ const Clients = require('./clients');
 const Balances = require('./balances');
 const Invoices = require('./invoices');
 
-const Balance_recharges = sequelize.define('balance_recharges', {
+const Balances_updates = sequelize.define('balances_updates', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -19,15 +19,15 @@ const Balance_recharges = sequelize.define('balance_recharges', {
     defaultValue: 'pending',
   },
 });
-Balance_recharges.belongsTo(Clients, {
+Balances_updates.belongsTo(Clients, {
   foreignKey: { name: 'client_id', allowNull: false },
 });
-Balance_recharges.belongsTo(Balances, {
+Balances_updates.belongsTo(Balances, {
   foreignKey: { name: 'balance_id', allowNull: false },
 });
-Balance_recharges.belongsTo(Invoices);
-Clients.hasMany(Balance_recharges, { foreignKey: { name: 'client_id' } });
-Balances.hasMany(Balance_recharges, { foreignKey: { name: 'balance_id' } });
-Invoices.hasOne(Balance_recharges);
-/* Balance_recharges.sync({ alter: true }); */
-module.exports = Balance_recharges;
+Balances_updates.belongsTo(Invoices);
+Clients.hasMany(Balances_updates, { foreignKey: { name: 'client_id' } });
+Balances.hasMany(Balances_updates, { foreignKey: { name: 'balance_id' } });
+Invoices.hasMany(Balances_updates);
+/* Balances_updates.sync({ alter: true }); */
+module.exports = Balances_updates;
