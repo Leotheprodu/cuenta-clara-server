@@ -47,6 +47,7 @@ const invoicesStatus = {
   pending: 'pending',
   cancelled: 'cancelled',
   inReview: 'inReview',
+  inProcess: 'inProcess',
 };
 const balancesStatus = {
   completed: 'completed',
