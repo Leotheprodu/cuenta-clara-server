@@ -109,6 +109,7 @@ const createInvoiceCtrl = async (req, res) => {
     handleHttpError(res, 'Error al crear factura');
   }
 };
+
 const getInvoicesOfUserCtrl = async (req, res) => {
   const user_id = req.session.user.id;
   const { status } = matchedData(req);
@@ -154,8 +155,38 @@ const getInvoicesByClientCtrl = async (req, res) => {
   }
 };
 
+const addTransactionCtrl = async (req, res) => {
+  const data = matchedData(req);
+  const { invoice_id } = data;
+  try {
+    const invoice = await invoicesModel.findByPk(invoice_id);
+    if (!invoice) {
+      handleHttpError(res, 'Error al obtener factura');
+      return;
+    }
+    const transaction = await transactionsModel.create({
+      id: idGenerator(12),
+      ...data,
+    });
+    /* 
+    [ ] Agregar condiciones para actualizar el balance del cliente
+    [ ] Ver la forma de traer el total de transacciones para revisar si se ha pagado la factura
+    [ ] Agregar condicion para actualizar el status de la factura
+    */
+
+    await invoice.addTransaction(transaction);
+    resOkData(res, {
+      data,
+    });
+  } catch (error) {
+    console.error(error);
+    handleHttpError(res, 'Error al crear transaccion');
+  }
+};
+
 module.exports = {
   createInvoiceCtrl,
   getInvoicesByClientCtrl,
   getInvoicesOfUserCtrl,
+  addTransactionCtrl,
 };

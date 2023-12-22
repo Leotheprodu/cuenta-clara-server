@@ -73,6 +73,46 @@ const validateInvoiceClientId = [
     .withMessage('El ID de la factura es requerido y debe ser un número.'),
   (req, res, next) => validateResults(req, res, next),
 ];
+const validatorAddTransaction = [
+  check('id')
+    .exists()
+    .isInt()
+    .withMessage('El ID del cliente es requerido y debe ser un número.'),
+  check('date')
+    .exists()
+    .isString()
+    .notEmpty()
+    .withMessage('La fecha es requerida y debe ser un string.'),
+  check('description')
+    .isString()
+    .notEmpty()
+    .withMessage('La descripción debe ser un string.'),
+  check('amount')
+    .isNumeric()
+    .notEmpty()
+    .withMessage('El amount es requerido y debe ser un número.'),
+  check('parent_user_id')
+    .isNumeric()
+    .notEmpty()
+    .withMessage('El parent_user_id es requerido y debe ser un número.'),
+  check('client_id')
+    .isNumeric()
+    .notEmpty()
+    .withMessage('El client_id es requerido y debe ser un número.'),
+  check('payment_method_id')
+    .isNumeric()
+    .notEmpty()
+    .withMessage('El payment_method_id es requerido y debe ser un número.'),
+  check('invoice_id')
+    .isNumeric()
+    .notEmpty()
+    .withMessage('El invoice_id es requerido y debe ser un número.'),
+  check('status_id')
+    .isNumeric()
+    .notEmpty()
+    .withMessage('El status_id es requerido y debe ser un número.'),
+  (req, res, next) => validateResults(req, res, next),
+];
 const validateQueryInvoicesOfUser = [
   check('status')
     .optional()
@@ -84,4 +124,5 @@ module.exports = {
   validatorCreateInvoice,
   validateInvoiceClientId,
   validateQueryInvoicesOfUser,
+  validatorAddTransaction,
 };

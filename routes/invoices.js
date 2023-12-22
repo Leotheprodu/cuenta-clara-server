@@ -5,11 +5,13 @@ const {
   createInvoiceCtrl,
   getInvoicesByClientCtrl,
   getInvoicesOfUserCtrl,
+  addTransactionCtrl,
 } = require('../controllers/invoices.controller');
 const {
   validatorCreateInvoice,
   validateInvoiceClientId,
   validateQueryInvoicesOfUser,
+  validatorAddTransaction,
 } = require('../validators/invoices');
 const checkClientOfUser = require('../middleware/checkClientOfUser');
 const checkIfBalanceCoverInvoice = require('../middleware/checkIfBalanceCoverInvoice');
@@ -33,6 +35,13 @@ router.post(
   checkClientOfUser,
   checkIfBalanceCoverInvoice,
   createInvoiceCtrl,
+);
+router.post(
+  '/add-transaction/:id',
+  isLoggedInTrue,
+  validatorAddTransaction,
+  checkClientOfUser,
+  addTransactionCtrl,
 );
 
 module.exports = router;
