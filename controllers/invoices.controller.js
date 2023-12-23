@@ -157,24 +157,48 @@ const getInvoicesByClientCtrl = async (req, res) => {
 
 const addTransactionCtrl = async (req, res) => {
   const data = matchedData(req);
-  const { invoice_id } = data;
   try {
-    const invoice = await invoicesModel.findByPk(invoice_id);
+    const invoice = await invoices.findInvoice(data.invoice_id);
     if (!invoice) {
       handleHttpError(res, 'Error al obtener factura');
       return;
     }
+    const balanceInvoice =
+      invoice.total_amount -
+      invoice.transactions.reduce((acc, transaction) => {
+        return acc + parseFloat(transaction.amount);
+      }, 0);
+    if (balanceInvoice <= 0) {
+      handleHttpError(res, 'La factura ya ha sido pagada');
+      return;
+    }
+    if (data.amount > balanceInvoice) {
+      handleHttpError(res, 'El monto de la transaccion es mayor al saldo');
+      return;
+    }
+    //actualiza el status de la factura
+    if (balanceInvoice === data.amount) {
+      await invoice.update({ status: invoicesStatus.paid });
+    } else if (balanceInvoice > data.amount) {
+      await invoice.update({ status: invoicesStatus.inProcess });
+    }
+    const clientBalance = await balances.getBalanceOfClient(
+      data.client_id,
+      invoice.users_business.id,
+    );
+    await balances.createBalanceRecharge(
+      clientBalance,
+      data.amount,
+      balancesStatus.completed,
+      invoice.id,
+    );
+    await balances.updateBalance(clientBalance, data.amount);
     const transaction = await transactionsModel.create({
-      id: idGenerator(12),
       ...data,
+      id: idGenerator(12),
     });
-    /* 
-    [ ] Agregar condiciones para actualizar el balance del cliente
-    [ ] Ver la forma de traer el total de transacciones para revisar si se ha pagado la factura
-    [ ] Agregar condicion para actualizar el status de la factura
-    */
-
     await invoice.addTransaction(transaction);
+
     resOkData(res, {
       data,
     });

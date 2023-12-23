@@ -51,7 +51,7 @@ class Balances {
 
   async updateBalance(balance, amount) {
     try {
-      const newBalance = balance.amount * 1 + amount;
+      const newBalance = balance.amount * 1 + amount * 1;
 
       await balancesModel.update(
         { amount: newBalance },
