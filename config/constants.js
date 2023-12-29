@@ -13,7 +13,7 @@ const initialBalance = process.env.INITIAL_BALANCE;
  * @description Billing price.
  * 3% of the invoice amount
  *  */
-const billingPrice = 0.03;
+const billingPrice = 0.04;
 
 /* ------------------------------------ Email -------------------------------------------- */
 const emailPort = 587;

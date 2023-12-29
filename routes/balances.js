@@ -3,6 +3,8 @@ const router = express.Router();
 const {
   balanceByClientCtrl,
   ClientBalancesCtrl,
+  getBalancesTypesCtrl,
+  getBalanceTypeCtrl,
 } = require('../controllers/balances.controller');
 const { isLoggedInTrue } = require('../middleware/isLoggedIn');
 const { validatorGetBalanceByClient } = require('../validators/balances');
@@ -16,5 +18,11 @@ router.get(
   balanceByClientCtrl,
 );
 router.get('/', isLoggedInTrue, ClientBalancesCtrl);
+router.get('/types/balance', getBalancesTypesCtrl);
+router.get(
+  '/types/balance/:id',
+  validatorGetBalanceByClient,
+  getBalanceTypeCtrl,
+);
 
 module.exports = router;
