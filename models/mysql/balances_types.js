@@ -22,5 +22,5 @@ const Balances_types = sequelize.define('balances_types', {
   },
 });
 
-Balances_types.sync({ alter: true });
+/* Balances_types.sync({ alter: true }); */
 module.exports = Balances_types;
