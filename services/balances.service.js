@@ -39,7 +39,6 @@ class Balances {
         amount,
         balance_id: balance.id,
         client_id: balance.client_id,
-        status,
         invoiceId,
       });
       return newBalanceRecharge;

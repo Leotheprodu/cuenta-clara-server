@@ -13,11 +13,6 @@ const Balances_updates = sequelize.define('balances_updates', {
   amount: {
     type: DataTypes.DECIMAL(10, 2),
   },
-  status: {
-    type: DataTypes.STRING(20),
-    allowNull: false,
-    defaultValue: 'pending',
-  },
 });
 Balances_updates.belongsTo(Clients, {
   foreignKey: { name: 'client_id', allowNull: false },

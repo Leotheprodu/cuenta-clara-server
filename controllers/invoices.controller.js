@@ -68,7 +68,6 @@ const createInvoiceCtrl = async (req, res) => {
       const balance = await balances.updateBalancebyInvoice(
         user_id,
         total * -1,
-        balancesStatus.completed,
         createInvoice.id,
       );
       req.session.balance = balance;
@@ -93,7 +92,6 @@ const createInvoiceCtrl = async (req, res) => {
         await balances.createBalanceRecharge(
           clientBalance,
           total * -1,
-          balancesStatus.completed,
           createInvoice.id,
         );
         await balances.updateBalance(clientBalance, total * -1);
