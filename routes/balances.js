@@ -5,9 +5,13 @@ const {
   ClientBalancesCtrl,
   getBalancesTypesCtrl,
   getBalanceTypeCtrl,
+  rechargeBalancesCtrl,
 } = require('../controllers/balances.controller');
 const { isLoggedInTrue } = require('../middleware/isLoggedIn');
-const { validatorGetBalanceByClient } = require('../validators/balances');
+const {
+  validatorGetBalanceByClient,
+  validatorRechargeBalance,
+} = require('../validators/balances');
 const checkClientOfUser = require('../middleware/checkClientOfUser');
 
 router.get(
@@ -24,5 +28,10 @@ router.get(
   validatorGetBalanceByClient,
   getBalanceTypeCtrl,
 );
-
+router.post(
+  '/recharge',
+  isLoggedInTrue,
+  validatorRechargeBalance,
+  rechargeBalancesCtrl,
+);
 module.exports = router;

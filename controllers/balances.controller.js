@@ -1,7 +1,11 @@
 //balanceByClientCtrl
 
 const { matchedData } = require('express-validator');
-const { balancesModel, balances_typesModel } = require('../models');
+const {
+  balancesModel,
+  balances_typesModel,
+  balances_rechargesModel,
+} = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 const { resOkData } = require('../utils/handleOkResponses');
 
@@ -16,6 +20,20 @@ const balanceByClientCtrl = async (req, res) => {
   } catch (error) {
     console.error(error);
     handleHttpError(res, 'Error al intentar mostrar el balance del cliente');
+  }
+};
+const rechargeBalancesCtrl = async (req, res) => {
+  const data = matchedData(req);
+  try {
+    const balance = await balances_rechargesModel.create(data);
+    //TODO hacer que envie tambien correos al cliente y a mi cada vez que haya una nueva recarga
+    resOkData(res, balance);
+  } catch (error) {
+    console.error(error);
+    handleHttpError(
+      res,
+      'Error al intentar crear recarga de balance del cliente',
+    );
   }
 };
 const getBalanceTypeCtrl = async (req, res) => {
@@ -57,4 +75,5 @@ module.exports = {
   ClientBalancesCtrl,
   getBalancesTypesCtrl,
   getBalanceTypeCtrl,
+  rechargeBalancesCtrl,
 };
