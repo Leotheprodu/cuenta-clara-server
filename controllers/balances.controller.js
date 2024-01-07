@@ -11,7 +11,12 @@ const {
 } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 const { resOkData } = require('../utils/handleOkResponses');
-const { BusinessConfigInfo } = require('../config/constants');
+const {
+  BusinessConfigInfo,
+  appName,
+  emailUser,
+} = require('../config/constants');
+const { sendAEmail } = require('../utils/handleSendEmail');
 
 const balanceByClientCtrl = async (req, res) => {
   const { id } = matchedData(req);
@@ -30,7 +35,31 @@ const rechargeBalancesCtrl = async (req, res) => {
   const data = matchedData(req);
   try {
     const balance = await balances_rechargesModel.create(data);
-    //TODO hacer que envie tambien correos al cliente y a mi cada vez que haya una nueva recarga
+    const from = {
+      name: `${appName}`,
+      email: `${emailUser}`,
+    };
+    const dataToEJS = {
+      status: 'pendiente',
+      amount: balance.amount,
+      client: req.session.user.username,
+      textoStatus:
+        'Dentro de poco vamos a procesarla y te notificaremos por este medio.',
+    };
+    await sendAEmail(
+      'balance-recharge-user',
+      dataToEJS,
+      from,
+      req.session.user.email,
+      `Nueva Recarga en ${appName}`,
+    );
+    await sendAEmail(
+      'balance-recharge-user',
+      { ...dataToEJS, textoStatus: 'nueva recarga del usuario, para aplicar' },
+      from,
+      'leovpc@gmail.com',
+      `Nueva Recarga de ${req.session.user.username}`,
+    );
     resOkData(res, balance);
   } catch (error) {
     console.error(error);
@@ -54,9 +83,28 @@ const applyBalanceRechargeCtrl = async (req, res) => {
         business_id: BusinessConfigInfo.businessId,
       },
     });
-    await balance.update({
+    const updatedBalance = await balance.update({
       amount: balance.amount * 1 + balanceRecharge.balance_amount * 1,
     });
+    const client = await clientsModel.findByPk(balanceRecharge.client_id);
+    const from = {
+      name: `${appName}`,
+      email: `${emailUser}`,
+    };
+    const dataToEJS = {
+      status: 'completada',
+      amount: balanceRecharge.amount,
+      client: client.username,
+      textoStatus: `Hemos aplicado el saldo a tu cuenta ahora tienes ${updatedBalance.amount} de saldo, ya puedes continuar usando la app.`,
+    };
+    await sendAEmail(
+      'balance-recharge-user',
+      dataToEJS,
+      from,
+      client.email,
+      `Recarga Procesada`,
+    );
+
     resOkData(res, { status: 'completed', balance: balance.amount });
   } catch (error) {
     console.error(error);
@@ -126,7 +174,6 @@ const balancesRechargesCtrl = async (req, res) => {
         },
       ],
     });
-    console.log(balance.id);
     resOkData(res, recharges);
   } catch (error) {
     console.error(error);
