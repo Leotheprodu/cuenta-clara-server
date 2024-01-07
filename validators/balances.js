@@ -9,6 +9,7 @@ const validatorGetBalanceByClient = [
 const validatorRechargeBalance = [
   check('client_id').exists().isNumeric().notEmpty(),
   check('amount').exists().isNumeric().notEmpty(),
+  check('balance_amount').exists().isNumeric().notEmpty(),
   check('balance_id').exists().isNumeric().notEmpty(),
   check('user_payment_methods_id').exists().isNumeric().notEmpty(),
   check('balances_types_id').exists().isNumeric().notEmpty(),

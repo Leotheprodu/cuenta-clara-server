@@ -26,7 +26,7 @@ const createInvoiceCtrl = async (req, res) => {
     date,
     invoice_details,
     status = invoicesStatus.pending,
-    payment_method_id = paymentMethod.cash,
+    payment_method_id = paymentMethod.cash.id,
   } = data;
   const user_id = req.session.user.id;
   try {

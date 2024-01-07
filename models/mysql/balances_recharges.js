@@ -14,6 +14,9 @@ const Balances_recharges = sequelize.define('balances_recharges', {
   amount: {
     type: DataTypes.DECIMAL(10, 2),
   },
+  balance_amount: {
+    type: DataTypes.DECIMAL(10, 2),
+  },
   status: {
     type: DataTypes.STRING(20),
     defaultValue: 'pending',
@@ -23,7 +26,7 @@ Balances_recharges.belongsTo(Clients, {
   foreignKey: { name: 'client_id', allowNull: false },
 });
 Balances_recharges.belongsTo(Balances, {
-  foreignKey: { name: 'balance_id', allowNull: true },
+  foreignKey: { name: 'balance_id', allowNull: false },
 });
 Balances_recharges.belongsTo(User_payment_methods, {
   foreignKey: { name: 'user_payment_methods_id', allowNull: false },

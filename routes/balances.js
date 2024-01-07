@@ -6,6 +6,9 @@ const {
   getBalancesTypesCtrl,
   getBalanceTypeCtrl,
   rechargeBalancesCtrl,
+  balancesRechargesCtrl,
+  applyBalanceRechargeCtrl,
+  cancelBalanceRechargeCtrl,
 } = require('../controllers/balances.controller');
 const { isLoggedInTrue } = require('../middleware/isLoggedIn');
 const {
@@ -13,6 +16,7 @@ const {
   validatorRechargeBalance,
 } = require('../validators/balances');
 const checkClientOfUser = require('../middleware/checkClientOfUser');
+const { isAdmin } = require('../middleware/isAdmin');
 
 router.get(
   '/:id',
@@ -27,6 +31,26 @@ router.get(
   '/types/balance/:id',
   validatorGetBalanceByClient,
   getBalanceTypeCtrl,
+);
+router.get(
+  '/recharges/:id',
+  isLoggedInTrue,
+  validatorGetBalanceByClient,
+  balancesRechargesCtrl,
+);
+router.patch(
+  '/recharges/ok/:id',
+  isLoggedInTrue,
+  isAdmin,
+  validatorGetBalanceByClient,
+  applyBalanceRechargeCtrl,
+);
+router.patch(
+  '/recharges/cancel/:id',
+  isLoggedInTrue,
+  isAdmin,
+  validatorGetBalanceByClient,
+  cancelBalanceRechargeCtrl,
 );
 router.post(
   '/recharge',

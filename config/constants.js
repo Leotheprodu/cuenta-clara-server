@@ -41,6 +41,24 @@ const FrontendDomain = process.env.FRONTEND_DOMAIN;
 const verifyEmailLink = `${FrontendDomain}sesion/verificar-email/`;
 
 /* ------------------------------------ Dictionaries --------------------------------------------------*/
+const typeOfRoles = {
+  admin: {
+    id: 1,
+    name: 'admin',
+  },
+  verified: {
+    id: 2,
+    name: 'verified',
+  },
+  unverified: {
+    id: 3,
+    name: 'unverified',
+  },
+  vip: {
+    id: 4,
+    name: 'vip',
+  },
+};
 
 const invoicesStatus = {
   paid: 'paid',
@@ -60,11 +78,26 @@ const paymentStatus = {
   cancelled: 3,
 };
 const paymentMethod = {
-  cash: 1,
-  sinpeMovil: 2,
-  bankTransfer: 3,
-  paypal: 4,
-  creditCard: 5,
+  cash: {
+    id: 1,
+    name: 'Efectivo',
+  },
+  sinpeMovil: {
+    id: 2,
+    name: 'Sinpe Movil',
+  },
+  bankTransfer: {
+    id: 3,
+    name: 'Deposito Bancario',
+  },
+  paypal: {
+    id: 4,
+    name: 'Paypal',
+  },
+  creditCard: {
+    id: 5,
+    name: 'Tarjeta de Credito',
+  },
 };
 
 module.exports = {
@@ -92,4 +125,5 @@ module.exports = {
   balancesStatus,
   paymentStatus,
   paymentMethod,
+  typeOfRoles,
 };
