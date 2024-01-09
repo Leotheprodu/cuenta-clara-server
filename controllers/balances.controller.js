@@ -173,6 +173,7 @@ const balancesRechargesCtrl = async (req, res) => {
           ],
         },
       ],
+      order: [['id', 'DESC']],
     });
     resOkData(res, recharges);
   } catch (error) {
