@@ -1,5 +1,5 @@
 /* ----------------------------------Basic constants----------------------------------- */
-const appName = 'Billeo';
+const appName = 'Yehu';
 const BusinessConfigInfo = {
   userId: 9,
   businessId: 1,

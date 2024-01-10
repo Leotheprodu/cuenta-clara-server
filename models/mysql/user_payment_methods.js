@@ -1,6 +1,5 @@
 const { sequelize } = require('../../config/mysql');
 const { DataTypes } = require('sequelize');
-const Users = require('./users');
 const Payment_methods = require('./payment_methods');
 const Users_business = require('./users_business');
 
@@ -31,16 +30,12 @@ const User_payment_methods = sequelize.define('user_payment_methods', {
     allowNull: true,
   },
 });
-User_payment_methods.belongsTo(Users, {
-  foreignKey: { name: 'user_id', allowNull: false },
-});
 User_payment_methods.belongsTo(Payment_methods, {
   foreignKey: { name: 'payment_method_id', allowNull: false },
 });
 User_payment_methods.belongsTo(Users_business, {
   foreignKey: { name: 'business_id', allowNull: false },
 });
-Users.hasMany(User_payment_methods, { foreignKey: { name: 'user_id' } });
 Payment_methods.hasMany(User_payment_methods, {
   foreignKey: { name: 'payment_method_id' },
 });

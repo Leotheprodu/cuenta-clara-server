@@ -7,6 +7,7 @@ const {
   users_businessModel,
   balancesModel,
   products_and_servicesModel,
+  user_payment_methodsModel,
 } = require('../models');
 const Users = require('../services/users.service');
 const { handleHttpError } = require('../utils/handleError');
@@ -23,6 +24,7 @@ const {
   appName,
   emailUser,
   verifyEmailLink,
+  paymentMethod,
 } = require('../config/constants');
 const userBusinessChecker = require('../utils/userBusinessChecker');
 const { cookieSessionInject } = require('../utils/handleCookie');
@@ -150,7 +152,13 @@ const signUpCtrl = async (req, res) => {
       business_id: 1,
       amount: initialBalance,
     });
-    //Respuesta
+    await user_payment_methodsModel.create({
+      payment_method_id: paymentMethod.cash.id,
+      business_id: newUserBusiness.id,
+      payment_method_cellphone: client.cellphone || null,
+      payment_method_email: client.email,
+      payment_method_description: ' pago en efectivo',
+    });
     resOkData(res, data);
   } catch (error) {
     console.error(error);

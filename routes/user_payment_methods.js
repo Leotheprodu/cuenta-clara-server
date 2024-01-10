@@ -6,13 +6,24 @@ const {
 } = require('../validators/products_and_services');
 const {
   paymentMethodsCtrl,
+  createPaymentMethodsCtrl,
 } = require('../controllers/user_payment_methods.controller');
+const {
+  validatorCreateUserPaymentMethods,
+} = require('../validators/user_payment_methods');
+const checkBusinessOfUser = require('../middleware/checkBusinessOfUser');
 
 router.get(
   '/:business_id',
-  isLoggedInTrue,
   validatorGetProductsAndServicesByClient,
   paymentMethodsCtrl,
+);
+router.post(
+  '/:id',
+  isLoggedInTrue,
+  validatorCreateUserPaymentMethods,
+  checkBusinessOfUser,
+  createPaymentMethodsCtrl,
 );
 
 module.exports = router;
