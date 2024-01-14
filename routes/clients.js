@@ -6,6 +6,7 @@ const {
   deactivateClientsCtrl,
   updateClientsCtrl,
   clientCtrl,
+  dashboardClientCtrl,
 } = require('../controllers/clients.controller');
 const {
   validatorCreateClients,
@@ -13,6 +14,7 @@ const {
   validatorQueryClients,
   validatorUpdateClients,
   validatorGetClient,
+  validatorDashboardClient,
 } = require('../validators/clients');
 const { isLoggedInTrue } = require('../middleware/isLoggedIn');
 const checkClientOfUser = require('../middleware/checkClientOfUser');
@@ -33,6 +35,11 @@ router.get(
   validatorDeactivateClient,
   checkClientOfUser,
   deactivateClientsCtrl,
+);
+router.get(
+  '/dashboardInfo/:token',
+  validatorDashboardClient,
+  dashboardClientCtrl,
 );
 
 module.exports = router;

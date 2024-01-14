@@ -3,6 +3,8 @@ const {
   clientsModel,
   balancesModel,
   users_businessModel,
+  user_payment_methodsModel,
+  payment_methodsModel,
 } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 const { resOkData } = require('../utils/handleOkResponses');
@@ -47,23 +49,67 @@ const clientsCtrl = async (req, res) => {
 const clientCtrl = async (req, res) => {
   const { id } = matchedData(req);
   try {
-    const clientsData = await clientsModel.findOne(
-      {
-        where: { parent_user_id: req.session.user.id, id },
-      },
-      {
-        include: [
-          {
-            model: balancesModel,
-            attributes: ['id', 'amount'],
-          },
-        ],
-      },
-    );
+    const clientsData = await clientsModel.findOne({
+      where: { parent_user_id: req.session.user.id, id },
+    });
     resOkData(res, clientsData);
   } catch (error) {
     console.error(error);
     handleHttpError(res, 'Error al intentar mostrar el cliente');
+  }
+};
+const dashboardClientCtrl = async (req, res) => {
+  const { token } = matchedData(req);
+  try {
+    const clientData = await clientsModel.scope('withPin').findOne({
+      where: { token },
+      attributes: {
+        exclude: [
+          'parent_user_id',
+          'createdAt',
+          'updatedAt',
+          'detail',
+          'token',
+        ],
+      },
+    });
+    const { pin, ...client } = clientData.dataValues;
+
+    const balances = await balancesModel.findAll({
+      where: { client_id: clientData.id },
+      attributes: {
+        exclude: ['client_id', 'business_id', 'createdAt', 'updatedAt'],
+      },
+      include: [
+        {
+          model: users_businessModel,
+          attributes: ['id', 'name'],
+          include: [
+            {
+              model: user_payment_methodsModel,
+              attributes: {
+                exclude: [
+                  'payment_method_id',
+                  'business_id',
+                  'createdAt',
+                  'updatedAt',
+                ],
+              },
+              include: [
+                {
+                  model: payment_methodsModel,
+                  attributes: ['id', 'name'],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+    resOkData(res, { client, balances });
+  } catch (error) {
+    console.error(error);
+    handleHttpError(res, 'Error al intentar mostrar datos del cliente');
   }
 };
 const createClientsCtrl = async (req, res) => {
@@ -179,4 +225,5 @@ module.exports = {
   deactivateClientsCtrl,
   updateClientsCtrl,
   clientCtrl,
+  dashboardClientCtrl,
 };
