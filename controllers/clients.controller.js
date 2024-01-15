@@ -59,7 +59,7 @@ const clientCtrl = async (req, res) => {
   }
 };
 const dashboardClientCtrl = async (req, res) => {
-  const { token } = matchedData(req);
+  const { token, pin: pinData } = matchedData(req);
   try {
     const clientData = await clientsModel.scope('withPin').findOne({
       where: { token },
@@ -73,8 +73,13 @@ const dashboardClientCtrl = async (req, res) => {
         ],
       },
     });
-    const { pin, ...client } = clientData.dataValues;
 
+    const { pin, ...client } = clientData.dataValues;
+    if (!pin) {
+      clientData.update({ pin: pinData });
+      handleHttpError(res, 'New PIN');
+      return;
+    }
     const balances = await balancesModel.findAll({
       where: { client_id: clientData.id },
       attributes: {

@@ -87,6 +87,7 @@ const validatorGetClient = [
 ];
 const validatorDashboardClient = [
   check('token').exists().notEmpty(),
+  check('pin').exists().notEmpty(),
   (req, res, next) => validateResults(req, res, next),
 ];
 

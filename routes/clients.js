@@ -18,6 +18,7 @@ const {
 } = require('../validators/clients');
 const { isLoggedInTrue } = require('../middleware/isLoggedIn');
 const checkClientOfUser = require('../middleware/checkClientOfUser');
+const { checkPin } = require('../middleware/checkPin');
 
 router.get('/', isLoggedInTrue, validatorQueryClients, clientsCtrl);
 router.get(
@@ -36,8 +37,9 @@ router.get(
   checkClientOfUser,
   deactivateClientsCtrl,
 );
-router.get(
+router.post(
   '/dashboardInfo/:token',
+  checkPin,
   validatorDashboardClient,
   dashboardClientCtrl,
 );
