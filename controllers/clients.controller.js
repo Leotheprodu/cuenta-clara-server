@@ -79,6 +79,9 @@ const dashboardClientCtrl = async (req, res) => {
       clientData.update({ pin: pinData });
       handleHttpError(res, 'New PIN');
       return;
+    } else if (pin !== pinData) {
+      handleHttpError(res, 'Invalid PIN');
+      return;
     }
     const balances = await balancesModel.findAll({
       where: { client_id: clientData.id },
