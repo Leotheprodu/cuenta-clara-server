@@ -3,6 +3,7 @@ const {
   invoicesModel,
   invoice_detailsModel,
   transactionsModel,
+  clientsModel,
 } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 const { resOkData } = require('../utils/handleOkResponses');
@@ -109,7 +110,7 @@ const createInvoiceCtrl = async (req, res) => {
   }
 };
 
-const getInvoicesOfUserCtrl = async (req, res) => {
+/* const getInvoicesOfUserCtrl = async (req, res) => {
   const user_id = req.session.user.id;
   const { status } = matchedData(req);
   const whereClause = {
@@ -135,13 +136,37 @@ const getInvoicesOfUserCtrl = async (req, res) => {
     console.error(error);
     handleHttpError(res, 'Error al obtener facturas');
   }
-};
+}; */
 
 const getInvoicesByClientCtrl = async (req, res) => {
   const { id } = matchedData(req);
   const user_id = req.session.user.id;
   try {
     const result = await invoices.findInvoicesofUserByClient(id, user_id);
+    if (!result) {
+      handleHttpError(res, 'Error al obtener facturas');
+      return;
+    } else {
+      resOkData(res, result);
+    }
+  } catch (error) {
+    console.error(error);
+    handleHttpError(res, 'Error al obtener facturas');
+  }
+};
+const getInvoicesByTokenCtrl = async (req, res) => {
+  const { token, pin: pinData } = matchedData(req);
+  try {
+    const clientData = await clientsModel.scope('withPin').findOne({
+      where: { token },
+      attributes: ['id', 'parent_user_id', 'pin'],
+    });
+    const { id, pin, parent_user_id } = clientData.dataValues;
+    if (pin !== pinData) {
+      handleHttpError(res, 'Invalid PIN');
+      return;
+    }
+    const result = await invoices.findInvoicesofUserByToken(id, parent_user_id);
     if (!result) {
       handleHttpError(res, 'Error al obtener facturas');
       return;
@@ -245,7 +270,8 @@ const addTransactionCtrl = async (req, res) => {
 module.exports = {
   createInvoiceCtrl,
   getInvoicesByClientCtrl,
-  getInvoicesOfUserCtrl,
+  /* getInvoicesOfUserCtrl, */
   addTransactionCtrl,
   deleteInvoicesByClientCtrl,
+  getInvoicesByTokenCtrl,
 };

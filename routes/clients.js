@@ -38,7 +38,7 @@ router.get(
   deactivateClientsCtrl,
 );
 router.post(
-  '/dashboardInfo/:token',
+  '/dashboard-info/:token',
   checkPin,
   validatorDashboardClient,
   dashboardClientCtrl,

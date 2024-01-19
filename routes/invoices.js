@@ -4,24 +4,27 @@ const { isLoggedInTrue } = require('../middleware/isLoggedIn');
 const {
   createInvoiceCtrl,
   getInvoicesByClientCtrl,
-  getInvoicesOfUserCtrl,
+  /*   getInvoicesOfUserCtrl, */
   addTransactionCtrl,
   deleteInvoicesByClientCtrl,
+  getInvoicesByTokenCtrl,
 } = require('../controllers/invoices.controller');
 const {
   validatorCreateInvoice,
   validateInvoiceClientId,
-  validateQueryInvoicesOfUser,
+  /*  validateQueryInvoicesOfUser, */
   validatorAddTransaction,
 } = require('../validators/invoices');
 const checkClientOfUser = require('../middleware/checkClientOfUser');
 const checkIfBalanceCoverInvoice = require('../middleware/checkIfBalanceCoverInvoice');
-router.get(
+const { checkPin } = require('../middleware/checkPin');
+const { validatorDashboardClient } = require('../validators/clients');
+/* router.get(
   '/',
   isLoggedInTrue,
   validateQueryInvoicesOfUser,
   getInvoicesOfUserCtrl,
-);
+); */
 router.get(
   '/:id',
   isLoggedInTrue,
@@ -50,5 +53,10 @@ router.post(
   checkClientOfUser,
   addTransactionCtrl,
 );
-
+router.post(
+  '/dashboard-info/:token',
+  checkPin,
+  validatorDashboardClient,
+  getInvoicesByTokenCtrl,
+);
 module.exports = router;
