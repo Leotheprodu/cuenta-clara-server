@@ -11,10 +11,10 @@ const Invoices = require('../services/invoices.service');
 const idGenerator = require('../utils/idGenerator');
 const {
   invoicesStatus,
-  balancesStatus,
   paymentStatus,
   paymentMethod,
 } = require('../config/constants');
+const dateNow = require('../utils/handleDate');
 const invoices = new Invoices();
 const balances = new Balances();
 const createInvoiceCtrl = async (req, res) => {
@@ -89,11 +89,12 @@ const createInvoiceCtrl = async (req, res) => {
           id,
           business_id,
         );
-        await balances.createBalanceRecharge(
+        await balances.createBalanceUpdate(
           clientBalance,
           total * -1,
           createInvoice.id,
         );
+        console.log(createInvoice);
         await balances.updateBalance(clientBalance, total * -1);
       }
       resOkData(res, {
@@ -152,6 +153,46 @@ const getInvoicesByClientCtrl = async (req, res) => {
     handleHttpError(res, 'Error al obtener facturas');
   }
 };
+const deleteInvoicesByClientCtrl = async (req, res) => {
+  const { id } = matchedData(req);
+  const user_id = req.session.user.id;
+  try {
+    const result = await invoicesModel.findOne({
+      where: { id },
+    });
+
+    if (!result.parent_user_id === user_id) {
+      handleHttpError(res, 'La Factura no le pertenece al usuario');
+      return;
+    }
+    if (result.status !== invoicesStatus.pending) {
+      handleHttpError(res, 'La Factura no se puede eliminar');
+      return;
+    }
+    if (result.date !== dateNow()) {
+      handleHttpError(
+        res,
+        'Solo se puede eliminar si la factura es del dia de hoy',
+      );
+      return;
+    }
+    const clientBalance = await balances.getBalanceOfClient(
+      result.client_id,
+      result.business_id,
+    );
+    await balances.createBalanceUpdate(
+      clientBalance,
+      result.total_amount,
+      result.id,
+    );
+    await balances.updateBalance(clientBalance, result.total_amount);
+    await result.update({ status: invoicesStatus.cancelled });
+    resOkData(res, { status: invoicesStatus.cancelled });
+  } catch (error) {
+    console.error(error);
+    handleHttpError(res, 'Error al obtener facturas');
+  }
+};
 
 const addTransactionCtrl = async (req, res) => {
   const data = matchedData(req);
@@ -184,12 +225,7 @@ const addTransactionCtrl = async (req, res) => {
       data.client_id,
       invoice.users_business.id,
     );
-    await balances.createBalanceRecharge(
-      clientBalance,
-      data.amount,
-      balancesStatus.completed,
-      invoice.id,
-    );
+    await balances.createBalanceUpdate(clientBalance, data.amount, invoice.id);
     await balances.updateBalance(clientBalance, data.amount);
     const transaction = await transactionsModel.create({
       ...data,
@@ -211,4 +247,5 @@ module.exports = {
   getInvoicesByClientCtrl,
   getInvoicesOfUserCtrl,
   addTransactionCtrl,
+  deleteInvoicesByClientCtrl,
 };

@@ -33,15 +33,15 @@ class Balances {
       throw new Error('Error al obtener balance');
     }
   }
-  async createBalanceRecharge(balance, amount, status, invoiceId = null) {
+  async createBalanceUpdate(balance, amount, invoiceId = null) {
     try {
-      const newBalanceRecharge = await balances_updatesModel.create({
+      const newBalanceUpdate = await balances_updatesModel.create({
         amount,
         balance_id: balance.id,
         client_id: balance.client_id,
         invoiceId,
       });
-      return newBalanceRecharge;
+      return newBalanceUpdate;
     } catch (error) {
       console.error(error);
       throw new Error('Error al crear recarga de balance');
@@ -63,16 +63,11 @@ class Balances {
     }
   }
 
-  async updateBalancebyInvoice(user_id, total, status, invoiceId) {
+  async updateBalancebyInvoice(user_id, total, invoiceId) {
     try {
       const invoiceAmount = total * billingPrice;
       const balance = await this.getBalanceOfUser(user_id);
-      await this.createBalanceRecharge(
-        balance,
-        invoiceAmount,
-        status,
-        invoiceId,
-      );
+      await this.createBalanceUpdate(balance, invoiceAmount, invoiceId);
 
       const newBalance = await this.updateBalance(balance, invoiceAmount);
 

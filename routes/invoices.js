@@ -6,6 +6,7 @@ const {
   getInvoicesByClientCtrl,
   getInvoicesOfUserCtrl,
   addTransactionCtrl,
+  deleteInvoicesByClientCtrl,
 } = require('../controllers/invoices.controller');
 const {
   validatorCreateInvoice,
@@ -27,6 +28,12 @@ router.get(
   validateInvoiceClientId,
   checkClientOfUser,
   getInvoicesByClientCtrl,
+);
+router.delete(
+  '/delete/:id',
+  isLoggedInTrue,
+  validateInvoiceClientId,
+  deleteInvoicesByClientCtrl,
 );
 router.post(
   '/create/:id',

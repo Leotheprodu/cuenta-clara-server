@@ -13,7 +13,7 @@ const initialBalance = process.env.INITIAL_BALANCE;
  * @description Billing price.
  * 3% of the invoice amount
  *  */
-const billingPrice = 0.04;
+const billingPrice = 0.035;
 
 /* ------------------------------------ Email -------------------------------------------- */
 const emailPort = 587;
@@ -67,11 +67,6 @@ const invoicesStatus = {
   inReview: 'inReview',
   inProcess: 'inProcess',
 };
-const balancesStatus = {
-  completed: 'completed',
-  pending: 'pending',
-  cancelled: 'cancelled',
-};
 const paymentStatus = {
   completed: 2,
   pending: 1,
@@ -122,7 +117,6 @@ module.exports = {
   verifyEmailLink,
   BusinessConfigInfo,
   invoicesStatus,
-  balancesStatus,
   paymentStatus,
   paymentMethod,
   typeOfRoles,

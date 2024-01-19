@@ -50,7 +50,7 @@ class Invoices {
           include: [
             {
               model: products_and_servicesModel,
-              attributes: ['id', 'name'],
+              attributes: ['id', 'name', 'unit', 'type'],
             },
           ],
         },
