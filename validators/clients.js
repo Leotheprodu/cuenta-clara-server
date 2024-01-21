@@ -90,6 +90,12 @@ const validatorDashboardClient = [
   check('pin').exists().notEmpty(),
   (req, res, next) => validateResults(req, res, next),
 ];
+const validatorDashboardTransactions = [
+  check('token').exists().notEmpty(),
+  check('pin').exists().notEmpty(),
+  check('invoice_id').exists().notEmpty().isInt(),
+  (req, res, next) => validateResults(req, res, next),
+];
 
 module.exports = {
   validatorCreateClients,
@@ -98,4 +104,5 @@ module.exports = {
   validatorUpdateClients,
   validatorGetClient,
   validatorDashboardClient,
+  validatorDashboardTransactions,
 };

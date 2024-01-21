@@ -83,6 +83,68 @@ class Invoices {
       ...paginationOptions,
     });
   }
+  async findInvoicebyIDforTransactions(invoice_id) {
+    // Condiciones de búsqueda
+    const whereConditions = {
+      id: invoice_id,
+    };
+
+    return await invoicesModel.findOne({
+      where: whereConditions,
+      attributes: ['id', 'status', 'total_amount'],
+      include: [
+        {
+          model: transactionsModel,
+          through: { attributes: [] },
+          attributes: {
+            exclude: [
+              'parent_user_id',
+              'createdAt',
+              'updatedAt',
+              'client_id',
+              'payment_method_id',
+              'status_id',
+            ],
+          },
+          include: [
+            {
+              model: payment_methodsModel,
+              attributes: ['id', 'name'],
+            },
+            {
+              model: payment_statusModel,
+              attributes: ['id', 'name'],
+            },
+          ],
+        },
+      ],
+    });
+  }
+  async findInvoicebyIDforDetails(invoice_id) {
+    // Condiciones de búsqueda
+    const whereConditions = {
+      id: invoice_id,
+    };
+
+    return await invoicesModel.findOne({
+      where: whereConditions,
+      attributes: ['id', 'status', 'total_amount'],
+      include: [
+        {
+          model: invoice_detailsModel,
+          attributes: {
+            exclude: ['default', 'createdAt', 'updatedAt', 'invoiceId'],
+          },
+          include: [
+            {
+              model: products_and_servicesModel,
+              attributes: ['id', 'name', 'unit', 'type'],
+            },
+          ],
+        },
+      ],
+    });
+  }
   async findInvoicesofUserByToken(client_id, parent_user_id, page, perPage) {
     // Condiciones de búsqueda
     const whereConditions = {

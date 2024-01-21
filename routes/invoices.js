@@ -8,6 +8,8 @@ const {
   addTransactionCtrl,
   deleteInvoicesByClientCtrl,
   getInvoicesByTokenCtrl,
+  getTransactionsDashboardCtrl,
+  getDetailsDashboardCtrl,
 } = require('../controllers/invoices.controller');
 const {
   validatorCreateInvoice,
@@ -18,7 +20,10 @@ const {
 const checkClientOfUser = require('../middleware/checkClientOfUser');
 const checkIfBalanceCoverInvoice = require('../middleware/checkIfBalanceCoverInvoice');
 const { checkPin } = require('../middleware/checkPin');
-const { validatorDashboardClient } = require('../validators/clients');
+const {
+  validatorDashboardClient,
+  validatorDashboardTransactions,
+} = require('../validators/clients');
 /* router.get(
   '/',
   isLoggedInTrue,
@@ -58,5 +63,17 @@ router.post(
   checkPin,
   validatorDashboardClient,
   getInvoicesByTokenCtrl,
+);
+router.post(
+  '/dashboard-transactions/:token',
+  checkPin,
+  validatorDashboardTransactions,
+  getTransactionsDashboardCtrl,
+);
+router.post(
+  '/dashboard-invoice-details/:token',
+  checkPin,
+  validatorDashboardTransactions,
+  getDetailsDashboardCtrl,
 );
 module.exports = router;

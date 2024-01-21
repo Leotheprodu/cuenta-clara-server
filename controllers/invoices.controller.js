@@ -178,6 +178,54 @@ const getInvoicesByTokenCtrl = async (req, res) => {
     handleHttpError(res, 'Error al obtener facturas');
   }
 };
+const getTransactionsDashboardCtrl = async (req, res) => {
+  const { token, pin: pinData, invoice_id } = matchedData(req);
+  try {
+    const clientData = await clientsModel.scope('withPin').findOne({
+      where: { token },
+      attributes: ['pin'],
+    });
+    const { pin } = clientData.dataValues;
+    if (pin !== pinData) {
+      handleHttpError(res, 'Invalid PIN');
+      return;
+    }
+    const result = await invoices.findInvoicebyIDforTransactions(invoice_id);
+    if (!result) {
+      handleHttpError(res, 'Error al obtener trasacciones');
+      return;
+    } else {
+      resOkData(res, result);
+    }
+  } catch (error) {
+    console.error(error);
+    handleHttpError(res, 'Error al obtener transacciones');
+  }
+};
+const getDetailsDashboardCtrl = async (req, res) => {
+  const { token, pin: pinData, invoice_id } = matchedData(req);
+  try {
+    const clientData = await clientsModel.scope('withPin').findOne({
+      where: { token },
+      attributes: ['pin'],
+    });
+    const { pin } = clientData.dataValues;
+    if (pin !== pinData) {
+      handleHttpError(res, 'Invalid PIN');
+      return;
+    }
+    const result = await invoices.findInvoicebyIDforDetails(invoice_id);
+    if (!result) {
+      handleHttpError(res, 'Error al obtener trasacciones');
+      return;
+    } else {
+      resOkData(res, result);
+    }
+  } catch (error) {
+    console.error(error);
+    handleHttpError(res, 'Error al obtener transacciones');
+  }
+};
 const deleteInvoicesByClientCtrl = async (req, res) => {
   const { id } = matchedData(req);
   const user_id = req.session.user.id;
@@ -274,4 +322,6 @@ module.exports = {
   addTransactionCtrl,
   deleteInvoicesByClientCtrl,
   getInvoicesByTokenCtrl,
+  getTransactionsDashboardCtrl,
+  getDetailsDashboardCtrl,
 };
