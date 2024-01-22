@@ -5,6 +5,7 @@ const {
   users_businessModel,
   user_payment_methodsModel,
   payment_methodsModel,
+  usersModel,
 } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 const { resOkData } = require('../utils/handleOkResponses');
@@ -109,6 +110,10 @@ const dashboardClientCtrl = async (req, res) => {
                   attributes: ['id', 'name'],
                 },
               ],
+            },
+            {
+              model: usersModel,
+              attributes: ['country', 'username', 'email', 'cellphone'],
             },
           ],
         },
