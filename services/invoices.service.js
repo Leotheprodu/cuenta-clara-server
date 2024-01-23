@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const {
   invoicesModel,
   invoice_detailsModel,
@@ -8,6 +9,7 @@ const {
   payment_statusModel,
   products_and_servicesModel,
 } = require('../models');
+const { invoicesStatus } = require('../config/constants');
 class Invoices {
   async findInvoicesofUserByClient(client_id, parent_user_id, page, perPage) {
     // Condiciones de búsqueda
@@ -150,6 +152,9 @@ class Invoices {
     const whereConditions = {
       client_id,
       parent_user_id,
+      status: {
+        [Op.ne]: invoicesStatus.cancelled,
+      },
     };
 
     // Opciones de paginación (solo se aplican si es necesario)
