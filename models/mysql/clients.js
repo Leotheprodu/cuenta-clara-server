@@ -36,6 +36,10 @@ const Clients = sequelize.define(
     country: {
       type: DataTypes.STRING(50),
     },
+    address: {
+      type: DataTypes.STRING(50),
+      defaultValue: '',
+    },
     detail: {
       type: DataTypes.STRING(100),
       allowNull: true,

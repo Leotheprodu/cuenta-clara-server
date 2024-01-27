@@ -35,6 +35,10 @@ const validatorCreateClients = [
     .isString()
     .notEmpty()
     .withMessage('country debe ser un string'),
+  check('address')
+    .optional()
+    .isString()
+    .withMessage('address debe ser un string'),
   check('detail')
     .optional({ nullable: true, checkFalsy: true })
     .isString()
@@ -67,6 +71,10 @@ const validatorUpdateClients = [
     .isString()
     .notEmpty()
     .withMessage('country debe ser un string'),
+  check('address')
+    .optional()
+    .isString()
+    .withMessage('address debe ser un string'),
   check('detail')
     .optional({ nullable: true, checkFalsy: true })
     .isString()

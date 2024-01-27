@@ -71,6 +71,7 @@ const dashboardClientCtrl = async (req, res) => {
           'updatedAt',
           'detail',
           'token',
+          'address',
         ],
       },
     });
@@ -162,7 +163,7 @@ const updateClientsCtrl = async (req, res) => {
   const clientId = data.id;
   try {
     // Actualizar datos del cliente
-    const updatedClient = await clientsModel.update(
+    await clientsModel.update(
       {
         ...data,
         parent_user_id: req.session.user.id,
@@ -193,7 +194,7 @@ const updateClientsCtrl = async (req, res) => {
     // Realizar la creación de nuevos balances
     await createBalances(clientId, balancesToCreate);
 
-    resOkData(res, updatedClient[1][0]);
+    resOkData(res, { message: 'Cliente actualizado correctamente' });
   } catch (error) {
     console.error(error);
     handleHttpError(res, 'Error al actualizar cliente');

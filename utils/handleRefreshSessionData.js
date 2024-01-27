@@ -23,7 +23,7 @@ const RefreshSessionData = async (req) => {
           ],
         },
       ],
-      attributes: ['id', 'parent_user_id'],
+      attributes: ['id', 'parent_user_id', 'active'],
     })) || null;
   const appClient = client.find(
     (client) => client.parent_user_id === BusinessConfigInfo.userId,
