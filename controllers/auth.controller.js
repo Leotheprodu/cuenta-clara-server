@@ -8,6 +8,7 @@ const {
   balancesModel,
   products_and_servicesModel,
   user_payment_methodsModel,
+  balances_rechargesModel,
 } = require('../models');
 const Users = require('../services/users.service');
 const { handleHttpError } = require('../utils/handleError');
@@ -25,6 +26,8 @@ const {
   emailUser,
   verifyEmailLink,
   paymentMethod,
+  BusinessConfigInfo,
+  paymentStatus,
 } = require('../config/constants');
 const userBusinessChecker = require('../utils/userBusinessChecker');
 const { cookieSessionInject } = require('../utils/handleCookie');
@@ -78,10 +81,11 @@ const logoutCtrl = async (req, res) => {
 const signUpCtrl = async (req, res) => {
   try {
     req = matchedData(req);
+    const { address, ...restOfReq } = req;
     const password = await PasswordEncrypt(req.password);
-    const body = { ...req, password };
+    const body = { ...restOfReq, password };
     const { username, email } = body;
-
+    console.log(body);
     // Se agrega la info de body a la base de datos usuarios
     const data = await usersModel.create(body);
     if (!data) {
@@ -117,27 +121,33 @@ const signUpCtrl = async (req, res) => {
 
     // Con esta linea cuando se registra no devuelve en password en la respuesta
 
-    const AppClient = {
+    const appClient = {
       username,
       email,
       cellphone: data.cellphone,
-      token: `${data.username.slice(0, 2)}-${idGenerator()}`,
+      token: `${data.username.toLowerCase().slice(0, 2)}-${idGenerator()}`,
       user_id: data.id,
-      parent_user_id: 9,
+      parent_user_id: BusinessConfigInfo.userId,
+      country: data.country,
+      address: address,
+    };
+    const userClient = {
+      username: 'Cliente 1',
+      token: `cp-${idGenerator()}`,
+      parent_user_id: data.id,
       country: data.country,
     };
-
     data.set('password', undefined, { strict: false });
     await role_usersModel.create({ user_id: data.id, role_id: 3 });
     const newUserBusiness = await users_businessModel.create({
       user_id: data.id,
-      name: 'Negocio principal',
+      name: `Negocio de ${data.username}`,
       default: true,
     });
     await products_and_servicesModel.create({
       user_id: data.id,
-      name: 'Ingreso por defecto',
-      description: 'Producto o servicio por defecto',
+      name: 'Predeterminado',
+      description: 'Servicio predeterminado',
       unit: 'unidad',
       unit_price: 1,
       default: true,
@@ -145,19 +155,36 @@ const signUpCtrl = async (req, res) => {
       code: `${data.id}-${newUserBusiness.id}-1`,
       type: 'service',
     });
-    //Importante para el negocio
-    const client = await clientsModel.create(AppClient);
-    await balancesModel.create({
+    //Crea cliente de la aplicacion para el usuario
+    const client = await clientsModel.create(appClient);
+
+    const userBalance = await balancesModel.create({
       client_id: client.id,
-      business_id: 1,
+      business_id: BusinessConfigInfo.businessId,
       amount: initialBalance,
     });
-    await user_payment_methodsModel.create({
+    //crea cliente predeterminado para el usuario
+    const userClientData = await clientsModel.create(userClient);
+    await balancesModel.create({
+      client_id: userClientData.id,
+      business_id: newUserBusiness.id,
+      amount: 0,
+    });
+    const userPaymentMethod = await user_payment_methodsModel.create({
       payment_method_id: paymentMethod.cash.id,
       business_id: newUserBusiness.id,
       payment_method_cellphone: client.cellphone || null,
       payment_method_email: client.email,
       payment_method_description: ' pago en efectivo',
+    });
+    await balances_rechargesModel.create({
+      amount: 0,
+      balance_amount: initialBalance,
+      status: paymentStatus.completed.name,
+      client_id: client.id,
+      balance_id: userBalance.id,
+      user_payment_methods_id: userPaymentMethod.id,
+      balances_types_id: 1,
     });
     resOkData(res, data);
   } catch (error) {

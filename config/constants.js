@@ -68,9 +68,9 @@ const invoicesStatus = {
   inProcess: 'inProcess',
 };
 const paymentStatus = {
-  completed: 2,
-  pending: 1,
-  cancelled: 3,
+  completed: { id: 2, name: 'completed' },
+  pending: { id: 1, name: 'pending' },
+  cancelled: { id: 3, name: 'cancelled' },
 };
 const paymentMethod = {
   cash: {

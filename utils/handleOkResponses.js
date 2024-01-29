@@ -1,3 +1,4 @@
+const { handleHttpError } = require('./handleError');
 const { RefreshSessionData } = require('./handleRefreshSessionData');
 
 /**
@@ -7,19 +8,23 @@ const { RefreshSessionData } = require('./handleRefreshSessionData');
  * @param {'mensaje de la respuesta'} message
  */
 const resUsersSessionData = async (req, res, message) => {
-  await RefreshSessionData(req);
-  res.send({
-    data: {
-      isLoggedIn: req.session.isLoggedIn,
-      user: req.session.user,
-      roles: req.session.roles,
-      client: req.session.client,
-      balance: req.session.balance,
-      userMessage: {
-        message,
+  try {
+    await RefreshSessionData(req);
+    res.send({
+      data: {
+        isLoggedIn: req.session.isLoggedIn,
+        user: req.session.user,
+        roles: req.session.roles,
+        client: req.session.client,
+        balance: req.session.balance,
+        userMessage: {
+          message,
+        },
       },
-    },
-  });
+    });
+  } catch (error) {
+    handleHttpError(res, 'Error al verificar sesion');
+  }
 };
 /**
  * Respuesta para enviar unicamente datos para mostrar al cliente

@@ -12,6 +12,8 @@ const validatorSignUp = [
 
   check('country').exists().notEmpty().isString(),
 
+  check('address').exists().notEmpty().isString(),
+
   (req, res, next) => validateResults(req, res, next),
 ];
 const validatorLogin = [

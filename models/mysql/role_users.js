@@ -19,5 +19,5 @@ Role_users.belongsTo(Roles, {
 Users.hasMany(Role_users, { foreignKey: { name: 'user_id' } });
 Roles.hasMany(Role_users, { foreignKey: { name: 'role_id' } });
 /* Role_users.sync({ alter: true }); */
-
+//dsd
 module.exports = Role_users;
