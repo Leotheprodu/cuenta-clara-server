@@ -9,7 +9,6 @@ const { handleHttpError } = require('../utils/handleError');
 const { resOkData } = require('../utils/handleOkResponses');
 const Balances = require('../services/balances.service');
 const Invoices = require('../services/invoices.service');
-const idGenerator = require('../utils/idGenerator');
 const {
   invoicesStatus,
   paymentStatus,
@@ -75,7 +74,6 @@ const createInvoiceCtrl = async (req, res) => {
 
       if (status === invoicesStatus.paid) {
         const transaction = await transactionsModel.create({
-          id: idGenerator(12),
           amount: total,
           status_id: paymentStatus.completed.id,
           payment_method_id,
@@ -288,23 +286,20 @@ const addTransactionCtrl = async (req, res) => {
       handleHttpError(res, 'El monto de la transaccion es mayor al saldo');
       return;
     }
-    //actualiza el status de la factura
-    if (balanceInvoice === data.amount) {
-      await invoice.update({ status: invoicesStatus.paid });
-    } else if (balanceInvoice > data.amount) {
-      await invoice.update({ status: invoicesStatus.inProcess });
-    }
     const clientBalance = await balances.getBalanceOfClient(
       data.client_id,
       invoice.users_business.id,
     );
     await balances.createBalanceUpdate(clientBalance, data.amount, invoice.id);
     await balances.updateBalance(clientBalance, data.amount);
-    const transaction = await transactionsModel.create({
-      ...data,
-      id: idGenerator(12),
-    });
+    const transaction = await transactionsModel.create(data);
     await invoice.addTransaction(transaction);
+    //actualiza el status de la factura
+    if (balanceInvoice === data.amount && transaction) {
+      await invoice.update({ status: invoicesStatus.paid });
+    } else if (balanceInvoice > data.amount && transaction) {
+      await invoice.update({ status: invoicesStatus.inProcess });
+    }
 
     resOkData(res, {
       data,
