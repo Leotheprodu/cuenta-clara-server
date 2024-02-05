@@ -35,7 +35,11 @@ const Products_and_services = sequelize.define('products_and_services', {
   },
   type: {
     type: DataTypes.STRING(50),
-    defaultValue: 'servicio',
+    defaultValue: 'service',
+  },
+  inventory_control: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
   },
 });
 Products_and_services.belongsTo(Users, {
