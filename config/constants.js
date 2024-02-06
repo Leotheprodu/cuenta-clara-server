@@ -59,7 +59,6 @@ const typeOfRoles = {
     name: 'vip',
   },
 };
-
 const invoicesStatus = {
   paid: 'paid',
   pending: 'pending',

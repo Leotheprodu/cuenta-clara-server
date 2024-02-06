@@ -240,6 +240,7 @@ const ckeckSessCtrl = async (req, res) => {
     handleHttpError(res, 'Error al verificar sesion');
   }
 };
+//NOTE hay que agregar un controlador para los usuarios que olviden su contraseña
 module.exports = {
   loginCtrl,
   logoutCtrl,
