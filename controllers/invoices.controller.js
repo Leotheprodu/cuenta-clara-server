@@ -290,10 +290,14 @@ const addTransactionCtrl = async (req, res) => {
       data.client_id,
       invoice.users_business.id,
     );
+    const transaction = await transactionsModel.create(data);
+    if (!transaction) {
+      handleHttpError(res, 'Error al crear transaccion');
+      return;
+    }
+    await invoice.addTransaction(transaction);
     await balances.createBalanceUpdate(clientBalance, data.amount, invoice.id);
     await balances.updateBalance(clientBalance, data.amount);
-    const transaction = await transactionsModel.create(data);
-    await invoice.addTransaction(transaction);
     //actualiza el status de la factura
     if (balanceInvoice === data.amount && transaction) {
       await invoice.update({ status: invoicesStatus.paid });
