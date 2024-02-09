@@ -267,6 +267,8 @@ const deleteInvoicesByClientCtrl = async (req, res) => {
 
 const addTransactionCtrl = async (req, res) => {
   const data = matchedData(req);
+  // eslint-disable-next-line no-unused-vars
+  const { id, ...transactionData } = data;
   try {
     const invoice = await invoices.findInvoice(data.invoice_id);
     if (!invoice) {
@@ -290,7 +292,8 @@ const addTransactionCtrl = async (req, res) => {
       data.client_id,
       invoice.users_business.id,
     );
-    const transaction = await transactionsModel.create(data);
+    const transaction = await transactionsModel.create(transactionData);
+
     if (!transaction) {
       handleHttpError(res, 'Error al crear transaccion');
       return;

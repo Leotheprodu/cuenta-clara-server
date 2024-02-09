@@ -45,6 +45,6 @@ Payment_methods.hasMany(Transactions, {
 Payment_status.hasMany(Transactions, {
   foreignKey: { name: 'status_id' },
 });
-/* Transactions.sync({ alter: true }); */
+Transactions.sync({ alter: true });
 
 module.exports = Transactions;
