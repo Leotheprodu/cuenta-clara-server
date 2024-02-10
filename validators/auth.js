@@ -21,6 +21,17 @@ const validatorLogin = [
 
   check('password').exists().notEmpty().isString(),
 
+  check('isEmployee').optional().isBoolean(),
+
+  (req, res, next) => validateResults(req, res, next),
+];
+const validatorLoginEmployee = [
+  check('username').exists().notEmpty().isString(),
+
+  check('password').exists().notEmpty().isString(),
+
+  check('isEmployee').optional().isBoolean(),
+
   (req, res, next) => validateResults(req, res, next),
 ];
 const validatorEmail = [
@@ -71,4 +82,5 @@ module.exports = {
   validatorUpdateUsers,
   validatorGetEmail,
   validatorGetToken,
+  validatorLoginEmployee,
 };

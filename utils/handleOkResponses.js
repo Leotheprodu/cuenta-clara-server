@@ -7,7 +7,7 @@ const { RefreshSessionData } = require('./handleRefreshSessionData');
  * @param {*} res
  * @param {'mensaje de la respuesta'} message
  */
-const resUsersSessionData = async (req, res, message) => {
+const resUsersSessionData = async (req, res) => {
   try {
     await RefreshSessionData(req);
     res.send({
@@ -17,9 +17,7 @@ const resUsersSessionData = async (req, res, message) => {
         roles: req.session.roles,
         client: req.session.client,
         balance: req.session.balance,
-        userMessage: {
-          message,
-        },
+        employee: req.session.employee,
       },
     });
   } catch (error) {

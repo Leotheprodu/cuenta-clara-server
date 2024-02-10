@@ -15,6 +15,7 @@ const {
   paymentMethod,
 } = require('../config/constants');
 const dateNow = require('../utils/handleDate');
+const { createActivityLog } = require('../utils/handleActivityLog');
 const invoices = new Invoices();
 const balances = new Balances();
 const createInvoiceCtrl = async (req, res) => {
@@ -96,6 +97,8 @@ const createInvoiceCtrl = async (req, res) => {
         console.log(createInvoice);
         await balances.updateBalance(clientBalance, total * -1);
       }
+
+      await createActivityLog(req, 'create-invoice', createInvoice.id);
       resOkData(res, {
         createInvoice,
         invoice_details,
@@ -107,34 +110,6 @@ const createInvoiceCtrl = async (req, res) => {
     handleHttpError(res, 'Error al crear factura');
   }
 };
-
-/* const getInvoicesOfUserCtrl = async (req, res) => {
-  const user_id = req.session.user.id;
-  const { status } = matchedData(req);
-  const whereClause = {
-    parent_user_id: user_id,
-  };
-
-  // Agregar la condición de status si está presente
-  if (status) {
-    whereClause.status = status;
-  }
-  try {
-    const invoices = await invoicesModel.findAll({
-      where: whereClause,
-      include: [invoice_detailsModel, transactionsModel],
-    });
-    if (!invoices) {
-      handleHttpError(res, 'Error al obtener facturas');
-      return;
-    } else {
-      resOkData(res, invoices);
-    }
-  } catch (error) {
-    console.error(error);
-    handleHttpError(res, 'Error al obtener facturas');
-  }
-}; */
 
 const getInvoicesByClientCtrl = async (req, res) => {
   const { id } = matchedData(req);

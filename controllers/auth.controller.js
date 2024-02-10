@@ -63,7 +63,59 @@ const loginCtrl = async (req, res) => {
     await userBusinessChecker(req, userData.id);
     req.session.user = userData;
     req.session.isLoggedIn = true;
-    resUsersSessionData(req, res, 'El Usuario ha iniciado sesion');
+    req.session.employee = {
+      isEmployee: false,
+      isAdmin: false,
+      active: false,
+      employeeName: '',
+    };
+    resUsersSessionData(req, res);
+  } catch (error) {
+    console.error(error);
+    handleHttpError(res, 'Error durante el inicio de sesion');
+  }
+};
+const employeeLoginCtrl = async (req, res) => {
+  try {
+    //Import the data provided by the client already filtered
+
+    const data = matchedData(req);
+
+    const { username, password } = data;
+
+    //extract user data from database
+    const employeeData =
+      await users.findEmployeeWithPasswordByUsername(username);
+
+    if (!employeeData) {
+      handleHttpError(res, 'El empleado no existe', 404);
+      return;
+    }
+    if (employeeData.active === 0) {
+      handleHttpError(res, 'El Empleado no esta activo', 401);
+      return;
+    }
+    const hashPassword = await employeeData.password;
+
+    const check = await PasswordCompare(password, hashPassword);
+    if (!check) {
+      handleHttpError(res, 'Contraseña Incorrecta', 401);
+      return;
+    }
+    cookieSessionInject(req, res);
+    const userData = await usersModel.findOne({
+      where: { id: employeeData.parent_user_id },
+    });
+    await userBusinessChecker(req, userData.id);
+    req.session.user = userData;
+    req.session.isLoggedIn = true;
+    req.session.employee = {
+      isEmployee: true,
+      isAdmin: employeeData?.admin,
+      active: employeeData?.active,
+      employeeName: employeeData?.username,
+    };
+    resUsersSessionData(req, res);
   } catch (error) {
     console.error(error);
     handleHttpError(res, 'Error durante el inicio de sesion');
@@ -247,4 +299,5 @@ module.exports = {
   signUpCtrl,
   emailVerifyCtrl,
   ckeckSessCtrl,
+  employeeLoginCtrl,
 };

@@ -1,5 +1,6 @@
 const { sequelize } = require('../../config/mysql');
 const { DataTypes } = require('sequelize');
+const Users = require('./users');
 
 const Activity_logs = sequelize.define('activity_logs', {
   id: {
@@ -7,8 +8,8 @@ const Activity_logs = sequelize.define('activity_logs', {
     primaryKey: true,
     autoIncrement: true,
   },
-  user: {
-    type: DataTypes.STRING(6),
+  username: {
+    type: DataTypes.STRING(50),
   },
   action: {
     type: DataTypes.STRING(50),
@@ -17,6 +18,10 @@ const Activity_logs = sequelize.define('activity_logs', {
     type: DataTypes.INTEGER,
   },
 });
+Activity_logs.belongsTo(Users, {
+  foreignKey: { name: 'parent_user_id', allowNull: false },
+});
+Users.hasMany(Activity_logs, { foreignKey: { name: 'parent_user_id' } });
 
 /* Activity_logs.sync({ alter: true }); */
 module.exports = Activity_logs;
