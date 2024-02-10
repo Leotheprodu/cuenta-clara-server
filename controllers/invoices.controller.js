@@ -98,7 +98,7 @@ const createInvoiceCtrl = async (req, res) => {
         await balances.updateBalance(clientBalance, total * -1);
       }
 
-      await createActivityLog(req, 'create-invoice', createInvoice.id);
+      await createActivityLog(req, 'invoice-create', createInvoice.id);
       resOkData(res, {
         createInvoice,
         invoice_details,
@@ -233,6 +233,7 @@ const deleteInvoicesByClientCtrl = async (req, res) => {
     );
     await balances.updateBalance(clientBalance, result.total_amount);
     await result.update({ status: invoicesStatus.cancelled });
+    await createActivityLog(req, 'invoice-delete', result.id);
     resOkData(res, { status: invoicesStatus.cancelled });
   } catch (error) {
     console.error(error);
@@ -282,7 +283,7 @@ const addTransactionCtrl = async (req, res) => {
     } else if (balanceInvoice > data.amount && transaction) {
       await invoice.update({ status: invoicesStatus.inProcess });
     }
-
+    await createActivityLog(req, 'transaction-create', transaction.id);
     resOkData(res, {
       data,
     });

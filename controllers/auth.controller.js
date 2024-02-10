@@ -31,6 +31,7 @@ const {
 } = require('../config/constants');
 const userBusinessChecker = require('../utils/userBusinessChecker');
 const { cookieSessionInject } = require('../utils/handleCookie');
+const { createActivityLog } = require('../utils/handleActivityLog');
 const users = new Users();
 const loginCtrl = async (req, res) => {
   try {
@@ -69,6 +70,7 @@ const loginCtrl = async (req, res) => {
       active: false,
       employeeName: '',
     };
+    await createActivityLog(req, 'user-login', userData.id);
     resUsersSessionData(req, res);
   } catch (error) {
     console.error(error);
@@ -83,7 +85,6 @@ const employeeLoginCtrl = async (req, res) => {
 
     const { username, password } = data;
 
-    //extract user data from database
     const employeeData =
       await users.findEmployeeWithPasswordByUsername(username);
 
@@ -115,6 +116,7 @@ const employeeLoginCtrl = async (req, res) => {
       active: employeeData?.active,
       employeeName: employeeData?.username,
     };
+    await createActivityLog(req, 'employee-login', employeeData.id);
     resUsersSessionData(req, res);
   } catch (error) {
     console.error(error);
@@ -124,6 +126,7 @@ const employeeLoginCtrl = async (req, res) => {
 const logoutCtrl = async (req, res) => {
   try {
     req.session.isLoggedIn = false;
+    await createActivityLog(req, 'logout', req.session.user.id);
     resUsersSessionData(req, res, 'El Usuario ha cerrado sesion');
   } catch (error) {
     console.error(error);
@@ -238,6 +241,16 @@ const signUpCtrl = async (req, res) => {
       user_payment_methods_id: userPaymentMethod.id,
       balances_types_id: 1,
     });
+    cookieSessionInject(req, res);
+    req.session.user = data;
+    req.session.isLoggedIn = false;
+    req.session.employee = {
+      isEmployee: false,
+      isAdmin: false,
+      active: false,
+      employeeName: '',
+    };
+    await createActivityLog(req, 'user-signup', data.id);
     resOkData(res, data);
   } catch (error) {
     console.error(error);

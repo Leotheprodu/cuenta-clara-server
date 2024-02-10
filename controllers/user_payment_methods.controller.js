@@ -6,6 +6,7 @@ const {
 } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 const { resOkData } = require('../utils/handleOkResponses');
+const { createActivityLog } = require('../utils/handleActivityLog');
 
 const paymentMethodsCtrl = async (req, res) => {
   const { business_id } = matchedData(req);
@@ -35,6 +36,11 @@ const createPaymentMethodsCtrl = async (req, res) => {
   };
   try {
     const newPaymentMethod = await user_payment_methodsModel.create(data);
+    await createActivityLog(
+      req,
+      'userPaymentMethod-create',
+      newPaymentMethod.id,
+    );
     resOkData(res, newPaymentMethod);
   } catch (error) {
     console.error(error);

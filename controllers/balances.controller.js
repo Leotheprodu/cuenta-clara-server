@@ -17,6 +17,7 @@ const {
   emailUser,
 } = require('../config/constants');
 const { sendAEmail } = require('../utils/handleSendEmail');
+const { createActivityLog } = require('../utils/handleActivityLog');
 
 const balanceByClientCtrl = async (req, res) => {
   const { id } = matchedData(req);
@@ -60,6 +61,7 @@ const rechargeBalancesCtrl = async (req, res) => {
       'leovpc@gmail.com',
       `Nueva Recarga de ${req.session.user.username}`,
     );
+    await createActivityLog(req, 'user-rechargeBalance', balance.id);
     resOkData(res, balance);
   } catch (error) {
     console.error(error);
@@ -104,7 +106,7 @@ const applyBalanceRechargeCtrl = async (req, res) => {
       client.email,
       `Recarga Procesada`,
     );
-
+    await createActivityLog(req, 'user-applyBalance', balanceRecharge.id);
     resOkData(res, { status: 'completed', balance: balance.amount });
   } catch (error) {
     console.error(error);
@@ -119,6 +121,7 @@ const cancelBalanceRechargeCtrl = async (req, res) => {
       where: { id },
     });
     await balanceRecharge.update({ status: 'cancelled' });
+    await createActivityLog(req, 'user-cancelBalance', balanceRecharge.id);
     resOkData(res, { status: 'cancelled' });
   } catch (error) {
     console.error(error);

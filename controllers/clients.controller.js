@@ -15,6 +15,7 @@ const {
   deleteBalances,
   createBalances,
 } = require('../services/clients');
+const { createActivityLog } = require('../utils/handleActivityLog');
 
 const clientsCtrl = async (req, res) => {
   const { active } = matchedData(req);
@@ -149,7 +150,7 @@ const createClientsCtrl = async (req, res) => {
     });
 
     await Promise.all(createBalancesPromises);
-
+    await createActivityLog(req, 'client-create', clientData.id);
     resOkData(res, clientData);
   } catch (error) {
     console.error(error);
@@ -193,7 +194,7 @@ const updateClientsCtrl = async (req, res) => {
 
     // Realizar la creación de nuevos balances
     await createBalances(clientId, balancesToCreate);
-
+    await createActivityLog(req, 'client-update', clientId);
     resOkData(res, { message: 'Cliente actualizado correctamente' });
   } catch (error) {
     console.error(error);
@@ -220,6 +221,7 @@ const deactivateClientsCtrl = async (req, res) => {
       );
       return;
     } else {
+      await createActivityLog(req, 'client-deactivate', client.id);
       resOkData(res, {
         message:
           active == 0
