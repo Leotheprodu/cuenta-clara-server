@@ -1,6 +1,7 @@
 const { BusinessConfigInfo } = require('../config/constants');
 const {
   clientsModel,
+  employeesModel,
   balancesModel,
   users_businessModel,
 } = require('../models/');
@@ -25,6 +26,24 @@ const RefreshSessionData = async (req) => {
       ],
       attributes: ['id', 'parent_user_id', 'active'],
     })) || null;
+  if (req.session.employee.isEmployee) {
+    const employee = await employeesModel.findOne({
+      where: { username: req.session.employee.employeeName },
+    });
+    req.session.employee = {
+      isEmployee: true,
+      isAdmin: employee.admin,
+      active: employee.active,
+      employeeName: employee.username,
+    };
+  } else {
+    req.session.employee = {
+      isEmployee: false,
+      isAdmin: true,
+      active: false,
+      employeeName: '',
+    };
+  }
   const appClient = client.find(
     (client) => client.parent_user_id === BusinessConfigInfo.userId,
   );

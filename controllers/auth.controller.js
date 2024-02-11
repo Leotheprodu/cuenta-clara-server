@@ -66,7 +66,7 @@ const loginCtrl = async (req, res) => {
     req.session.isLoggedIn = true;
     req.session.employee = {
       isEmployee: false,
-      isAdmin: false,
+      isAdmin: true,
       active: false,
       employeeName: '',
     };
@@ -246,7 +246,7 @@ const signUpCtrl = async (req, res) => {
     req.session.isLoggedIn = false;
     req.session.employee = {
       isEmployee: false,
-      isAdmin: false,
+      isAdmin: true,
       active: false,
       employeeName: '',
     };
