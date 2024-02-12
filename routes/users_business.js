@@ -5,14 +5,17 @@ const {
   favoriteBusinessCtrl,
 } = require('../controllers/users_business.controller');
 const { isLoggedInTrue } = require('../middleware/isLoggedIn');
-const { validatorGetBussiness } = require('../validators/business');
+const {
+  validatorGetBussiness,
+  validatorGetFavoriteBussiness,
+} = require('../validators/business');
 const checkBusinessOfUser = require('../middleware/checkBusinessOfUser');
 
-router.get('/', isLoggedInTrue, businessByUserCtrl);
+router.get('/', isLoggedInTrue, validatorGetBussiness, businessByUserCtrl);
 router.get(
   '/favorite/:id',
   isLoggedInTrue,
-  validatorGetBussiness,
+  validatorGetFavoriteBussiness,
   checkBusinessOfUser,
   favoriteBusinessCtrl,
 );

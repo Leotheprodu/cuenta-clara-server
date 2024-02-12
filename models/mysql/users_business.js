@@ -18,6 +18,10 @@ const Users_business = sequelize.define(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
   },
   {
     tableName: 'users_business',
