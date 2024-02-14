@@ -4,6 +4,7 @@ const {
   businessByUserCtrl,
   favoriteBusinessCtrl,
   createBusinessCtrl,
+  deactivateBusinessCtrl,
 } = require('../controllers/users_business.controller');
 const { isLoggedInTrue } = require('../middleware/isLoggedIn');
 const {
@@ -21,6 +22,13 @@ router.get(
   validatorGetFavoriteBussiness,
   checkBusinessOfUser,
   favoriteBusinessCtrl,
+);
+router.get(
+  '/deactivate/:id',
+  isLoggedInTrue,
+  validatorGetFavoriteBussiness,
+  checkBusinessOfUser,
+  deactivateBusinessCtrl,
 );
 
 module.exports = router;

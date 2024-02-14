@@ -94,6 +94,32 @@ const favoriteBusinessCtrl = async (req, res) => {
     handleHttpError(res, 'Error al seleccionar negocio');
   }
 };
+const deactivateBusinessCtrl = async (req, res) => {
+  const { id } = matchedData(req);
+  try {
+    const business = await users_businessModel.findOne({
+      where: { id },
+    });
+
+    if (!business) {
+      handleHttpError(res, `el negocio id: ${id} no pertenece al usuario`, 404);
+      return;
+    } else if (business.default) {
+      handleHttpError(res, 'No se puede desactivar el negocio predeterminado');
+      return;
+    }
+    await business.update({
+      active: business.active ? false : true,
+    });
+    resOkData(res, {
+      id: business.id,
+      active: business.active ? false : true,
+    });
+  } catch (error) {
+    console.error(error);
+    handleHttpError(res, 'Error al seleccionar negocio');
+  }
+};
 const businessSelected = async (business, id) => {
   return await business.find((item) => item.id == id);
 };
@@ -104,4 +130,5 @@ module.exports = {
   businessByUserCtrl,
   favoriteBusinessCtrl,
   createBusinessCtrl,
+  deactivateBusinessCtrl,
 };
