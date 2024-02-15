@@ -5,12 +5,14 @@ const {
   favoriteBusinessCtrl,
   createBusinessCtrl,
   deactivateBusinessCtrl,
+  updateBusinessCtrl,
 } = require('../controllers/users_business.controller');
 const { isLoggedInTrue } = require('../middleware/isLoggedIn');
 const {
   validatorGetBussiness,
   validatorGetFavoriteBussiness,
   validatorCreateBusiness,
+  validatorUpdateBussiness,
 } = require('../validators/business');
 const checkBusinessOfUser = require('../middleware/checkBusinessOfUser');
 
@@ -29,6 +31,13 @@ router.get(
   validatorGetFavoriteBussiness,
   checkBusinessOfUser,
   deactivateBusinessCtrl,
+);
+router.post(
+  '/:id',
+  isLoggedInTrue,
+  validatorUpdateBussiness,
+  checkBusinessOfUser,
+  updateBusinessCtrl,
 );
 
 module.exports = router;

@@ -120,6 +120,29 @@ const deactivateBusinessCtrl = async (req, res) => {
     handleHttpError(res, 'Error al seleccionar negocio');
   }
 };
+const updateBusinessCtrl = async (req, res) => {
+  const { id, name } = matchedData(req);
+  try {
+    const business = await users_businessModel.findOne({
+      where: { id },
+    });
+
+    if (!business) {
+      handleHttpError(res, `el negocio id: ${id} no pertenece al usuario`, 404);
+      return;
+    }
+    await business.update({
+      name,
+    });
+    resOkData(res, {
+      id: business.id,
+      message: 'Negocio actualizado correctamente',
+    });
+  } catch (error) {
+    console.error(error);
+    handleHttpError(res, 'Error al actualizar negocio');
+  }
+};
 const businessSelected = async (business, id) => {
   return await business.find((item) => item.id == id);
 };
@@ -131,4 +154,5 @@ module.exports = {
   favoriteBusinessCtrl,
   createBusinessCtrl,
   deactivateBusinessCtrl,
+  updateBusinessCtrl,
 };
