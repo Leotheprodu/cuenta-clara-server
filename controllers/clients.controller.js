@@ -164,20 +164,22 @@ const updateClientsCtrl = async (req, res) => {
   const clientId = data.id;
   try {
     // Actualizar datos del cliente
-    await clientsModel.update(
-      {
-        ...data,
-        parent_user_id: req.session.user.id,
-      },
-      {
-        where: { id: clientId },
-        returning: true,
-      },
-    );
+    const clientData = await clientsModel.findOne({
+      where: { id: clientId },
+    });
+
+    if (!clientData) {
+      handleHttpError(res, 'El cliente no existe', 404);
+      return;
+    } else if (clientData.parent_user_id !== req.session.user.id) {
+      handleHttpError(res, 'No tienes permisos para editar este cliente', 403);
+      return;
+    }
+    await clientData.update(data);
 
     // Obtener los balances existentes del cliente
     const existingBalances = await balancesModel.findAll({
-      where: { client_id: clientId },
+      where: { client_id: clientId, active: true },
     });
     // Identificar los IDs de balances a borrar (amount igual a 0)
     const balancesToDelete = await findBalancesToDelete(

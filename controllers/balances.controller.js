@@ -24,7 +24,7 @@ const balanceByClientCtrl = async (req, res) => {
 
   try {
     const balance = await balancesModel.findAll({
-      where: { client_id: id },
+      where: { client_id: id, active: true },
     });
     resOkData(res, balance);
   } catch (error) {

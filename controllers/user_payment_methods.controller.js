@@ -12,7 +12,7 @@ const paymentMethodsCtrl = async (req, res) => {
   const { business_id } = matchedData(req);
   try {
     const paymentMethods = await user_payment_methodsModel.findAll({
-      where: { business_id },
+      where: { business_id, active: true },
       attributes: {
         exclude: ['createdAt', 'updatedAt', 'business_id', 'payment_method_id'],
       },

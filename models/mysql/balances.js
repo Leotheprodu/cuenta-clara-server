@@ -12,6 +12,10 @@ const Balances = sequelize.define('balances', {
   amount: {
     type: DataTypes.DECIMAL(10, 2),
   },
+  active: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
+  },
 });
 Balances.belongsTo(Clients, {
   foreignKey: { name: 'client_id', allowNull: false },

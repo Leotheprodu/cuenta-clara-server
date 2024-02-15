@@ -1,11 +1,13 @@
 const {
   users_businessModel,
   products_and_servicesModel,
+  user_payment_methodsModel,
 } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 const { resOkData } = require('../utils/handleOkResponses');
 const { matchedData } = require('express-validator');
 const userBusinessChecker = require('../utils/userBusinessChecker');
+const { paymentMethod } = require('../config/constants');
 
 const businessByUserCtrl = async (req, res) => {
   const { active } = matchedData(req);
@@ -50,6 +52,13 @@ const createBusinessCtrl = async (req, res) => {
       business_id: newUserBusiness.id,
       code: `${req.session.user.id}-${newUserBusiness.id}-1`,
       type: 'service',
+    });
+    await user_payment_methodsModel.create({
+      payment_method_id: paymentMethod.cash.id,
+      business_id: newUserBusiness.id,
+      payment_method_cellphone: req.session.user.cellphone || null,
+      payment_method_email: req.session.user.email,
+      payment_method_description: ' pago en efectivo',
     });
     resOkData(res, { message: 'Negocio creado correctamente' });
   } catch (error) {
