@@ -26,7 +26,7 @@ const clientsCtrl = async (req, res) => {
       include: [
         {
           model: balancesModel,
-          attributes: ['id', 'amount'],
+          attributes: ['id', 'amount', 'active'],
           include: [
             {
               model: users_businessModel,
