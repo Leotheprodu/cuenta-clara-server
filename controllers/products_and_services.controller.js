@@ -1,5 +1,8 @@
 const { matchedData } = require('express-validator');
-const { products_and_servicesModel } = require('../models');
+const {
+  products_and_servicesModel,
+  users_businessModel,
+} = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 const { resOkData } = require('../utils/handleOkResponses');
 
@@ -45,17 +48,67 @@ const productsAndServicesUpdateCtrl = async (req, res) => {
       handleHttpError(res, 'El producto o servicio no existe', 404);
       return;
     }
+    if (products_and_services.user_id !== user_id) {
+      handleHttpError(
+        res,
+        'No puedes actualizar productos de otro usuario',
+        400,
+      );
+      return;
+    }
+    if (products_and_services.business_id !== data.business_id) {
+      handleHttpError(
+        res,
+        'No puedes actualizar productos de otro negocio',
+        400,
+      );
+      return;
+    }
     await products_and_services.update(data);
     resOkData(res, { message: 'Producto o servicio actualizado' });
   } catch (error) {
     console.error(error);
-    handleHttpError(
-      res,
-      'Error al obtener los productos y servicios del cliente',
-    );
+    handleHttpError(res, 'Error al actualizar producto o servicio del cliente');
+  }
+};
+const productsAndServicesCreateCtrl = async (req, res) => {
+  const reqData = matchedData(req);
+  // eslint-disable-next-line no-unused-vars
+  const { id, ...data } = reqData;
+  const user_id = req.session.user.id;
+  try {
+    if (data.user_id !== user_id) {
+      handleHttpError(
+        res,
+        'No puedes actualizar productos de otro usuario',
+        400,
+      );
+      return;
+    }
+    const business = await users_businessModel.findOne({
+      where: { id: data.business_id },
+    });
+    if (!business) {
+      handleHttpError(res, 'El negocio no existe', 404);
+      return;
+    }
+    if (business.user_id !== user_id) {
+      handleHttpError(
+        res,
+        'No puedes actualizar el negocio de otro usuario',
+        400,
+      );
+      return;
+    }
+    await products_and_servicesModel.create(data);
+    resOkData(res, { message: 'Producto o servicio creado' });
+  } catch (error) {
+    console.error(error);
+    handleHttpError(res, 'Error al crear el producto o servicio del cliente');
   }
 };
 module.exports = {
   productsAndServicesByClientCtrl,
   productsAndServicesUpdateCtrl,
+  productsAndServicesCreateCtrl,
 };

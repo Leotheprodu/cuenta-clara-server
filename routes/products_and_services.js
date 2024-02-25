@@ -8,6 +8,7 @@ const {
 const {
   productsAndServicesByClientCtrl,
   productsAndServicesUpdateCtrl,
+  productsAndServicesCreateCtrl,
 } = require('../controllers/products_and_services.controller');
 
 router.get(
@@ -21,6 +22,12 @@ router.put(
   isLoggedInTrue,
   validatorGetProductsAndServicesUpdateByClient,
   productsAndServicesUpdateCtrl,
+);
+router.post(
+  '/',
+  isLoggedInTrue,
+  validatorGetProductsAndServicesUpdateByClient,
+  productsAndServicesCreateCtrl,
 );
 
 module.exports = router;
