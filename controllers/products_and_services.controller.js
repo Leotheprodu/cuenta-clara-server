@@ -107,8 +107,58 @@ const productsAndServicesCreateCtrl = async (req, res) => {
     handleHttpError(res, 'Error al crear el producto o servicio del cliente');
   }
 };
+const productsAndServicesDefaultUpdateCtrl = async (req, res) => {
+  const { id } = matchedData(req);
+  const user_id = req.session.user.id;
+  try {
+    const products_and_services = await products_and_servicesModel.findOne({
+      where: { id },
+    });
+    if (!products_and_services) {
+      handleHttpError(res, 'El producto o servicio no existe', 404);
+      return;
+    }
+    if (products_and_services.user_id !== user_id) {
+      handleHttpError(
+        res,
+        'No puedes actualizar productos de otro usuario',
+        400,
+      );
+      return;
+    }
+    if (products_and_services.default) {
+      handleHttpError(
+        res,
+        'No puedes actualizar el producto o servicio por defecto',
+        400,
+      );
+      return;
+    }
+    const defaultProduct_or_service = await products_and_servicesModel.findOne({
+      where: {
+        user_id,
+        default: true,
+        business_id: products_and_services.business_id,
+      },
+    });
+    if (defaultProduct_or_service) {
+      await defaultProduct_or_service.update({ default: false });
+    }
+    await products_and_services.update({
+      default: !products_and_services.default,
+    });
+    resOkData(res, { message: 'Producto o servicio actualizado' });
+  } catch (error) {
+    console.error(error);
+    handleHttpError(
+      res,
+      'Error al actualizar el producto o servicio del cliente',
+    );
+  }
+};
 module.exports = {
   productsAndServicesByClientCtrl,
   productsAndServicesUpdateCtrl,
   productsAndServicesCreateCtrl,
+  productsAndServicesDefaultUpdateCtrl,
 };

@@ -6,6 +6,11 @@ const validatorGetProductsAndServicesByClient = [
 
   (req, res, next) => validateResults(req, res, next),
 ];
+const validatorProductsAndServicesUpdateDefault = [
+  check('id').exists().isNumeric().notEmpty(),
+
+  (req, res, next) => validateResults(req, res, next),
+];
 const validatorGetProductsAndServicesUpdateByClient = [
   check('id').exists().isNumeric(),
   check('user_id').exists().isNumeric(),
@@ -24,4 +29,5 @@ const validatorGetProductsAndServicesUpdateByClient = [
 module.exports = {
   validatorGetProductsAndServicesByClient,
   validatorGetProductsAndServicesUpdateByClient,
+  validatorProductsAndServicesUpdateDefault,
 };
