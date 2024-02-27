@@ -24,7 +24,7 @@ app.use(
     credentials: true,
   }),
 );
-console.log('ORIGIN_CORS', ORIGIN_CORS);
+app.set('trust proxy', 1);
 app.use(session(sess));
 app.use(express.json());
 app.use('/api', require('./routes'));
