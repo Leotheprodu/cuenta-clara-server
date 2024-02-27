@@ -31,7 +31,7 @@ const port = process.env.DB_PORT;
 
 /* ------------------------------------ Config --------------------------------------------------*/
 const PORT = process.env.PORT || 5000;
-const ORIGIN_CORS = process.env.URL_CORS;
+const ORIGIN_CORS = process.env.URL_CORS.split(',');
 const secret = process.env.SECRET_EXPRESS_SESSION;
 const environment = process.env.NODE_ENV;
 const FrontendDomain = process.env.FRONTEND_DOMAIN;
