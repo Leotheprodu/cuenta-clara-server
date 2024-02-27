@@ -70,7 +70,6 @@ const loginCtrl = async (req, res) => {
       active: false,
       employeeName: '',
     };
-    await createActivityLog(req, 'user-login', userData.id);
     resUsersSessionData(req, res);
   } catch (error) {
     console.error(error);
@@ -126,7 +125,6 @@ const employeeLoginCtrl = async (req, res) => {
 const logoutCtrl = async (req, res) => {
   try {
     req.session.isLoggedIn = false;
-    await createActivityLog(req, 'logout', req.session.user.id);
     resUsersSessionData(req, res, 'El Usuario ha cerrado sesion');
   } catch (error) {
     console.error(error);
@@ -241,7 +239,6 @@ const signUpCtrl = async (req, res) => {
       user_payment_methods_id: userPaymentMethod.id,
       balances_types_id: 1,
     });
-    cookieSessionInject(req, res);
     req.session.user = data;
     req.session.isLoggedIn = false;
     req.session.employee = {
@@ -250,6 +247,7 @@ const signUpCtrl = async (req, res) => {
       active: false,
       employeeName: '',
     };
+    cookieSessionInject(req, res);
     await createActivityLog(req, 'user-signup', data.id);
     resOkData(res, data);
   } catch (error) {
