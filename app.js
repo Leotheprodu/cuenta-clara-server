@@ -1,10 +1,20 @@
-require('dotenv').config({ override: true });
+/* require('dotenv').config({ override: true });
 const cors = require('cors');
 const { dbConnectMySql } = require('./config/mysql');
 const session = require('express-session');
 const sess = require('./config/expressSessions');
 const express = require('express');
-const { PORT, ORIGIN_CORS } = require('./config/constants');
+const { PORT, ORIGIN_CORS } = require('./config/constants'); */
+
+import 'dotenv/config';
+import cors from 'cors';
+import { dbConnectMySql } from './config/mysql.js';
+import router from './routes/index.js';
+import session from 'express-session';
+import sess from './config/expressSessions.js';
+
+import express from 'express';
+import { PORT, ORIGIN_CORS } from './config/constants.js';
 
 const app = express();
 app.use(
@@ -27,7 +37,7 @@ app.use(
 app.set('trust proxy', 1);
 app.use(session(sess));
 app.use(express.json());
-app.use('/api', require('./routes'));
+/* app.use('/api', router); */
 const server = app.listen(PORT, () => {
   console.log(`The server is listening on port ${PORT}...`);
 });

@@ -1,10 +1,10 @@
-const { user, password, database, host, port } = require('./constants.js');
-const credentials = {
-    user,
-    password,
-    database,
-    host,
-    port,
-};
+import { user, password, database, host, port } from './constants.js';
 
-module.exports = credentials;
+const credentials = {
+  user,
+  password,
+  database,
+  host,
+  port,
+};
+export default credentials;

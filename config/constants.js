@@ -1,6 +1,6 @@
 /* ----------------------------------Basic constants----------------------------------- */
-const appName = 'Yehu';
-const BusinessConfigInfo = {
+export const appName = 'Yehu';
+export const BusinessConfigInfo = {
   userId: 9,
   businessId: 1,
 };
@@ -8,40 +8,40 @@ const BusinessConfigInfo = {
 /**
  * @description Initial balance for new users
  *  */
-const initialBalance = process.env.INITIAL_BALANCE;
+export const initialBalance = process.env.INITIAL_BALANCE;
 /**
  * @description Billing price.
  * 3% of the invoice amount
  *  */
-const billingPrice = 0.035;
+export const billingPrice = 0.035;
 
 /* ------------------------------------ Email -------------------------------------------- */
-const emailPort = 587;
-const emailSecure = false;
-const emailHost = process.env.EMAIL_HOST;
-const emailUser = process.env.EMAIL_USER;
-const emailPass = process.env.EMAIL_PASS;
+export const emailPort = 587;
+export const emailSecure = false;
+export const emailHost = process.env.EMAIL_HOST;
+export const emailUser = process.env.EMAIL_USER;
+export const emailPass = process.env.EMAIL_PASS;
 
 /* ------------------------------------ Database --------------------------------------------------*/
-const user = process.env.DB_USER;
-const password = process.env.DB_PASSWORD;
-const database = process.env.DB_NAME;
-const host = process.env.DB_HOST;
-const port = process.env.DB_PORT;
+export const user = process.env.DB_USER;
+export const password = process.env.DB_PASSWORD;
+export const database = process.env.DB_NAME;
+export const host = process.env.DB_HOST;
+export const port = process.env.DB_PORT;
 
 /* ------------------------------------ Config --------------------------------------------------*/
-const PORT = process.env.PORT || 5000;
-const ORIGIN_CORS = process.env.URL_CORS.split(',');
-const secret = process.env.SECRET_EXPRESS_SESSION;
-const environment = process.env.NODE_ENV;
-const FrontendDomain = process.env.FRONTEND_DOMAIN;
+export const PORT = process.env.PORT || 5000;
+export const ORIGIN_CORS = process.env.URL_CORS.split(',');
+export const secret = process.env.SECRET_EXPRESS_SESSION;
+export const environment = process.env.NODE_ENV;
+export const FrontendDomain = process.env.FRONTEND_DOMAIN;
 
 /* ------------------------------------ FrontendLinks --------------------------------------------------*/
 
-const verifyEmailLink = `${FrontendDomain}sesion/verificar-email/`;
+export const verifyEmailLink = `${FrontendDomain}sesion/verificar-email/`;
 
 /* ------------------------------------ Dictionaries --------------------------------------------------*/
-const typeOfRoles = {
+export const typeOfRoles = {
   admin: {
     id: 1,
     name: 'admin',
@@ -59,19 +59,19 @@ const typeOfRoles = {
     name: 'vip',
   },
 };
-const invoicesStatus = {
+export const invoicesStatus = {
   paid: 'paid',
   pending: 'pending',
   cancelled: 'cancelled',
   inReview: 'inReview',
   inProcess: 'inProcess',
 };
-const paymentStatus = {
+export const paymentStatus = {
   completed: { id: 2, name: 'completed' },
   pending: { id: 1, name: 'pending' },
   cancelled: { id: 3, name: 'cancelled' },
 };
-const paymentMethod = {
+export const paymentMethod = {
   cash: {
     id: 1,
     name: 'Efectivo',
@@ -92,31 +92,4 @@ const paymentMethod = {
     id: 5,
     name: 'Tarjeta de Credito',
   },
-};
-
-module.exports = {
-  user,
-  password,
-  database,
-  host,
-  port,
-  initialBalance,
-  billingPrice,
-  appName,
-  PORT,
-  ORIGIN_CORS,
-  secret,
-  environment,
-  emailSecure,
-  emailPort,
-  emailHost,
-  emailUser,
-  emailPass,
-  FrontendDomain,
-  verifyEmailLink,
-  BusinessConfigInfo,
-  invoicesStatus,
-  paymentStatus,
-  paymentMethod,
-  typeOfRoles,
 };
