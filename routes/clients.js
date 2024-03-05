@@ -1,24 +1,25 @@
-const express = require('express');
-const router = express.Router();
-const {
+import express from 'express';
+import {
   clientsCtrl,
   createClientsCtrl,
   deactivateClientsCtrl,
   updateClientsCtrl,
   clientCtrl,
   dashboardClientCtrl,
-} = require('../controllers/clients.controller');
-const {
+} from '../controllers/clients.controller.js';
+import {
   validatorCreateClients,
   validatorDeactivateClient,
   validatorQueryClients,
   validatorUpdateClients,
   validatorGetClient,
   validatorDashboardClient,
-} = require('../validators/clients');
-const { isLoggedInTrue } = require('../middleware/isLoggedIn');
-const checkClientOfUser = require('../middleware/checkClientOfUser');
-const { checkPin } = require('../middleware/checkPin');
+} from '../validators/clients.js';
+import { isLoggedInTrue } from '../middleware/isLoggedIn.js';
+import checkClientOfUser from '../middleware/checkClientOfUser.js';
+import { checkPin } from '../middleware/checkPin.js';
+
+const router = express.Router();
 
 router.get('/', isLoggedInTrue, validatorQueryClients, clientsCtrl);
 router.get(
@@ -44,4 +45,4 @@ router.post(
   dashboardClientCtrl,
 );
 
-module.exports = router;
+export default router;

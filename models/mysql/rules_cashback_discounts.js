@@ -1,6 +1,6 @@
-const { sequelize } = require('../../config/mysql');
-const { DataTypes } = require('sequelize');
-const Users = require('./users');
+import { sequelize } from '../../config/mysql.js';
+import { DataTypes } from 'sequelize';
+import Users from './users.js';
 
 const Rules_cashback_discounts = sequelize.define('rules_cashback_discounts', {
   id: {
@@ -31,4 +31,4 @@ Rules_cashback_discounts.belongsTo(Users, {
 });
 Users.hasMany(Rules_cashback_discounts, { foreignKey: { name: 'user_id' } });
 /* Rules_cashback_discounts.sync({ alter: true }); */
-module.exports = Rules_cashback_discounts;
+export default Rules_cashback_discounts;

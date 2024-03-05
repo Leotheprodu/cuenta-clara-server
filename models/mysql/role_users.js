@@ -1,7 +1,7 @@
-const { sequelize } = require('../../config/mysql');
-const { DataTypes } = require('sequelize');
-const Users = require('./users');
-const Roles = require('./roles');
+import { sequelize } from '../../config/mysql.js';
+import { DataTypes } from 'sequelize';
+import Users from './users.js';
+import Roles from './roles.js';
 
 const Role_users = sequelize.define('role_users', {
   id: {
@@ -19,5 +19,4 @@ Role_users.belongsTo(Roles, {
 Users.hasMany(Role_users, { foreignKey: { name: 'user_id' } });
 Roles.hasMany(Role_users, { foreignKey: { name: 'role_id' } });
 /* Role_users.sync({ alter: true }); */
-//dsd
-module.exports = Role_users;
+export default Role_users;

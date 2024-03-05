@@ -1,7 +1,7 @@
-const { sequelize } = require('../../config/mysql');
-const { DataTypes } = require('sequelize');
-const Transactions = require('./transactions');
-const Invoices = require('./invoices');
+import { sequelize } from '../../config/mysql.js';
+import { DataTypes } from 'sequelize';
+import Transactions from './transactions.js';
+import Invoices from './invoices.js';
 
 const Transaction_invoices = sequelize.define('transaction_invoices', {
   id: {
@@ -17,5 +17,4 @@ Invoices.belongsToMany(Transactions, {
   through: Transaction_invoices,
 });
 /* Transaction_invoices.sync({ alter: true }); */
-
-module.exports = Transaction_invoices;
+export default Transaction_invoices;

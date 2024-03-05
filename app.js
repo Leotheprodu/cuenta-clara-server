@@ -15,7 +15,6 @@ import sess from './config/expressSessions.js';
 
 import express from 'express';
 import { PORT, ORIGIN_CORS } from './config/constants.js';
-
 const app = express();
 app.use(
   cors({
@@ -37,7 +36,7 @@ app.use(
 app.set('trust proxy', 1);
 app.use(session(sess));
 app.use(express.json());
-/* app.use('/api', router); */
+app.use('/api', router);
 const server = app.listen(PORT, () => {
   console.log(`The server is listening on port ${PORT}...`);
 });

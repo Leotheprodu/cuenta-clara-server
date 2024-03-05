@@ -1,7 +1,7 @@
-const { sequelize } = require('../../config/mysql');
-const { DataTypes } = require('sequelize');
-const Clients = require('./clients');
-const Users_business = require('./users_business');
+import { sequelize } from '../../config/mysql.js';
+import { DataTypes } from 'sequelize';
+import Clients from './clients.js';
+import Users_business from './users_business.js';
 
 const Balances = sequelize.define('balances', {
   id: {
@@ -26,4 +26,4 @@ Balances.belongsTo(Users_business, {
 Clients.hasMany(Balances, { foreignKey: { name: 'client_id' } });
 Users_business.hasMany(Balances, { foreignKey: { name: 'business_id' } });
 /* Balances.sync({ alter: true }); */
-module.exports = Balances;
+export default Balances;

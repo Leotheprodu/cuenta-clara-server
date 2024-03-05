@@ -1,6 +1,6 @@
-const { matchedData } = require('express-validator');
-const { handleHttpError } = require('../utils/handleError');
-const { billingPrice } = require('../config/constants');
+import { matchedData } from 'express-validator';
+import { handleHttpError } from '../utils/handleError.js';
+import { billingPrice } from '../config/constants.js';
 
 const checkIfBalanceCoverInvoice = (req, res, next) => {
   const { total } = matchedData(req);
@@ -26,4 +26,4 @@ const checkIfBalanceCoverInvoice = (req, res, next) => {
     return;
   }
 };
-module.exports = checkIfBalanceCoverInvoice;
+export default checkIfBalanceCoverInvoice;

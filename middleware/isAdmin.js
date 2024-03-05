@@ -1,5 +1,5 @@
-const { typeOfRoles } = require('../config/constants');
-const { handleHttpError } = require('../utils/handleError');
+import { typeOfRoles } from '../config/constants.js';
+import { handleHttpError } from '../utils/handleError.js';
 
 const isAdmin = (req, res, next) => {
   const roles = req.session.roles;
@@ -11,4 +11,4 @@ const isAdmin = (req, res, next) => {
   }
 };
 
-module.exports = { isAdmin };
+export { isAdmin };

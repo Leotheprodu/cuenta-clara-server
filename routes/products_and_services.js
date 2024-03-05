@@ -1,17 +1,17 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { isLoggedInTrue } = require('../middleware/isLoggedIn');
-const {
+import { isLoggedInTrue } from '../middleware/isLoggedIn.js';
+import {
   validatorGetProductsAndServicesByClient,
   validatorGetProductsAndServicesUpdateByClient,
   validatorProductsAndServicesUpdateDefault,
-} = require('../validators/products_and_services');
-const {
+} from '../validators/products_and_services.js';
+import {
   productsAndServicesByClientCtrl,
   productsAndServicesUpdateCtrl,
   productsAndServicesCreateCtrl,
   productsAndServicesDefaultUpdateCtrl,
-} = require('../controllers/products_and_services.controller');
+} from '../controllers/products_and_services.controller.js';
 
 router.get(
   '/:business_id',
@@ -38,4 +38,4 @@ router.patch(
   productsAndServicesDefaultUpdateCtrl,
 );
 
-module.exports = router;
+export default router;

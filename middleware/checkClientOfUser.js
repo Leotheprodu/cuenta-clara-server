@@ -1,6 +1,7 @@
-const { clientsModel } = require('../models');
-const { handleHttpError } = require('../utils/handleError');
-const { matchedData } = require('express-validator');
+import models from '../models/index.js';
+import { handleHttpError } from '../utils/handleError.js';
+import { matchedData } from 'express-validator';
+const { clientsModel } = models;
 
 const checkClientOfUser = async (req, res, next) => {
   try {
@@ -27,4 +28,4 @@ const checkClientOfUser = async (req, res, next) => {
   }
 };
 
-module.exports = checkClientOfUser;
+export default checkClientOfUser;

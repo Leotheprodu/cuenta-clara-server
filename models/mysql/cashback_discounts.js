@@ -1,7 +1,7 @@
-const { sequelize } = require('../../config/mysql');
-const { DataTypes } = require('sequelize');
-const Business = require('./users_business');
-const Rules_cashback_discounts = require('./rules_cashback_discounts');
+import { sequelize } from '../../config/mysql.js';
+import { DataTypes } from 'sequelize';
+import Business from './users_business.js';
+import Rules_cashback_discounts from './rules_cashback_discounts.js';
 
 const Cashback_discounts = sequelize.define('cashback_discounts', {
   id: {
@@ -40,4 +40,4 @@ Rules_cashback_discounts.hasMany(Cashback_discounts, {
 });
 /* Cashback_discounts.sync({ alter: true }); */
 
-module.exports = Cashback_discounts;
+export default Cashback_discounts;

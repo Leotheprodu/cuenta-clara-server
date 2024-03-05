@@ -1,5 +1,5 @@
-const { sequelize } = require('../../config/mysql');
-const { DataTypes } = require('sequelize');
+import { sequelize } from '../../config/mysql.js';
+import { DataTypes } from 'sequelize';
 
 const Roles = sequelize.define('roles', {
   id: {
@@ -13,4 +13,4 @@ const Roles = sequelize.define('roles', {
   },
 });
 /* Roles.sync({ alter: true }); */
-module.exports = Roles;
+export default Roles;

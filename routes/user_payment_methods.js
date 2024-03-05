@@ -1,17 +1,13 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { isLoggedInTrue } = require('../middleware/isLoggedIn');
-const {
-  validatorGetProductsAndServicesByClient,
-} = require('../validators/products_and_services');
-const {
+import { isLoggedInTrue } from '../middleware/isLoggedIn.js';
+import { validatorGetProductsAndServicesByClient } from '../validators/products_and_services.js';
+import {
   paymentMethodsCtrl,
   createPaymentMethodsCtrl,
-} = require('../controllers/user_payment_methods.controller');
-const {
-  validatorCreateUserPaymentMethods,
-} = require('../validators/user_payment_methods');
-const checkBusinessOfUser = require('../middleware/checkBusinessOfUser');
+} from '../controllers/user_payment_methods.controller.js';
+import { validatorCreateUserPaymentMethods } from '../validators/user_payment_methods.js';
+import checkBusinessOfUser from '../middleware/checkBusinessOfUser.js';
 
 router.get(
   '/:business_id',
@@ -26,4 +22,4 @@ router.post(
   createPaymentMethodsCtrl,
 );
 
-module.exports = router;
+export default router;

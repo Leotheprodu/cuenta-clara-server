@@ -1,7 +1,8 @@
-const { matchedData } = require('express-validator');
-const { users_businessModel } = require('../models');
-const { handleHttpError } = require('../utils/handleError');
-const { typeOfRoles } = require('../config/constants');
+import { matchedData } from 'express-validator';
+import models from '../models/index.js';
+import { handleHttpError } from '../utils/handleError.js';
+import { typeOfRoles } from '../config/constants.js';
+const { users_businessModel } = models;
 
 const checkBusinessOfUser = async (req, res, next) => {
   const { id } = matchedData(req);
@@ -20,4 +21,4 @@ const checkBusinessOfUser = async (req, res, next) => {
   }
 };
 
-module.exports = checkBusinessOfUser;
+export default checkBusinessOfUser;

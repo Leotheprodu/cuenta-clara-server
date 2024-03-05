@@ -1,21 +1,22 @@
-const express = require('express');
-const router = express.Router();
-const {
+import express from 'express';
+import {
   loginCtrl,
   signUpCtrl,
   logoutCtrl,
   emailVerifyCtrl,
   ckeckSessCtrl,
   employeeLoginCtrl,
-} = require('../controllers/auth.controller');
-const {
+} from '../controllers/auth.controller.js';
+import {
   validatorLogin,
   validatorSignUp,
   validatorGetToken,
   validatorLoginEmployee,
-} = require('../validators/auth');
-const { isLoggedInTrue, isLoggedInFalse } = require('../middleware/isLoggedIn');
-const checkEmailExist = require('../middleware/checkEmailExist');
+} from '../validators/auth.js';
+import { isLoggedInTrue, isLoggedInFalse } from '../middleware/isLoggedIn.js';
+import checkEmailExist from '../middleware/checkEmailExist.js';
+
+const router = express.Router();
 
 router.post('/login', isLoggedInFalse, validatorLogin, loginCtrl);
 router.post(
@@ -28,4 +29,5 @@ router.post('/signup', validatorSignUp, checkEmailExist, signUpCtrl);
 router.get('/logout', isLoggedInTrue, logoutCtrl);
 router.get('/email-verification/:token', validatorGetToken, emailVerifyCtrl);
 router.get('/check-session', ckeckSessCtrl);
-module.exports = router;
+
+export default router;

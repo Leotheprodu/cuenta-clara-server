@@ -1,5 +1,5 @@
-const { sequelize } = require('../../config/mysql');
-const { DataTypes } = require('sequelize');
+import { sequelize } from '../../config/mysql.js';
+import { DataTypes } from 'sequelize';
 
 const Users = sequelize.define(
   'users',
@@ -46,4 +46,4 @@ Users.addScope('withPassword', {
   attributes: { include: ['password'] },
 });
 /* Users.sync({ alter: true }); */
-module.exports = Users;
+export default Users;

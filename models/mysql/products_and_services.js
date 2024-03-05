@@ -1,7 +1,7 @@
-const { sequelize } = require('../../config/mysql');
-const { DataTypes } = require('sequelize');
-const Users = require('./users');
-const Users_business = require('./users_business');
+import { sequelize } from '../../config/mysql.js';
+import { DataTypes } from 'sequelize';
+import Users from './users.js';
+import Users_business from './users_business.js';
 
 const Products_and_services = sequelize.define('products_and_services', {
   id: {
@@ -53,4 +53,4 @@ Users_business.hasMany(Products_and_services, {
   foreignKey: { name: 'business_id' },
 });
 /* Products_and_services.sync({ alter: true }); */
-module.exports = Products_and_services;
+export default Products_and_services;

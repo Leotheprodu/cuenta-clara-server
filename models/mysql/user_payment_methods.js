@@ -1,7 +1,7 @@
-const { sequelize } = require('../../config/mysql');
-const { DataTypes } = require('sequelize');
-const Payment_methods = require('./payment_methods');
-const Users_business = require('./users_business');
+import { sequelize } from '../../config/mysql.js';
+import { DataTypes } from 'sequelize';
+import Users_business from './users_business.js';
+import Payment_methods from './payment_methods.js';
 
 const User_payment_methods = sequelize.define('user_payment_methods', {
   id: {
@@ -43,4 +43,4 @@ Users_business.hasMany(User_payment_methods, {
   foreignKey: { name: 'business_id' },
 });
 /* User_payment_methods.sync({ alter: true }); */
-module.exports = User_payment_methods;
+export default User_payment_methods;

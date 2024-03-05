@@ -1,12 +1,10 @@
-const { BusinessConfigInfo } = require('../config/constants');
-const {
-  clientsModel,
-  employeesModel,
-  balancesModel,
-  users_businessModel,
-} = require('../models/');
-const { refreshUserRoles } = require('./handleRoles');
-const userBusinessChecker = require('./userBusinessChecker');
+import { BusinessConfigInfo } from '../config/constants.js';
+import models from '../models/index.js';
+import { refreshUserRoles } from './handleRoles.js';
+import userBusinessChecker from './userBusinessChecker.js';
+const { clientsModel, employeesModel, balancesModel, users_businessModel } =
+  models;
+
 const RefreshSessionData = async (req) => {
   const id = req.session.user.id;
   const client =
@@ -56,4 +54,4 @@ const RefreshSessionData = async (req) => {
   await userBusinessChecker(req, id);
 };
 
-module.exports = { RefreshSessionData };
+export { RefreshSessionData };

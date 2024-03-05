@@ -1,5 +1,5 @@
-const { handleHttpError } = require('../utils/handleError');
-const { resUsersSessionData } = require('../utils/handleOkResponses');
+import { handleHttpError } from '../utils/handleError.js';
+import { resUsersSessionData } from '../utils/handleOkResponses.js';
 
 const isLoggedInTrue = (req, res, next) => {
   const isLoggedIn = req.session.isLoggedIn;
@@ -21,4 +21,4 @@ const isLoggedInFalse = async (req, res, next) => {
   }
 };
 
-module.exports = { isLoggedInTrue, isLoggedInFalse };
+export { isLoggedInTrue, isLoggedInFalse };

@@ -1,9 +1,9 @@
-const { sequelize } = require('../../config/mysql');
-const { DataTypes } = require('sequelize');
-const Clients = require('./clients');
-const Balances = require('./balances');
-const User_payment_methods = require('./user_payment_methods');
-const Balances_types = require('./balances_types');
+import { sequelize } from '../../config/mysql.js';
+import { DataTypes } from 'sequelize';
+import Clients from './clients.js';
+import Balances from './balances.js';
+import User_payment_methods from './user_payment_methods.js';
+import Balances_types from './balances_types.js';
 
 const Balances_recharges = sequelize.define('balances_recharges', {
   id: {
@@ -43,4 +43,4 @@ Balances_types.hasMany(Balances_recharges, {
   foreignKey: { name: 'balances_types_id' },
 });
 /* Balances_recharges.sync({ alter: true }); */
-module.exports = Balances_recharges;
+export default Balances_recharges;

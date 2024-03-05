@@ -1,10 +1,5 @@
-const { activity_logsModel } = require('../models');
-/**
- * Create activity log
- * @param {*} res
- * @param {string} action
- * @param {number} reference_id
- */
+import { activity_logsModel } from '../models/index.js';
+
 const createActivityLog = async (req, action, reference_id) => {
   if (req.session.isLoggedIn) {
     const { user, employee } = req.session;
@@ -19,4 +14,5 @@ const createActivityLog = async (req, action, reference_id) => {
     return await activity_logsModel.create(log);
   }
 };
-module.exports = { createActivityLog };
+
+export { createActivityLog };

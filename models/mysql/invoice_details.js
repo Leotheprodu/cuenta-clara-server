@@ -1,7 +1,7 @@
-const { sequelize } = require('../../config/mysql');
-const { DataTypes } = require('sequelize');
-const Invoices = require('./invoices');
-const Products_and_services = require('./products_and_services');
+import { sequelize } from '../../config/mysql.js';
+import { DataTypes } from 'sequelize';
+import Invoices from './invoices.js';
+import Products_and_services from './products_and_services.js';
 
 const Invoice_details = sequelize.define('invoice_details', {
   id: {
@@ -35,4 +35,4 @@ Products_and_services.hasMany(Invoice_details, {
   foreignKey: { name: 'code' },
 });
 /* Invoice_details.sync({ alter: true }); */
-module.exports = Invoice_details;
+export default Invoice_details;

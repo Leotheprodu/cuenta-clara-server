@@ -1,24 +1,24 @@
-const crypto = require('crypto');
-const { temp_token_poolModel } = require('../models');
+import crypto from 'crypto';
+import { temp_token_poolModel } from '../models/index.js';
 
 const newToken = async () => {
-    try {
-        return crypto.randomBytes(32).toString('hex');
-    } catch (error) {
-        throw new Error(`Ha habido un error al generar el token: ${error}`);
-    }
+  try {
+    return crypto.randomBytes(32).toString('hex');
+  } catch (error) {
+    throw new Error(`Ha habido un error al generar el token: ${error}`);
+  }
 };
 
 function generateRandomPin(length) {
-    if (length <= 0) {
-        throw new Error('PIN debe ser mayor a 0');
-    }
+  if (length <= 0) {
+    throw new Error('PIN debe ser mayor a 0');
+  }
 
-    const min = 10 ** (length - 1); // Valor mínimo basado en la longitud
-    const max = 10 ** length - 1; // Valor máximo basado en la longitud
-    const pin = Math.floor(Math.random() * (max - min + 1)) + min;
+  const min = 10 ** (length - 1); // Valor mínimo basado en la longitud
+  const max = 10 ** length - 1; // Valor máximo basado en la longitud
+  const pin = Math.floor(Math.random() * (max - min + 1)) + min;
 
-    return pin.toString().padStart(length, '0'); // Rellenar con ceros a la izquierda si es necesario
+  return pin.toString().padStart(length, '0'); // Rellenar con ceros a la izquierda si es necesario
 }
 /**
  * aqui pasa el token, email del usuario y el tipo de registro
@@ -27,16 +27,16 @@ function generateRandomPin(length) {
  * @param {*} type
  */
 const createTempToken = async (token, user_email, type) => {
-    const temp_token = await temp_token_poolModel.create({
-        token,
-        user_email,
-        type,
-    });
-    const message = {
-        message: 'token temporal guardado existosamente',
-        temp_token,
-    };
-    return message;
+  const temp_token = await temp_token_poolModel.create({
+    token,
+    user_email,
+    type,
+  });
+  const message = {
+    message: 'token temporal guardado existosamente',
+    temp_token,
+  };
+  return message;
 };
 /**
  * aqui pasa el token, email del usuario y el tipo de registro
@@ -45,42 +45,42 @@ const createTempToken = async (token, user_email, type) => {
  * @param {*} type
  */
 const deleteTempToken = async (token, user_email, type) => {
-    try {
-        const temp_token = await temp_token_poolModel.findOne({
-            where: { user_email, type, token },
-        });
-        if (!temp_token) return;
+  try {
+    const temp_token = await temp_token_poolModel.findOne({
+      where: { user_email, type, token },
+    });
+    if (!temp_token) return;
 
-        await temp_token.destroy();
-        const message = {
-            message: 'token temporal eliminado existosamente',
-        };
-        return message;
-    } catch (error) {
-        console.log(error);
-    }
+    await temp_token.destroy();
+    const message = {
+      message: 'token temporal eliminado existosamente',
+    };
+    return message;
+  } catch (error) {
+    console.log(error);
+  }
 };
 const deleteTempNoToken = async (user_email, type) => {
-    try {
-        const temp_token = await temp_token_poolModel.findOne({
-            where: { user_email, type },
-        });
-        if (!temp_token) return;
+  try {
+    const temp_token = await temp_token_poolModel.findOne({
+      where: { user_email, type },
+    });
+    if (!temp_token) return;
 
-        await temp_token.destroy();
-        const message = {
-            message: 'token temporal eliminado existosamente',
-        };
-        return message;
-    } catch (error) {
-        console.log(error);
-    }
+    await temp_token.destroy();
+    const message = {
+      message: 'token temporal eliminado existosamente',
+    };
+    return message;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-module.exports = {
-    newToken,
-    generateRandomPin,
-    createTempToken,
-    deleteTempToken,
-    deleteTempNoToken,
+export {
+  newToken,
+  generateRandomPin,
+  createTempToken,
+  deleteTempToken,
+  deleteTempNoToken,
 };

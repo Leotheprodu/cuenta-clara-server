@@ -1,5 +1,5 @@
-const { sequelize } = require('../../config/mysql');
-const { DataTypes } = require('sequelize');
+import { sequelize } from '../../config/mysql.js';
+import { DataTypes } from 'sequelize';
 
 const Payment_methods = sequelize.define(
   'payment_methods',
@@ -19,4 +19,4 @@ const Payment_methods = sequelize.define(
   },
 );
 /* Payment_methods.sync({ alter: true }); */
-module.exports = Payment_methods;
+export default Payment_methods;

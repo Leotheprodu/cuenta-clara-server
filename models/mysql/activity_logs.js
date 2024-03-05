@@ -1,6 +1,6 @@
-const { sequelize } = require('../../config/mysql');
-const { DataTypes } = require('sequelize');
-const Users = require('./users');
+import { sequelize } from '../../config/mysql.js';
+import { DataTypes } from 'sequelize';
+import Users from './users.js';
 
 const Activity_logs = sequelize.define('activity_logs', {
   id: {
@@ -24,4 +24,4 @@ Activity_logs.belongsTo(Users, {
 Users.hasMany(Activity_logs, { foreignKey: { name: 'parent_user_id' } });
 
 /* Activity_logs.sync({ alter: true }); */
-module.exports = Activity_logs;
+export default Activity_logs;

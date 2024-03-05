@@ -1,18 +1,25 @@
-const express = require('express');
-const fs = require('fs');
+import express from 'express';
+import path from 'path';
+import { readdirSync } from 'fs';
 const router = express.Router();
+const filePath = new URL(import.meta.url).pathname;
+const PATH_ROUTES = path.normalize(path.dirname(filePath)).substring(1);
 
-const PATH_ROUTES = __dirname;
 const removeExtension = (fileName) => {
   return fileName.split('.').shift();
 };
 
-fs.readdirSync(PATH_ROUTES).filter((file) => {
+readdirSync(PATH_ROUTES).forEach((file) => {
   const name = removeExtension(file);
-
-  if (name != 'index') {
-    router.use(`/${name}`, require(`./${file}`));
+  if (name !== 'index') {
+    import(`./${file}`)
+      .then((module) => {
+        router.use(`/${name}`, module.default);
+      })
+      .catch((err) => {
+        console.error(`Error importing route file ${file}:`, err);
+      });
   }
 });
 
-module.exports = router;
+export default router;

@@ -1,6 +1,6 @@
-const { sequelize } = require('../../config/mysql');
-const { DataTypes } = require('sequelize');
-const Users = require('./users');
+import { sequelize } from '../../config/mysql.js';
+import { DataTypes } from 'sequelize';
+import Users from './users.js';
 
 const Temp_token_pool = sequelize.define(
   'temp_token_pool',
@@ -30,4 +30,4 @@ Temp_token_pool.belongsTo(Users, {
 });
 Users.hasOne(Temp_token_pool, { foreignKey: { name: 'user_email' } });
 /* Temp_token_pool.sync({ alter: true }); */
-module.exports = Temp_token_pool;
+export default Temp_token_pool;

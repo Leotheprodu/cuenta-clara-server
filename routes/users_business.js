@@ -1,20 +1,20 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const {
+import {
   businessByUserCtrl,
   favoriteBusinessCtrl,
   createBusinessCtrl,
   deactivateBusinessCtrl,
   updateBusinessCtrl,
-} = require('../controllers/users_business.controller');
-const { isLoggedInTrue } = require('../middleware/isLoggedIn');
-const {
+} from '../controllers/users_business.controller.js';
+import { isLoggedInTrue } from '../middleware/isLoggedIn.js';
+import {
   validatorGetBussiness,
   validatorGetFavoriteBussiness,
   validatorCreateBusiness,
   validatorUpdateBussiness,
-} = require('../validators/business');
-const checkBusinessOfUser = require('../middleware/checkBusinessOfUser');
+} from '../validators/business.js';
+import checkBusinessOfUser from '../middleware/checkBusinessOfUser.js';
 
 router.get('/', isLoggedInTrue, validatorGetBussiness, businessByUserCtrl);
 router.post('/', isLoggedInTrue, validatorCreateBusiness, createBusinessCtrl);
@@ -40,4 +40,4 @@ router.post(
   updateBusinessCtrl,
 );
 
-module.exports = router;
+export default router;

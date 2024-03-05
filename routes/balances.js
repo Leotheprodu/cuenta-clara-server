@@ -1,6 +1,5 @@
-const express = require('express');
-const router = express.Router();
-const {
+import express from 'express';
+import {
   balanceByClientCtrl,
   ClientBalancesCtrl,
   getBalancesTypesCtrl,
@@ -9,14 +8,16 @@ const {
   balancesRechargesCtrl,
   applyBalanceRechargeCtrl,
   cancelBalanceRechargeCtrl,
-} = require('../controllers/balances.controller');
-const { isLoggedInTrue } = require('../middleware/isLoggedIn');
-const {
+} from '../controllers/balances.controller.js';
+import { isLoggedInTrue } from '../middleware/isLoggedIn.js';
+import {
   validatorGetBalanceByClient,
   validatorRechargeBalance,
-} = require('../validators/balances');
-const checkClientOfUser = require('../middleware/checkClientOfUser');
-const { isAdmin } = require('../middleware/isAdmin');
+} from '../validators/balances.js';
+import checkClientOfUser from '../middleware/checkClientOfUser.js';
+import { isAdmin } from '../middleware/isAdmin.js';
+
+const router = express.Router();
 
 router.get(
   '/:id',
@@ -58,4 +59,5 @@ router.post(
   validatorRechargeBalance,
   rechargeBalancesCtrl,
 );
-module.exports = router;
+
+export default router;

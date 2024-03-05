@@ -1,35 +1,28 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { isLoggedInTrue } = require('../middleware/isLoggedIn');
-const {
+import { isLoggedInTrue } from '../middleware/isLoggedIn.js';
+import {
   createInvoiceCtrl,
   getInvoicesByClientCtrl,
-  /*   getInvoicesOfUserCtrl, */
   addTransactionCtrl,
   deleteInvoicesByClientCtrl,
   getInvoicesByTokenCtrl,
   getTransactionsDashboardCtrl,
   getDetailsDashboardCtrl,
-} = require('../controllers/invoices.controller');
-const {
+} from '../controllers/invoices.controller.js';
+import {
   validatorCreateInvoice,
   validateInvoiceClientId,
-  /*  validateQueryInvoicesOfUser, */
   validatorAddTransaction,
-} = require('../validators/invoices');
-const checkClientOfUser = require('../middleware/checkClientOfUser');
-const checkIfBalanceCoverInvoice = require('../middleware/checkIfBalanceCoverInvoice');
-const { checkPin } = require('../middleware/checkPin');
-const {
+} from '../validators/invoices.js';
+import checkClientOfUser from '../middleware/checkClientOfUser.js';
+import checkIfBalanceCoverInvoice from '../middleware/checkIfBalanceCoverInvoice.js';
+import { checkPin } from '../middleware/checkPin.js';
+import {
   validatorDashboardClient,
   validatorDashboardTransactions,
-} = require('../validators/clients');
-/* router.get(
-  '/',
-  isLoggedInTrue,
-  validateQueryInvoicesOfUser,
-  getInvoicesOfUserCtrl,
-); */
+} from '../validators/clients.js';
+
 router.get(
   '/:id',
   isLoggedInTrue,
@@ -76,4 +69,5 @@ router.post(
   validatorDashboardTransactions,
   getDetailsDashboardCtrl,
 );
-module.exports = router;
+
+export default router;

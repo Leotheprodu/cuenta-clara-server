@@ -1,5 +1,7 @@
-const { handleHttpError } = require('../utils/handleError');
-const { clientsModel } = require('../models');
+import { handleHttpError } from '../utils/handleError.js';
+import models from '../models/index.js';
+const { clientsModel } = models;
+
 const checkPin = async (req, res, next) => {
   const { token } = req.params;
   const { pin } = req.body;
@@ -17,4 +19,4 @@ const checkPin = async (req, res, next) => {
   }
 };
 
-module.exports = { checkPin };
+export { checkPin };

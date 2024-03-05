@@ -1,5 +1,5 @@
-const { sequelize } = require('../../config/mysql');
-const { DataTypes } = require('sequelize');
+import { sequelize } from '../../config/mysql.js';
+import { DataTypes } from 'sequelize';
 
 const Balances_types = sequelize.define('balances_types', {
   id: {
@@ -23,4 +23,4 @@ const Balances_types = sequelize.define('balances_types', {
 });
 
 /* Balances_types.sync({ alter: true }); */
-module.exports = Balances_types;
+export default Balances_types;

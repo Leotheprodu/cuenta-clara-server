@@ -8,5 +8,4 @@ const dateNow = () => {
 
   return fechaActual;
 };
-
-module.exports = dateNow;
+export default dateNow;

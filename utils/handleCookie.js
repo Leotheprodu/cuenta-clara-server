@@ -1,4 +1,5 @@
-const { environment } = require('../config/constants');
+import { environment } from '../config/constants.js';
+
 const cookieSessionInject = (req, res) => {
   if (environment === 'production') {
     res.cookie('sessionId', req.session.id, {
@@ -15,4 +16,5 @@ const cookieSessionInject = (req, res) => {
     });
   }
 };
-module.exports = { cookieSessionInject };
+
+export { cookieSessionInject };

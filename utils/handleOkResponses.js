@@ -1,5 +1,5 @@
-const { handleHttpError } = require('./handleError');
-const { RefreshSessionData } = require('./handleRefreshSessionData');
+import { handleHttpError } from './handleError.js';
+import { RefreshSessionData } from './handleRefreshSessionData.js';
 
 /**
  * Respuesta para enviar toda la informacion de la sesion actual del usuario
@@ -33,4 +33,4 @@ const resOkData = (res, data) => {
   res.send({ data });
 };
 
-module.exports = { resUsersSessionData, resOkData };
+export { resUsersSessionData, resOkData };

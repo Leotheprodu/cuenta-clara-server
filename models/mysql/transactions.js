@@ -1,9 +1,9 @@
-const { sequelize } = require('../../config/mysql');
-const { DataTypes } = require('sequelize');
-const Users = require('./users');
-const Payment_methods = require('./payment_methods');
-const Payment_status = require('./payment_status');
-const Clients = require('./clients');
+import { sequelize } from '../../config/mysql.js';
+import { DataTypes } from 'sequelize';
+import Users from './users.js';
+import Payment_methods from './payment_methods.js';
+import Payment_status from './payment_status.js';
+import Clients from './clients.js';
 
 const Transactions = sequelize.define('transactions', {
   id: {
@@ -47,4 +47,4 @@ Payment_status.hasMany(Transactions, {
 });
 /* Transactions.sync({ alter: true }); */
 
-module.exports = Transactions;
+export default Transactions;

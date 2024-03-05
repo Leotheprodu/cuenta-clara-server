@@ -1,5 +1,5 @@
-const { sequelize } = require('../../config/mysql');
-const { DataTypes } = require('sequelize');
+import { sequelize } from '../../config/mysql.js';
+import { DataTypes } from 'sequelize';
 
 const Payment_status = sequelize.define(
   'payment_status',
@@ -20,4 +20,4 @@ const Payment_status = sequelize.define(
   },
 );
 /* Payment_status.sync({ alter: true }); */
-module.exports = Payment_status;
+export default Payment_status;
