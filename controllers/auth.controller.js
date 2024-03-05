@@ -1,4 +1,24 @@
-const { matchedData } = require('express-validator');
+import { matchedData } from 'express-validator';
+import models from '../models/index.js';
+import Users from '../services/users.service.js';
+import { handleHttpError } from '../utils/handleError.js';
+import { PasswordCompare, PasswordEncrypt } from '../utils/handlePassword.js';
+import { resUsersSessionData, resOkData } from '../utils/handleOkResponses.js';
+import { createTempToken, newToken } from '../utils/handleTempToken.js';
+import { sendAEmail } from '../utils/handleSendEmail.js';
+import idGenerator from '../utils/idGenerator.js';
+import {
+  initialBalance,
+  appName,
+  emailUser,
+  verifyEmailLink,
+  paymentMethod,
+  BusinessConfigInfo,
+  paymentStatus,
+} from '../config/constants.js';
+import userBusinessChecker from '../utils/userBusinessChecker.js';
+import { cookieSessionInject } from '../utils/handleCookie.js';
+import { createActivityLog } from '../utils/handleActivityLog.js';
 const {
   usersModel,
   clientsModel,
@@ -9,39 +29,13 @@ const {
   products_and_servicesModel,
   user_payment_methodsModel,
   balances_rechargesModel,
-} = require('../models');
-const Users = require('../services/users.service');
-const { handleHttpError } = require('../utils/handleError');
-const { PasswordCompare, PasswordEncrypt } = require('../utils/handlePassword');
-const {
-  resUsersSessionData,
-  resOkData,
-} = require('../utils/handleOkResponses');
-const { createTempToken, newToken } = require('../utils/handleTempToken');
-const { sendAEmail } = require('../utils/handleSendEmail');
-const idGenerator = require('../utils/idGenerator');
-const {
-  initialBalance,
-  appName,
-  emailUser,
-  verifyEmailLink,
-  paymentMethod,
-  BusinessConfigInfo,
-  paymentStatus,
-} = require('../config/constants');
-const userBusinessChecker = require('../utils/userBusinessChecker');
-const { cookieSessionInject } = require('../utils/handleCookie');
-const { createActivityLog } = require('../utils/handleActivityLog');
+} = models;
 const users = new Users();
+
 const loginCtrl = async (req, res) => {
   try {
-    //Import the data provided by the client already filtered
-
     const data = matchedData(req);
-
     const { email, password } = data;
-
-    //extract user data from database
     const userData = await users.findUserWithPasswordByEmail(email);
 
     if (!userData) {
@@ -53,7 +47,6 @@ const loginCtrl = async (req, res) => {
       return;
     }
     const hashPassword = await userData.password;
-
     const check = await PasswordCompare(password, hashPassword);
     if (!check) {
       handleHttpError(res, 'Contraseña Incorrecta', 401);
@@ -76,14 +69,11 @@ const loginCtrl = async (req, res) => {
     handleHttpError(res, 'Error durante el inicio de sesion');
   }
 };
+
 const employeeLoginCtrl = async (req, res) => {
   try {
-    //Import the data provided by the client already filtered
-
     const data = matchedData(req);
-
     const { username, password } = data;
-
     const employeeData =
       await users.findEmployeeWithPasswordByUsername(username);
 
@@ -96,7 +86,6 @@ const employeeLoginCtrl = async (req, res) => {
       return;
     }
     const hashPassword = await employeeData.password;
-
     const check = await PasswordCompare(password, hashPassword);
     if (!check) {
       handleHttpError(res, 'Contraseña Incorrecta', 401);
@@ -122,6 +111,7 @@ const employeeLoginCtrl = async (req, res) => {
     handleHttpError(res, 'Error durante el inicio de sesion');
   }
 };
+
 const logoutCtrl = async (req, res) => {
   try {
     req.session.isLoggedIn = false;
@@ -131,6 +121,7 @@ const logoutCtrl = async (req, res) => {
     handleHttpError(res, 'Error al cerrar sesion');
   }
 };
+
 const signUpCtrl = async (req, res) => {
   try {
     req = matchedData(req);
@@ -138,32 +129,19 @@ const signUpCtrl = async (req, res) => {
     const password = await PasswordEncrypt(req.password);
     const body = { ...restOfReq, password };
     const { username, email } = body;
-    console.log(body);
-    // Se agrega la info de body a la base de datos usuarios
     const data = await usersModel.create(body);
     if (!data) {
       handleHttpError(res, 'Error creando usuario');
       return;
     }
-    //Se genera un token random
     const token = await newToken();
-
-    //Crea el link que va a ser enviar al correo del nuevo usuario para verificar el email
     const link = `${verifyEmailLink}${token}`;
-
-    // Crea el objeto con el nombre y correo del remitente del correo a enviar
     const from = {
       name: `${appName}`,
       email: `${emailUser}`,
     };
-
-    // Crea el objeto con la data que necesita la plantilla para ser renderizada y enviada
     const dataToEJS = { username, link };
-
-    // Agrega el token en la base de datos asignada al correo del usuario
     await createTempToken(token, email, 'sign_up');
-
-    // Envia el correo a usuario para que se verifique
     await sendAEmail(
       'user-sign_up',
       dataToEJS,
@@ -171,9 +149,6 @@ const signUpCtrl = async (req, res) => {
       email,
       `Bienvenido(a) a ${appName}`,
     );
-
-    // Con esta linea cuando se registra no devuelve en password en la respuesta
-
     const appClient = {
       username,
       email,
@@ -208,15 +183,12 @@ const signUpCtrl = async (req, res) => {
       code: `${data.id}-${newUserBusiness.id}-1`,
       type: 'service',
     });
-    //Crea cliente de la aplicacion para el usuario
     const client = await clientsModel.create(appClient);
-
     const userBalance = await balancesModel.create({
       client_id: client.id,
       business_id: BusinessConfigInfo.businessId,
       amount: initialBalance,
     });
-    //crea cliente predeterminado para el usuario
     const userClientData = await clientsModel.create(userClient);
     await balancesModel.create({
       client_id: userClientData.id,
@@ -255,9 +227,9 @@ const signUpCtrl = async (req, res) => {
     handleHttpError(res, 'Error creando usuario');
   }
 };
+
 const emailVerifyCtrl = async (req, res) => {
   const { token } = matchedData(req);
-
   const tempToken = async (token) => {
     try {
       const result = await temp_token_poolModel.findOne({
@@ -280,17 +252,16 @@ const emailVerifyCtrl = async (req, res) => {
     const unverifiedRole = await role_usersModel.findOne({
       where: { user_id: userData.id, role_id: 3 },
     });
-
     await tempTokenData.destroy();
     await unverifiedRole.destroy();
     await role_usersModel.create({ user_id: userData.id, role_id: 2 });
-
     resOkData(res, userData);
   } catch (error) {
     console.log(error);
     handleHttpError(res, 'Error verificando correo electronico');
   }
 };
+
 const ckeckSessCtrl = async (req, res) => {
   try {
     if (req.session.isLoggedIn) {
@@ -303,12 +274,12 @@ const ckeckSessCtrl = async (req, res) => {
     handleHttpError(res, 'Error al verificar sesion');
   }
 };
-//NOTE hay que agregar un controlador para los usuarios que olviden su contraseña
-module.exports = {
+
+export {
   loginCtrl,
+  employeeLoginCtrl,
   logoutCtrl,
   signUpCtrl,
   emailVerifyCtrl,
   ckeckSessCtrl,
-  employeeLoginCtrl,
 };

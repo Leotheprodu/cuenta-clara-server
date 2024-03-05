@@ -1,11 +1,8 @@
-const { matchedData } = require('express-validator');
-const {
-  products_and_servicesModel,
-  users_businessModel,
-} = require('../models');
-const { handleHttpError } = require('../utils/handleError');
-const { resOkData } = require('../utils/handleOkResponses');
-
+import { matchedData } from 'express-validator';
+import models from '../models';
+import { handleHttpError } from '../utils/handleError';
+import { resOkData } from '../utils/handleOkResponses';
+const { products_and_servicesModel, users_businessModel } = models;
 const productsAndServicesByClientCtrl = async (req, res) => {
   const { business_id } = matchedData(req);
   const user_id = req.session.user.id;
@@ -156,7 +153,7 @@ const productsAndServicesDefaultUpdateCtrl = async (req, res) => {
     );
   }
 };
-module.exports = {
+export {
   productsAndServicesByClientCtrl,
   productsAndServicesUpdateCtrl,
   productsAndServicesCreateCtrl,

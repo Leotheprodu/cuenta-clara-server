@@ -1,13 +1,14 @@
+import models from '../models';
+import { handleHttpError } from '../utils/handleError';
+import { resOkData } from '../utils/handleOkResponses';
+import { matchedData } from 'express-validator';
+import userBusinessChecker from '../utils/userBusinessChecker';
+import { paymentMethod } from '../config/constants';
 const {
   users_businessModel,
   products_and_servicesModel,
   user_payment_methodsModel,
-} = require('../models');
-const { handleHttpError } = require('../utils/handleError');
-const { resOkData } = require('../utils/handleOkResponses');
-const { matchedData } = require('express-validator');
-const userBusinessChecker = require('../utils/userBusinessChecker');
-const { paymentMethod } = require('../config/constants');
+} = models;
 
 const businessByUserCtrl = async (req, res) => {
   const { active } = matchedData(req);
@@ -158,7 +159,7 @@ const businessSelected = async (business, id) => {
 const oldDefaultBusiness = async (business) => {
   return await business.find((item) => item.default === true);
 };
-module.exports = {
+export {
   businessByUserCtrl,
   favoriteBusinessCtrl,
   createBusinessCtrl,

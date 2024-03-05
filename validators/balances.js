@@ -1,5 +1,5 @@
-const { check } = require('express-validator');
-const validateResults = require('../utils/handleValidator');
+import { check } from 'express-validator';
+import validateResults from '../utils/handleValidator.js';
 
 const validatorGetBalanceByClient = [
   check('id').exists().isNumeric().notEmpty(),
@@ -16,8 +16,4 @@ const validatorRechargeBalance = [
 
   (req, res, next) => validateResults(req, res, next),
 ];
-
-module.exports = {
-  validatorGetBalanceByClient,
-  validatorRechargeBalance,
-};
+export { validatorGetBalanceByClient, validatorRechargeBalance };

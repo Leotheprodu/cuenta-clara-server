@@ -1,4 +1,5 @@
-const { balancesModel } = require('../models');
+import models from '../models/index.js';
+const { balancesModel } = models;
 
 // Función para identificar los balances a borrar
 async function findBalancesToDelete(existingBalances, id_business) {
@@ -39,7 +40,7 @@ async function createBalances(clientId, balancesToCreate) {
     });
   }
 }
-module.exports = {
+export {
   findBalancesToDelete,
   findBalancesToCreate,
   deleteBalances,

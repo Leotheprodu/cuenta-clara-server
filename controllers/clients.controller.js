@@ -1,4 +1,14 @@
-const { matchedData } = require('express-validator');
+import { matchedData } from 'express-validator';
+import models from '../models';
+import { handleHttpError } from '../utils/handleError';
+import { resOkData } from '../utils/handleOkResponses';
+import {
+  findBalancesToDelete,
+  findBalancesToCreate,
+  deleteBalances,
+  createBalances,
+} from '../services/clients';
+import { createActivityLog } from '../utils/handleActivityLog';
 const {
   clientsModel,
   balancesModel,
@@ -6,16 +16,7 @@ const {
   user_payment_methodsModel,
   payment_methodsModel,
   usersModel,
-} = require('../models');
-const { handleHttpError } = require('../utils/handleError');
-const { resOkData } = require('../utils/handleOkResponses');
-const {
-  findBalancesToDelete,
-  findBalancesToCreate,
-  deleteBalances,
-  createBalances,
-} = require('../services/clients');
-const { createActivityLog } = require('../utils/handleActivityLog');
+} = models;
 
 const clientsCtrl = async (req, res) => {
   const { active } = matchedData(req);
@@ -237,7 +238,7 @@ const deactivateClientsCtrl = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   clientsCtrl,
   createClientsCtrl,
   deactivateClientsCtrl,

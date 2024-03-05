@@ -1,5 +1,5 @@
-const { check } = require('express-validator');
-const validateResults = require('../utils/handleValidator');
+import { check } from 'express-validator';
+import validateResults from '../utils/handleValidator.js';
 
 const validatorCreateUserPaymentMethods = [
   check('payment_method_full_name')
@@ -43,4 +43,4 @@ const validatorCreateUserPaymentMethods = [
   (req, res, next) => validateResults(req, res, next),
 ];
 
-module.exports = { validatorCreateUserPaymentMethods };
+export { validatorCreateUserPaymentMethods };

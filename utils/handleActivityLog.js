@@ -1,4 +1,5 @@
-import { activity_logsModel } from '../models/index.js';
+import models from '../models/index.js';
+const { activity_logsModel } = models;
 
 const createActivityLog = async (req, action, reference_id) => {
   if (req.session.isLoggedIn) {

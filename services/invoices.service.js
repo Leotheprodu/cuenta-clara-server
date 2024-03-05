@@ -1,4 +1,6 @@
-const { Op } = require('sequelize');
+import { Op } from 'sequelize';
+import { invoicesStatus } from '../config/constants';
+import models from '../models/index.js';
 const {
   invoicesModel,
   invoice_detailsModel,
@@ -8,8 +10,7 @@ const {
   payment_methodsModel,
   payment_statusModel,
   products_and_servicesModel,
-} = require('../models');
-const { invoicesStatus } = require('../config/constants');
+} = models;
 class Invoices {
   async findInvoicesofUserByClient(client_id, parent_user_id, page, perPage) {
     // Condiciones de búsqueda
@@ -285,4 +286,4 @@ class Invoices {
   }
 }
 
-module.exports = Invoices;
+export default Invoices;

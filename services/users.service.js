@@ -1,4 +1,5 @@
-const { usersModel, employeesModel } = require('../models');
+import models from '../models/index.js';
+const { usersModel, employeesModel } = models;
 class Users {
   async findUserWithPasswordByEmail(email) {
     const userData = await usersModel.scope('withPassword').findOne({
@@ -14,4 +15,4 @@ class Users {
   }
 }
 
-module.exports = Users;
+export default Users;

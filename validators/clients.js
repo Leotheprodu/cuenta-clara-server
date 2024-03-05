@@ -1,5 +1,5 @@
-const { check } = require('express-validator');
-const validateResults = require('../utils/handleValidator');
+import { check } from 'express-validator';
+import validateResults from '../utils/handleValidator.js';
 
 const validatorCreateClients = [
   check('username')
@@ -105,7 +105,7 @@ const validatorDashboardTransactions = [
   (req, res, next) => validateResults(req, res, next),
 ];
 
-module.exports = {
+export {
   validatorCreateClients,
   validatorDeactivateClient,
   validatorQueryClients,

@@ -1,13 +1,10 @@
-const { matchedData } = require('express-validator');
-const {
-  user_payment_methodsModel,
-  payment_methodsModel,
-  users_businessModel,
-} = require('../models');
-const { handleHttpError } = require('../utils/handleError');
-const { resOkData } = require('../utils/handleOkResponses');
-const { createActivityLog } = require('../utils/handleActivityLog');
-
+import { matchedData } from 'express-validator';
+import models from '../models';
+import { handleHttpError } from '../utils/handleError';
+import { resOkData } from '../utils/handleOkResponses';
+import { createActivityLog } from '../utils/handleActivityLog';
+const { user_payment_methodsModel, payment_methodsModel, users_businessModel } =
+  models;
 const paymentMethodsCtrl = async (req, res) => {
   const { business_id } = matchedData(req);
   try {
@@ -47,7 +44,4 @@ const createPaymentMethodsCtrl = async (req, res) => {
     handleHttpError(res, 'Error al crear el método de pago');
   }
 };
-module.exports = {
-  paymentMethodsCtrl,
-  createPaymentMethodsCtrl,
-};
+export { paymentMethodsCtrl, createPaymentMethodsCtrl };

@@ -1,6 +1,6 @@
 import crypto from 'crypto';
-import { temp_token_poolModel } from '../models/index.js';
-
+import models from '../models/index.js';
+const { temp_token_poolModel } = models;
 const newToken = async () => {
   try {
     return crypto.randomBytes(32).toString('hex');

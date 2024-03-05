@@ -1,5 +1,5 @@
-const { check } = require('express-validator');
-const validateResults = require('../utils/handleValidator');
+import { check } from 'express-validator';
+import validateResults from '../utils/handleValidator.js';
 
 const validatorGetProductsAndServicesByClient = [
   check('business_id').exists().isNumeric().notEmpty(),
@@ -26,7 +26,7 @@ const validatorGetProductsAndServicesUpdateByClient = [
   (req, res, next) => validateResults(req, res, next),
 ];
 
-module.exports = {
+export {
   validatorGetProductsAndServicesByClient,
   validatorGetProductsAndServicesUpdateByClient,
   validatorProductsAndServicesUpdateDefault,

@@ -1,5 +1,5 @@
-const { check } = require('express-validator');
-const validateResults = require('../utils/handleValidator');
+import { check } from 'express-validator';
+import validateResults from '../utils/handleValidator.js';
 
 const validatorCreateInvoice = [
   check('date')
@@ -120,7 +120,7 @@ const validateQueryInvoicesOfUser = [
     .withMessage('El campo status debe ser un string.'),
   (req, res, next) => validateResults(req, res, next),
 ];
-module.exports = {
+export {
   validatorCreateInvoice,
   validateInvoiceClientId,
   validateQueryInvoicesOfUser,

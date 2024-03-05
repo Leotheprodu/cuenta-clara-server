@@ -1,9 +1,6 @@
-const { BusinessConfigInfo, billingPrice } = require('../config/constants');
-const {
-  clientsModel,
-  balancesModel,
-  balances_updatesModel,
-} = require('../models');
+import { BusinessConfigInfo, billingPrice } from '../config/constants';
+import models from '../models/index.js';
+const { clientsModel, balancesModel, balances_updatesModel } = models;
 class Balances {
   async getBalanceOfUser(user_id) {
     try {
@@ -80,4 +77,4 @@ class Balances {
   }
 }
 
-module.exports = Balances;
+export default Balances;

@@ -1,4 +1,5 @@
 import ejs from 'ejs';
+import path from 'path';
 import transporter from '../config/nodemailer/transporter.js';
 const filePath = new URL(import.meta.url).pathname;
 const PATH_ROUTES = path.normalize(path.dirname(filePath)).substring(1);

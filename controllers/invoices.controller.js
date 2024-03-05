@@ -1,21 +1,18 @@
-const { matchedData } = require('express-validator');
-const {
-  invoicesModel,
-  invoice_detailsModel,
-  transactionsModel,
-  clientsModel,
-} = require('../models');
-const { handleHttpError } = require('../utils/handleError');
-const { resOkData } = require('../utils/handleOkResponses');
-const Balances = require('../services/balances.service');
-const Invoices = require('../services/invoices.service');
-const {
+import { matchedData } from 'express-validator';
+import models from '../models';
+import { handleHttpError } from '../utils/handleError';
+import { resOkData } from '../utils/handleOkResponses';
+import Balances from '../services/balances.service';
+import Invoices from '../services/invoices.service';
+import {
   invoicesStatus,
   paymentStatus,
   paymentMethod,
-} = require('../config/constants');
-const dateNow = require('../utils/handleDate');
-const { createActivityLog } = require('../utils/handleActivityLog');
+} from '../config/constants';
+import dateNow from '../utils/handleDate';
+import { createActivityLog } from '../utils/handleActivityLog';
+const { invoicesModel, invoice_detailsModel, transactionsModel, clientsModel } =
+  models;
 const invoices = new Invoices();
 const balances = new Balances();
 const createInvoiceCtrl = async (req, res) => {
@@ -293,10 +290,9 @@ const addTransactionCtrl = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   createInvoiceCtrl,
   getInvoicesByClientCtrl,
-  /* getInvoicesOfUserCtrl, */
   addTransactionCtrl,
   deleteInvoicesByClientCtrl,
   getInvoicesByTokenCtrl,

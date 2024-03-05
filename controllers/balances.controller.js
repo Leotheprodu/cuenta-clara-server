@@ -1,6 +1,10 @@
-//balanceByClientCtrl
-
-const { matchedData } = require('express-validator');
+import { matchedData } from 'express-validator';
+import models from '../models/index.js';
+import { handleHttpError } from '../utils/handleError.js';
+import { resOkData } from '../utils/handleOkResponses.js';
+import { BusinessConfigInfo, appName, emailUser } from '../config/constants.js';
+import { sendAEmail } from '../utils/handleSendEmail.js';
+import { createActivityLog } from '../utils/handleActivityLog.js';
 const {
   balancesModel,
   balances_typesModel,
@@ -8,17 +12,7 @@ const {
   clientsModel,
   user_payment_methodsModel,
   payment_methodsModel,
-} = require('../models');
-const { handleHttpError } = require('../utils/handleError');
-const { resOkData } = require('../utils/handleOkResponses');
-const {
-  BusinessConfigInfo,
-  appName,
-  emailUser,
-} = require('../config/constants');
-const { sendAEmail } = require('../utils/handleSendEmail');
-const { createActivityLog } = require('../utils/handleActivityLog');
-
+} = models;
 const balanceByClientCtrl = async (req, res) => {
   const { id } = matchedData(req);
 
@@ -32,6 +26,7 @@ const balanceByClientCtrl = async (req, res) => {
     handleHttpError(res, 'Error al intentar mostrar el balance del cliente');
   }
 };
+
 const rechargeBalancesCtrl = async (req, res) => {
   const data = matchedData(req);
   try {
@@ -71,6 +66,7 @@ const rechargeBalancesCtrl = async (req, res) => {
     );
   }
 };
+
 const applyBalanceRechargeCtrl = async (req, res) => {
   const { id } = matchedData(req);
 
@@ -113,6 +109,7 @@ const applyBalanceRechargeCtrl = async (req, res) => {
     handleHttpError(res, 'Error al intentar aplicar el saldo al cliente');
   }
 };
+
 const cancelBalanceRechargeCtrl = async (req, res) => {
   const { id } = matchedData(req);
 
@@ -128,6 +125,7 @@ const cancelBalanceRechargeCtrl = async (req, res) => {
     handleHttpError(res, 'Error al intentar cancelar la recarga del cliente');
   }
 };
+
 const balancesRechargesCtrl = async (req, res) => {
   const { id } = matchedData(req);
   try {
@@ -187,6 +185,7 @@ const balancesRechargesCtrl = async (req, res) => {
     );
   }
 };
+
 const getBalanceTypeCtrl = async (req, res) => {
   const { id } = matchedData(req);
 
@@ -198,6 +197,7 @@ const getBalanceTypeCtrl = async (req, res) => {
     handleHttpError(res, 'Error al intentar mostrar el plan de Recarga');
   }
 };
+
 const ClientBalancesCtrl = async (req, res) => {
   try {
     const defaultUserBusiness = req.session.userBusiness;
@@ -211,6 +211,7 @@ const ClientBalancesCtrl = async (req, res) => {
     handleHttpError(res, 'Error al intentar mostrar los balances');
   }
 };
+
 const getBalancesTypesCtrl = async (req, res) => {
   try {
     const balancesTypes = await balances_typesModel.findAll();
@@ -221,7 +222,8 @@ const getBalancesTypesCtrl = async (req, res) => {
     handleHttpError(res, 'Error al intentar mostrar los planes de Recarga');
   }
 };
-module.exports = {
+
+export {
   balanceByClientCtrl,
   ClientBalancesCtrl,
   getBalancesTypesCtrl,

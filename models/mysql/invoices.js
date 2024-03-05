@@ -1,6 +1,7 @@
 import { sequelize } from '../../config/mysql.js';
 import { DataTypes } from 'sequelize';
 import Clients from './clients.js';
+import Users from './users.js';
 import Users_business from './users_business.js';
 
 const Invoices = sequelize.define('invoices', {
