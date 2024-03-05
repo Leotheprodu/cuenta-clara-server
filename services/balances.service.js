@@ -1,12 +1,11 @@
 import { BusinessConfigInfo, billingPrice } from '../config/constants.js';
 import models from '../models/index.js';
-const { clientsModel, balancesModel, balances_updatesModel } = models;
 class Balances {
   async getBalanceOfUser(user_id) {
     try {
-      const client = await clientsModel.findOne({
+      const client = await models.clientsModel.findOne({
         where: { user_id, parent_user_id: BusinessConfigInfo.userId },
-        include: [balancesModel],
+        include: [models.balancesModel],
       });
       return client.balances.find(
         (balance) => balance.business_id === BusinessConfigInfo.businessId,
@@ -18,9 +17,9 @@ class Balances {
   }
   async getBalanceOfClient(id, business_id) {
     try {
-      const client = await clientsModel.findOne({
+      const client = await models.clientsModel.findOne({
         where: { id },
-        include: [balancesModel],
+        include: [models.balancesModel],
       });
       return client.balances.find(
         (balance) => balance.business_id === business_id,
@@ -32,7 +31,7 @@ class Balances {
   }
   async createBalanceUpdate(balance, amount, invoiceId = null) {
     try {
-      const newBalanceUpdate = await balances_updatesModel.create({
+      const newBalanceUpdate = await models.balances_updatesModel.create({
         amount,
         balance_id: balance.id,
         client_id: balance.client_id,
@@ -49,7 +48,7 @@ class Balances {
     try {
       const newBalance = balance.amount * 1 + amount * 1;
 
-      await balancesModel.update(
+      await models.balancesModel.update(
         { amount: newBalance },
         { where: { id: balance.id } },
       );

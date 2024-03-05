@@ -1,5 +1,4 @@
 import models from '../models/index.js';
-const { balancesModel } = models;
 
 // Función para identificar los balances a borrar
 async function findBalancesToDelete(existingBalances, id_business) {
@@ -21,7 +20,7 @@ async function findBalancesToCreate(existingBalances, id_business) {
 // Función para eliminar balances
 async function deleteBalances(balancesToDelete) {
   for (const balance of balancesToDelete) {
-    await balancesModel.update(
+    await models.balancesModel.update(
       { active: false },
       {
         where: { id: balance, amount: 0 },
@@ -33,7 +32,7 @@ async function deleteBalances(balancesToDelete) {
 // Función para crear nuevos balances
 async function createBalances(clientId, balancesToCreate) {
   for (const businessId of balancesToCreate) {
-    await balancesModel.create({
+    await models.balancesModel.create({
       client_id: clientId,
       business_id: businessId,
       amount: 0,

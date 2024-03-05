@@ -4,11 +4,6 @@ import { resOkData } from '../utils/handleOkResponses.js';
 import { matchedData } from 'express-validator';
 import userBusinessChecker from '../utils/userBusinessChecker.js';
 import { paymentMethod } from '../config/constants.js';
-const {
-  users_businessModel,
-  products_and_servicesModel,
-  user_payment_methodsModel,
-} = models;
 
 const businessByUserCtrl = async (req, res) => {
   const { active } = matchedData(req);
@@ -19,7 +14,7 @@ const businessByUserCtrl = async (req, res) => {
     whereData.active = true;
   }
   try {
-    const business = await users_businessModel.findAll({
+    const business = await models.users_businessModel.findAll({
       where: whereData,
     });
     if (!business) {
@@ -37,13 +32,13 @@ const createBusinessCtrl = async (req, res) => {
   const { name } = matchedData(req);
 
   try {
-    const newUserBusiness = await users_businessModel.create({
+    const newUserBusiness = await models.users_businessModel.create({
       user_id: req.session.user.id,
       name: name,
       default: false,
       active: true,
     });
-    await products_and_servicesModel.create({
+    await models.products_and_servicesModel.create({
       user_id: req.session.user.id,
       name: 'Predeterminado',
       description: 'Servicio predeterminado',
@@ -54,7 +49,7 @@ const createBusinessCtrl = async (req, res) => {
       code: `${req.session.user.id}-${newUserBusiness.id}-1`,
       type: 'service',
     });
-    await user_payment_methodsModel.create({
+    await models.user_payment_methodsModel.create({
       payment_method_id: paymentMethod.cash.id,
       business_id: newUserBusiness.id,
       payment_method_cellphone: req.session.user.cellphone || null,
@@ -71,7 +66,7 @@ const favoriteBusinessCtrl = async (req, res) => {
   const { id } = matchedData(req);
   try {
     const user_id = req.session.user.id;
-    let business = await users_businessModel.findAll({
+    let business = await models.users_businessModel.findAll({
       where: { user_id },
     });
 
@@ -107,7 +102,7 @@ const favoriteBusinessCtrl = async (req, res) => {
 const deactivateBusinessCtrl = async (req, res) => {
   const { id } = matchedData(req);
   try {
-    const business = await users_businessModel.findOne({
+    const business = await models.users_businessModel.findOne({
       where: { id },
     });
 
@@ -133,7 +128,7 @@ const deactivateBusinessCtrl = async (req, res) => {
 const updateBusinessCtrl = async (req, res) => {
   const { id, name } = matchedData(req);
   try {
-    const business = await users_businessModel.findOne({
+    const business = await models.users_businessModel.findOne({
       where: { id },
     });
 

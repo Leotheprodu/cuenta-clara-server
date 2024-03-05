@@ -1,12 +1,11 @@
 import models from '../models/index.js';
 import { handleHttpError } from '../utils/handleError.js';
 import { matchedData } from 'express-validator';
-const { clientsModel } = models;
 
 const checkClientOfUser = async (req, res, next) => {
   try {
     const { id } = matchedData(req);
-    const consultaBD = await clientsModel.findOne({
+    const consultaBD = await models.clientsModel.findOne({
       where: { id },
     });
 

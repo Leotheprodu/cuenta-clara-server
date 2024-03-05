@@ -2,14 +2,13 @@ import { matchedData } from 'express-validator';
 import models from '../models/index.js';
 import { handleHttpError } from '../utils/handleError.js';
 import { typeOfRoles } from '../config/constants.js';
-const { users_businessModel } = models;
 
 const checkBusinessOfUser = async (req, res, next) => {
   const { id } = matchedData(req);
   const user_id = req.session.user.id;
   const roles = req.session.roles;
 
-  const consultaBD = await users_businessModel.findOne({
+  const consultaBD = await models.users_businessModel.findOne({
     where: { id },
   });
   if (roles.includes(typeOfRoles.admin.id)) {

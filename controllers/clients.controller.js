@@ -9,15 +9,6 @@ import {
   createBalances,
 } from '../services/clients.js';
 import { createActivityLog } from '../utils/handleActivityLog.js';
-const {
-  clientsModel,
-  balancesModel,
-  users_businessModel,
-  user_payment_methodsModel,
-  payment_methodsModel,
-  usersModel,
-} = models;
-
 const clientsCtrl = async (req, res) => {
   const { active } = matchedData(req);
   try {
@@ -26,11 +17,11 @@ const clientsCtrl = async (req, res) => {
       order: [['username', 'ASC']],
       include: [
         {
-          model: balancesModel,
+          model: models.balancesModel,
           attributes: ['id', 'amount', 'active'],
           include: [
             {
-              model: users_businessModel,
+              model: models.users_businessModel,
               attributes: ['id', 'name'],
             },
           ],
@@ -42,7 +33,7 @@ const clientsCtrl = async (req, res) => {
     } else if (active === 'false') {
       filtro.where.active = false;
     }
-    const clientsData = await clientsModel.findAll(filtro);
+    const clientsData = await models.clientsModel.findAll(filtro);
     resOkData(res, clientsData);
   } catch (error) {
     console.error(error);
@@ -52,7 +43,7 @@ const clientsCtrl = async (req, res) => {
 const clientCtrl = async (req, res) => {
   const { id } = matchedData(req);
   try {
-    const clientsData = await clientsModel.findOne({
+    const clientsData = await models.clientsModel.findOne({
       where: { parent_user_id: req.session.user.id, id },
     });
     resOkData(res, clientsData);
@@ -64,7 +55,7 @@ const clientCtrl = async (req, res) => {
 const dashboardClientCtrl = async (req, res) => {
   const { token, pin: pinData } = matchedData(req);
   try {
-    const clientData = await clientsModel.scope('withPin').findOne({
+    const clientData = await models.clientsModel.scope('withPin').findOne({
       where: { token },
       attributes: {
         exclude: [
@@ -87,18 +78,18 @@ const dashboardClientCtrl = async (req, res) => {
       handleHttpError(res, 'Invalid PIN');
       return;
     }
-    const balances = await balancesModel.findAll({
+    const balances = await models.balancesModel.findAll({
       where: { client_id: clientData.id },
       attributes: {
         exclude: ['client_id', 'business_id', 'createdAt', 'updatedAt'],
       },
       include: [
         {
-          model: users_businessModel,
+          model: models.users_businessModel,
           attributes: ['id', 'name'],
           include: [
             {
-              model: user_payment_methodsModel,
+              model: models.user_payment_methodsModel,
               attributes: {
                 exclude: [
                   'payment_method_id',
@@ -109,13 +100,13 @@ const dashboardClientCtrl = async (req, res) => {
               },
               include: [
                 {
-                  model: payment_methodsModel,
+                  model: models.payment_methodsModel,
                   attributes: ['id', 'name'],
                 },
               ],
             },
             {
-              model: usersModel,
+              model: models.usersModel,
               attributes: ['country', 'username', 'email', 'cellphone'],
             },
           ],
@@ -132,14 +123,14 @@ const createClientsCtrl = async (req, res) => {
   const data = matchedData(req);
   const { id_business } = data;
   try {
-    const clientData = await clientsModel.create({
+    const clientData = await models.clientsModel.create({
       ...data,
       parent_user_id: req.session.user.id,
     });
 
     const createBalancesPromises = id_business.map(async (id) => {
       try {
-        await balancesModel.create({
+        await models.balancesModel.create({
           client_id: clientData.id,
           business_id: id,
           amount: 0,
@@ -165,7 +156,7 @@ const updateClientsCtrl = async (req, res) => {
   const clientId = data.id;
   try {
     // Actualizar datos del cliente
-    const clientData = await clientsModel.findOne({
+    const clientData = await models.clientsModel.findOne({
       where: { id: clientId },
     });
 
@@ -179,7 +170,7 @@ const updateClientsCtrl = async (req, res) => {
     await clientData.update(data);
 
     // Obtener los balances existentes del cliente
-    const existingBalances = await balancesModel.findAll({
+    const existingBalances = await models.balancesModel.findAll({
       where: { client_id: clientId, active: true },
     });
     // Identificar los IDs de balances a borrar (amount igual a 0)
@@ -209,9 +200,9 @@ const deactivateClientsCtrl = async (req, res) => {
   const { id } = matchedData(req);
 
   try {
-    const client = await clientsModel.findOne({ where: { id } });
+    const client = await models.clientsModel.findOne({ where: { id } });
     const active = client.active;
-    const [updatedRowCount] = await clientsModel.update(
+    const [updatedRowCount] = await models.clientsModel.update(
       { active: active == 0 ? 1 : 0 },
       { where: { id } },
     );

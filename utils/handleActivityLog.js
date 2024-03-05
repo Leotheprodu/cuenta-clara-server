@@ -1,5 +1,4 @@
 import models from '../models/index.js';
-const { activity_logsModel } = models;
 
 const createActivityLog = async (req, action, reference_id) => {
   if (req.session.isLoggedIn) {
@@ -12,7 +11,7 @@ const createActivityLog = async (req, action, reference_id) => {
       reference_id,
       parent_user_id: user.id,
     };
-    return await activity_logsModel.create(log);
+    return await models.activity_logsModel.create(log);
   }
 };
 

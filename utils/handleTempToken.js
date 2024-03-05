@@ -1,6 +1,5 @@
 import crypto from 'crypto';
 import models from '../models/index.js';
-const { temp_token_poolModel } = models;
 const newToken = async () => {
   try {
     return crypto.randomBytes(32).toString('hex');
@@ -27,7 +26,7 @@ function generateRandomPin(length) {
  * @param {*} type
  */
 const createTempToken = async (token, user_email, type) => {
-  const temp_token = await temp_token_poolModel.create({
+  const temp_token = await models.temp_token_poolModel.create({
     token,
     user_email,
     type,
@@ -46,7 +45,7 @@ const createTempToken = async (token, user_email, type) => {
  */
 const deleteTempToken = async (token, user_email, type) => {
   try {
-    const temp_token = await temp_token_poolModel.findOne({
+    const temp_token = await models.temp_token_poolModel.findOne({
       where: { user_email, type, token },
     });
     if (!temp_token) return;
@@ -62,7 +61,7 @@ const deleteTempToken = async (token, user_email, type) => {
 };
 const deleteTempNoToken = async (user_email, type) => {
   try {
-    const temp_token = await temp_token_poolModel.findOne({
+    const temp_token = await models.temp_token_poolModel.findOne({
       where: { user_email, type },
     });
     if (!temp_token) return;

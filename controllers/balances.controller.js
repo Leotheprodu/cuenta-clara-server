@@ -5,19 +5,12 @@ import { resOkData } from '../utils/handleOkResponses.js';
 import { BusinessConfigInfo, appName, emailUser } from '../config/constants.js';
 import { sendAEmail } from '../utils/handleSendEmail.js';
 import { createActivityLog } from '../utils/handleActivityLog.js';
-const {
-  balancesModel,
-  balances_typesModel,
-  balances_rechargesModel,
-  clientsModel,
-  user_payment_methodsModel,
-  payment_methodsModel,
-} = models;
+
 const balanceByClientCtrl = async (req, res) => {
   const { id } = matchedData(req);
 
   try {
-    const balance = await balancesModel.findAll({
+    const balance = await models.balancesModel.findAll({
       where: { client_id: id, active: true },
     });
     resOkData(res, balance);
@@ -30,7 +23,7 @@ const balanceByClientCtrl = async (req, res) => {
 const rechargeBalancesCtrl = async (req, res) => {
   const data = matchedData(req);
   try {
-    const balance = await balances_rechargesModel.create(data);
+    const balance = await models.balances_rechargesModel.create(data);
     const from = {
       name: `${appName}`,
       email: `${emailUser}`,
@@ -71,11 +64,11 @@ const applyBalanceRechargeCtrl = async (req, res) => {
   const { id } = matchedData(req);
 
   try {
-    const balanceRecharge = await balances_rechargesModel.findOne({
+    const balanceRecharge = await models.balances_rechargesModel.findOne({
       where: { id },
     });
     await balanceRecharge.update({ status: 'completed' });
-    const balance = await balancesModel.findOne({
+    const balance = await models.balancesModel.findOne({
       where: {
         client_id: balanceRecharge.client_id,
         business_id: BusinessConfigInfo.businessId,
@@ -84,7 +77,9 @@ const applyBalanceRechargeCtrl = async (req, res) => {
     const updatedBalance = await balance.update({
       amount: balance.amount * 1 + balanceRecharge.balance_amount * 1,
     });
-    const client = await clientsModel.findByPk(balanceRecharge.client_id);
+    const client = await models.clientsModel.findByPk(
+      balanceRecharge.client_id,
+    );
     const from = {
       name: `${appName}`,
       email: `${emailUser}`,
@@ -114,7 +109,7 @@ const cancelBalanceRechargeCtrl = async (req, res) => {
   const { id } = matchedData(req);
 
   try {
-    const balanceRecharge = await balances_rechargesModel.findOne({
+    const balanceRecharge = await models.balances_rechargesModel.findOne({
       where: { id },
     });
     await balanceRecharge.update({ status: 'cancelled' });
@@ -129,10 +124,10 @@ const cancelBalanceRechargeCtrl = async (req, res) => {
 const balancesRechargesCtrl = async (req, res) => {
   const { id } = matchedData(req);
   try {
-    const balance = await balancesModel.findOne({
+    const balance = await models.balancesModel.findOne({
       where: { client_id: id, business_id: BusinessConfigInfo.businessId },
     });
-    const recharges = await balances_rechargesModel.findAll({
+    const recharges = await models.balances_rechargesModel.findAll({
       where: { client_id: id, balance_id: balance.id },
       attributes: {
         exclude: [
@@ -144,19 +139,19 @@ const balancesRechargesCtrl = async (req, res) => {
       },
       include: [
         {
-          model: balances_typesModel,
+          model: models.balances_typesModel,
           attributes: ['id', 'name'],
         },
         {
-          model: clientsModel,
+          model: models.clientsModel,
           attributes: ['id', 'username', 'cellphone', 'token', 'email'],
         },
         {
-          model: balancesModel,
+          model: models.balancesModel,
           attributes: ['id', 'amount'],
         },
         {
-          model: user_payment_methodsModel,
+          model: models.user_payment_methodsModel,
           attributes: {
             exclude: [
               'user_id',
@@ -168,7 +163,7 @@ const balancesRechargesCtrl = async (req, res) => {
           },
           include: [
             {
-              model: payment_methodsModel,
+              model: models.payment_methodsModel,
               attributes: ['id', 'name'],
             },
           ],
@@ -190,7 +185,7 @@ const getBalanceTypeCtrl = async (req, res) => {
   const { id } = matchedData(req);
 
   try {
-    const balance = await balances_typesModel.findByPk(id);
+    const balance = await models.balances_typesModel.findByPk(id);
     resOkData(res, balance);
   } catch (error) {
     console.error(error);
@@ -201,7 +196,7 @@ const getBalanceTypeCtrl = async (req, res) => {
 const ClientBalancesCtrl = async (req, res) => {
   try {
     const defaultUserBusiness = req.session.userBusiness;
-    const balances = await balancesModel.findAll({
+    const balances = await models.balancesModel.findAll({
       where: { business_id: defaultUserBusiness },
     });
 
@@ -214,7 +209,7 @@ const ClientBalancesCtrl = async (req, res) => {
 
 const getBalancesTypesCtrl = async (req, res) => {
   try {
-    const balancesTypes = await balances_typesModel.findAll();
+    const balancesTypes = await models.balances_typesModel.findAll();
 
     resOkData(res, balancesTypes);
   } catch (error) {

@@ -2,7 +2,6 @@ import { matchedData } from 'express-validator';
 import models from '../models/index.js';
 import { handleHttpError } from '../utils/handleError.js';
 import { resOkData } from '../utils/handleOkResponses.js';
-const { products_and_servicesModel, users_businessModel } = models;
 const productsAndServicesByClientCtrl = async (req, res) => {
   const { business_id } = matchedData(req);
   const user_id = req.session.user.id;
@@ -11,12 +10,13 @@ const productsAndServicesByClientCtrl = async (req, res) => {
       handleHttpError(res, 'El business id no puede ser 0', 400);
       return;
     }
-    const products_and_services = await products_and_servicesModel.findAll({
-      where: { business_id, user_id },
-      attributes: {
-        exclude: ['createdAt', 'updateAt'],
-      },
-    });
+    const products_and_services =
+      await models.products_and_servicesModel.findAll({
+        where: { business_id, user_id },
+        attributes: {
+          exclude: ['createdAt', 'updateAt'],
+        },
+      });
     resOkData(res, products_and_services);
   } catch (error) {
     console.error(error);
@@ -38,9 +38,10 @@ const productsAndServicesUpdateCtrl = async (req, res) => {
       );
       return;
     }
-    const products_and_services = await products_and_servicesModel.findOne({
-      where: { id: data.id },
-    });
+    const products_and_services =
+      await models.products_and_servicesModel.findOne({
+        where: { id: data.id },
+      });
     if (!products_and_services) {
       handleHttpError(res, 'El producto o servicio no existe', 404);
       return;
@@ -82,7 +83,7 @@ const productsAndServicesCreateCtrl = async (req, res) => {
       );
       return;
     }
-    const business = await users_businessModel.findOne({
+    const business = await models.users_businessModel.findOne({
       where: { id: data.business_id },
     });
     if (!business) {
@@ -97,7 +98,7 @@ const productsAndServicesCreateCtrl = async (req, res) => {
       );
       return;
     }
-    await products_and_servicesModel.create(data);
+    await models.products_and_servicesModel.create(data);
     resOkData(res, { message: 'Producto o servicio creado' });
   } catch (error) {
     console.error(error);
@@ -108,9 +109,10 @@ const productsAndServicesDefaultUpdateCtrl = async (req, res) => {
   const { id } = matchedData(req);
   const user_id = req.session.user.id;
   try {
-    const products_and_services = await products_and_servicesModel.findOne({
-      where: { id },
-    });
+    const products_and_services =
+      await models.products_and_servicesModel.findOne({
+        where: { id },
+      });
     if (!products_and_services) {
       handleHttpError(res, 'El producto o servicio no existe', 404);
       return;
@@ -131,13 +133,14 @@ const productsAndServicesDefaultUpdateCtrl = async (req, res) => {
       );
       return;
     }
-    const defaultProduct_or_service = await products_and_servicesModel.findOne({
-      where: {
-        user_id,
-        default: true,
-        business_id: products_and_services.business_id,
-      },
-    });
+    const defaultProduct_or_service =
+      await models.products_and_servicesModel.findOne({
+        where: {
+          user_id,
+          default: true,
+          business_id: products_and_services.business_id,
+        },
+      });
     if (defaultProduct_or_service) {
       await defaultProduct_or_service.update({ default: false });
     }

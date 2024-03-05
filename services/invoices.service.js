@@ -1,16 +1,6 @@
 import { Op } from 'sequelize';
 import { invoicesStatus } from '../config/constants.js';
 import models from '../models/index.js';
-const {
-  invoicesModel,
-  invoice_detailsModel,
-  transactionsModel,
-  users_businessModel,
-  clientsModel,
-  payment_methodsModel,
-  payment_statusModel,
-  products_and_servicesModel,
-} = models;
 class Invoices {
   async findInvoicesofUserByClient(client_id, parent_user_id, page, perPage) {
     // Condiciones de búsqueda
@@ -25,7 +15,7 @@ class Invoices {
       paginationOptions.offset = (page - 1) * perPage;
       paginationOptions.limit = perPage;
     }
-    return await invoicesModel.findAll({
+    return await models.invoicesModel.findAll({
       where: whereConditions,
       attributes: {
         exclude: [
@@ -38,27 +28,27 @@ class Invoices {
       },
       include: [
         {
-          model: users_businessModel,
+          model: models.users_businessModel,
           attributes: ['id', 'name'],
         },
         {
-          model: clientsModel,
+          model: models.clientsModel,
           attributes: ['id', 'username'],
         },
         {
-          model: invoice_detailsModel,
+          model: models.invoice_detailsModel,
           attributes: {
             exclude: ['default', 'createdAt', 'updatedAt', 'invoiceId'],
           },
           include: [
             {
-              model: products_and_servicesModel,
+              model: models.products_and_servicesModel,
               attributes: ['id', 'name', 'unit', 'type'],
             },
           ],
         },
         {
-          model: transactionsModel,
+          model: models.transactionsModel,
           through: { attributes: [] },
           attributes: {
             exclude: [
@@ -72,11 +62,11 @@ class Invoices {
           },
           include: [
             {
-              model: payment_methodsModel,
+              model: models.payment_methodsModel,
               attributes: ['id', 'name'],
             },
             {
-              model: payment_statusModel,
+              model: models.payment_statusModel,
               attributes: ['id', 'name'],
             },
           ],
@@ -92,12 +82,12 @@ class Invoices {
       id: invoice_id,
     };
 
-    return await invoicesModel.findOne({
+    return await models.invoicesModel.findOne({
       where: whereConditions,
       attributes: ['id', 'status', 'total_amount'],
       include: [
         {
-          model: transactionsModel,
+          model: models.transactionsModel,
           through: { attributes: [] },
           attributes: {
             exclude: [
@@ -111,11 +101,11 @@ class Invoices {
           },
           include: [
             {
-              model: payment_methodsModel,
+              model: models.payment_methodsModel,
               attributes: ['id', 'name'],
             },
             {
-              model: payment_statusModel,
+              model: models.payment_statusModel,
               attributes: ['id', 'name'],
             },
           ],
@@ -129,18 +119,18 @@ class Invoices {
       id: invoice_id,
     };
 
-    return await invoicesModel.findOne({
+    return await models.invoicesModel.findOne({
       where: whereConditions,
       attributes: ['id', 'status', 'total_amount'],
       include: [
         {
-          model: invoice_detailsModel,
+          model: models.invoice_detailsModel,
           attributes: {
             exclude: ['default', 'createdAt', 'updatedAt', 'invoiceId'],
           },
           include: [
             {
-              model: products_and_servicesModel,
+              model: models.products_and_servicesModel,
               attributes: ['id', 'name', 'unit', 'type'],
             },
           ],
@@ -164,7 +154,7 @@ class Invoices {
       paginationOptions.offset = (page - 1) * perPage;
       paginationOptions.limit = perPage;
     }
-    return await invoicesModel.findAll({
+    return await models.invoicesModel.findAll({
       where: whereConditions,
       attributes: {
         exclude: [
@@ -177,56 +167,20 @@ class Invoices {
       },
       include: [
         {
-          model: users_businessModel,
+          model: models.users_businessModel,
           attributes: ['id', 'name'],
         },
         {
-          model: clientsModel,
+          model: models.clientsModel,
           attributes: ['id', 'username'],
         },
-        /* {
-          model: invoice_detailsModel,
-          attributes: {
-            exclude: ['default', 'createdAt', 'updatedAt', 'invoiceId'],
-          },
-          include: [
-            {
-              model: products_and_servicesModel,
-              attributes: ['id', 'name', 'unit', 'type'],
-            },
-          ],
-        }, */
-        /*  {
-          model: transactionsModel,
-          through: { attributes: [] },
-          attributes: {
-            exclude: [
-              'parent_user_id',
-              'createdAt',
-              'updatedAt',
-              'client_id',
-              'payment_method_id',
-              'status_id',
-            ],
-          },
-          include: [
-            {
-              model: payment_methodsModel,
-              attributes: ['id', 'name'],
-            },
-            {
-              model: payment_statusModel,
-              attributes: ['id', 'name'],
-            },
-          ],
-        }, */
       ],
       order: [['id', 'DESC']],
       ...paginationOptions,
     });
   }
   async findInvoice(invoice_id) {
-    return await invoicesModel.findByPk(invoice_id, {
+    return await models.invoicesModel.findByPk(invoice_id, {
       attributes: {
         exclude: [
           'client_id',
@@ -238,27 +192,27 @@ class Invoices {
       },
       include: [
         {
-          model: users_businessModel,
+          model: models.users_businessModel,
           attributes: ['id', 'name'],
         },
         {
-          model: clientsModel,
+          model: models.clientsModel,
           attributes: ['id', 'username'],
         },
         {
-          model: invoice_detailsModel,
+          model: models.invoice_detailsModel,
           attributes: {
             exclude: ['default', 'createdAt', 'updatedAt', 'invoiceId'],
           },
           include: [
             {
-              model: products_and_servicesModel,
+              model: models.products_and_servicesModel,
               attributes: ['id', 'name'],
             },
           ],
         },
         {
-          model: transactionsModel,
+          model: models.transactionsModel,
           through: { attributes: [] },
           attributes: {
             exclude: [
@@ -272,11 +226,11 @@ class Invoices {
           },
           include: [
             {
-              model: payment_methodsModel,
+              model: models.payment_methodsModel,
               attributes: ['id', 'name'],
             },
             {
-              model: payment_statusModel,
+              model: models.payment_statusModel,
               attributes: ['id', 'name'],
             },
           ],

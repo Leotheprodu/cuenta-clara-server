@@ -11,8 +11,6 @@ import {
 } from '../config/constants.js';
 import dateNow from '../utils/handleDate.js';
 import { createActivityLog } from '../utils/handleActivityLog.js';
-const { invoicesModel, invoice_detailsModel, transactionsModel, clientsModel } =
-  models;
 const invoices = new Invoices();
 const balances = new Balances();
 const createInvoiceCtrl = async (req, res) => {
@@ -33,7 +31,7 @@ const createInvoiceCtrl = async (req, res) => {
       element.code = `${user_id}-${business_id}-${element.code}`;
     });
 
-    const createInvoice = await invoicesModel.create({
+    const createInvoice = await models.invoicesModel.create({
       parent_user_id: user_id,
       business_id,
       date,
@@ -48,7 +46,7 @@ const createInvoiceCtrl = async (req, res) => {
       const createInvoicesDetailsPromises = invoice_details.map(
         async (invoiceDetail) => {
           try {
-            await invoice_detailsModel.create({
+            await models.invoice_detailsModel.create({
               invoiceId: createInvoice.id,
               description: invoiceDetail.description,
               quantity: invoiceDetail.quantity,
@@ -71,7 +69,7 @@ const createInvoiceCtrl = async (req, res) => {
       req.session.balance = balance;
 
       if (status === invoicesStatus.paid) {
-        const transaction = await transactionsModel.create({
+        const transaction = await models.transactionsModel.create({
           amount: total,
           status_id: paymentStatus.completed.id,
           payment_method_id,
@@ -126,7 +124,7 @@ const getInvoicesByClientCtrl = async (req, res) => {
 const getInvoicesByTokenCtrl = async (req, res) => {
   const { token, pin: pinData } = matchedData(req);
   try {
-    const clientData = await clientsModel.scope('withPin').findOne({
+    const clientData = await models.clientsModel.scope('withPin').findOne({
       where: { token },
       attributes: ['id', 'parent_user_id', 'pin'],
     });
@@ -150,7 +148,7 @@ const getInvoicesByTokenCtrl = async (req, res) => {
 const getTransactionsDashboardCtrl = async (req, res) => {
   const { token, pin: pinData, invoice_id } = matchedData(req);
   try {
-    const clientData = await clientsModel.scope('withPin').findOne({
+    const clientData = await models.clientsModel.scope('withPin').findOne({
       where: { token },
       attributes: ['pin'],
     });
@@ -174,7 +172,7 @@ const getTransactionsDashboardCtrl = async (req, res) => {
 const getDetailsDashboardCtrl = async (req, res) => {
   const { token, pin: pinData, invoice_id } = matchedData(req);
   try {
-    const clientData = await clientsModel.scope('withPin').findOne({
+    const clientData = await models.clientsModel.scope('withPin').findOne({
       where: { token },
       attributes: ['pin'],
     });
@@ -199,7 +197,7 @@ const deleteInvoicesByClientCtrl = async (req, res) => {
   const { id } = matchedData(req);
   const user_id = req.session.user.id;
   try {
-    const result = await invoicesModel.findOne({
+    const result = await models.invoicesModel.findOne({
       where: { id },
     });
 
@@ -264,7 +262,7 @@ const addTransactionCtrl = async (req, res) => {
       data.client_id,
       invoice.users_business.id,
     );
-    const transaction = await transactionsModel.create(transactionData);
+    const transaction = await models.transactionsModel.create(transactionData);
 
     if (!transaction) {
       handleHttpError(res, 'Error al crear transaccion');

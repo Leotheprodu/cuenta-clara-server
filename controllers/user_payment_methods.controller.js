@@ -3,19 +3,20 @@ import models from '../models/index.js';
 import { handleHttpError } from '../utils/handleError.js';
 import { resOkData } from '../utils/handleOkResponses.js';
 import { createActivityLog } from '../utils/handleActivityLog.js';
-const { user_payment_methodsModel, payment_methodsModel, users_businessModel } =
-  models;
 const paymentMethodsCtrl = async (req, res) => {
   const { business_id } = matchedData(req);
   try {
-    const paymentMethods = await user_payment_methodsModel.findAll({
+    const paymentMethods = await models.user_payment_methodsModel.findAll({
       where: { business_id },
       attributes: {
         exclude: ['createdAt', 'updatedAt', 'business_id', 'payment_method_id'],
       },
       include: [
-        { model: payment_methodsModel },
-        { model: users_businessModel, attributes: ['id', 'name', 'user_id'] },
+        { model: models.payment_methodsModel },
+        {
+          model: models.users_businessModel,
+          attributes: ['id', 'name', 'user_id'],
+        },
       ],
     });
     resOkData(res, paymentMethods);
@@ -32,7 +33,8 @@ const createPaymentMethodsCtrl = async (req, res) => {
     id: undefined,
   };
   try {
-    const newPaymentMethod = await user_payment_methodsModel.create(data);
+    const newPaymentMethod =
+      await models.user_payment_methodsModel.create(data);
     await createActivityLog(
       req,
       'userPaymentMethod-create',

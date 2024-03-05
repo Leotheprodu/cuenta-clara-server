@@ -19,17 +19,6 @@ import {
 import userBusinessChecker from '../utils/userBusinessChecker.js';
 import { cookieSessionInject } from '../utils/handleCookie.js';
 import { createActivityLog } from '../utils/handleActivityLog.js';
-const {
-  usersModel,
-  clientsModel,
-  role_usersModel,
-  temp_token_poolModel,
-  users_businessModel,
-  balancesModel,
-  products_and_servicesModel,
-  user_payment_methodsModel,
-  balances_rechargesModel,
-} = models;
 const users = new UsersService();
 
 const loginCtrl = async (req, res) => {
@@ -92,7 +81,7 @@ const employeeLoginCtrl = async (req, res) => {
       return;
     }
     cookieSessionInject(req, res);
-    const userData = await usersModel.findOne({
+    const userData = await models.usersModel.findOne({
       where: { id: employeeData.parent_user_id },
     });
     await userBusinessChecker(req, userData.id);
@@ -129,7 +118,7 @@ const signUpCtrl = async (req, res) => {
     const password = await PasswordEncrypt(req.password);
     const body = { ...restOfReq, password };
     const { username, email } = body;
-    const data = await usersModel.create(body);
+    const data = await models.usersModel.create(body);
     if (!data) {
       handleHttpError(res, 'Error creando usuario');
       return;
@@ -166,13 +155,13 @@ const signUpCtrl = async (req, res) => {
       country: data.country,
     };
     data.set('password', undefined, { strict: false });
-    await role_usersModel.create({ user_id: data.id, role_id: 3 });
-    const newUserBusiness = await users_businessModel.create({
+    await models.role_usersModel.create({ user_id: data.id, role_id: 3 });
+    const newUserBusiness = await models.users_businessModel.create({
       user_id: data.id,
       name: `Negocio de ${data.username}`,
       default: true,
     });
-    await products_and_servicesModel.create({
+    await models.products_and_servicesModel.create({
       user_id: data.id,
       name: 'Predeterminado',
       description: 'Servicio predeterminado',
@@ -183,26 +172,26 @@ const signUpCtrl = async (req, res) => {
       code: `${data.id}-${newUserBusiness.id}-1`,
       type: 'service',
     });
-    const client = await clientsModel.create(appClient);
-    const userBalance = await balancesModel.create({
+    const client = await models.clientsModel.create(appClient);
+    const userBalance = await models.balancesModel.create({
       client_id: client.id,
       business_id: BusinessConfigInfo.businessId,
       amount: initialBalance,
     });
-    const userClientData = await clientsModel.create(userClient);
-    await balancesModel.create({
+    const userClientData = await models.clientsModel.create(userClient);
+    await models.balancesModel.create({
       client_id: userClientData.id,
       business_id: newUserBusiness.id,
       amount: 0,
     });
-    const userPaymentMethod = await user_payment_methodsModel.create({
+    const userPaymentMethod = await models.user_payment_methodsModel.create({
       payment_method_id: paymentMethod.cash.id,
       business_id: newUserBusiness.id,
       payment_method_cellphone: client.cellphone || null,
       payment_method_email: client.email,
       payment_method_description: ' pago en efectivo',
     });
-    await balances_rechargesModel.create({
+    await models.balances_rechargesModel.create({
       amount: 0,
       balance_amount: initialBalance,
       status: paymentStatus.completed.name,
@@ -232,7 +221,7 @@ const emailVerifyCtrl = async (req, res) => {
   const { token } = matchedData(req);
   const tempToken = async (token) => {
     try {
-      const result = await temp_token_poolModel.findOne({
+      const result = await models.temp_token_poolModel.findOne({
         where: { token, type: 'sign_up' },
       });
       return result;
@@ -242,19 +231,19 @@ const emailVerifyCtrl = async (req, res) => {
   };
   try {
     const tempTokenData = await tempToken(token);
-    const userData = await usersModel.findOne({
+    const userData = await models.usersModel.findOne({
       where: { email: tempTokenData.user_email },
     });
     if (!userData) {
       handleHttpError(res, 'El usuario no existe', 404);
       return;
     }
-    const unverifiedRole = await role_usersModel.findOne({
+    const unverifiedRole = await models.role_usersModel.findOne({
       where: { user_id: userData.id, role_id: 3 },
     });
     await tempTokenData.destroy();
     await unverifiedRole.destroy();
-    await role_usersModel.create({ user_id: userData.id, role_id: 2 });
+    await models.role_usersModel.create({ user_id: userData.id, role_id: 2 });
     resOkData(res, userData);
   } catch (error) {
     console.log(error);

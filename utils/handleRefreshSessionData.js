@@ -2,21 +2,18 @@ import { BusinessConfigInfo } from '../config/constants.js';
 import models from '../models/index.js';
 import { refreshUserRoles } from './handleRoles.js';
 import userBusinessChecker from './userBusinessChecker.js';
-const { clientsModel, employeesModel, balancesModel, users_businessModel } =
-  models;
-
 const RefreshSessionData = async (req) => {
   const id = req.session.user.id;
   const client =
-    (await clientsModel.findAll({
+    (await models.clientsModel.findAll({
       where: { user_id: id },
       include: [
         {
-          model: balancesModel,
+          model: models.balancesModel,
           attributes: ['id', 'amount'],
           include: [
             {
-              model: users_businessModel,
+              model: models.users_businessModel,
               attributes: ['id', 'name'],
             },
           ],
@@ -25,7 +22,7 @@ const RefreshSessionData = async (req) => {
       attributes: ['id', 'parent_user_id', 'active'],
     })) || null;
   if (req.session.employee.isEmployee) {
-    const employee = await employeesModel.findOne({
+    const employee = await models.employeesModel.findOne({
       where: { username: req.session.employee.employeeName },
     });
     req.session.employee = {
