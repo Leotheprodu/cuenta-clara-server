@@ -1,3 +1,4 @@
+import eslintConfigPrettier from 'eslint-config-prettier';
 export default [
   {
     files: ['src/**/*.js'],
@@ -6,6 +7,7 @@ export default [
       semi: 'error',
     },
   },
+  eslintConfigPrettier,
 ];
 
 /* module.exports = {

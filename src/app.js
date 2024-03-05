@@ -1,11 +1,3 @@
-/* require('dotenv').config({ override: true });
-const cors = require('cors');
-const { dbConnectMySql } = require('./config/mysql');
-const session = require('express-session');
-const sess = require('./config/expressSessions');
-const express = require('express');
-const { PORT, ORIGIN_CORS } = require('./config/constants'); */
-
 import 'dotenv/config';
 import cors from 'cors';
 import { dbConnectMySql } from './config/mysql.js';
