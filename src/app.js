@@ -1,11 +1,12 @@
 import 'dotenv/config';
 import cors from 'cors';
+import session from 'express-session';
+import express from 'express';
 import { dbConnectMySql } from './config/mysql.js';
 import router from './routes/index.js';
-import session from 'express-session';
 import sess from './config/expressSessions.js';
-import express from 'express';
 import { PORT, ORIGIN_CORS } from './config/constants.js';
+
 const app = express();
 app.use(
   cors({
@@ -29,6 +30,7 @@ app.use(session(sess));
 app.use(express.json());
 app.use('/api', router);
 const server = app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
   console.log(`The server is listening on port ${PORT}...`);
 });
 
