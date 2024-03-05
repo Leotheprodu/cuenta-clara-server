@@ -12,7 +12,6 @@ import { dbConnectMySql } from './config/mysql.js';
 import router from './routes/index.js';
 import session from 'express-session';
 import sess from './config/expressSessions.js';
-
 import express from 'express';
 import { PORT, ORIGIN_CORS } from './config/constants.js';
 const app = express();

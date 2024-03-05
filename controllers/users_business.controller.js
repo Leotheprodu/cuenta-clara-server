@@ -1,9 +1,9 @@
-import models from '../models';
-import { handleHttpError } from '../utils/handleError';
-import { resOkData } from '../utils/handleOkResponses';
+import models from '../models/index.js';
+import { handleHttpError } from '../utils/handleError.js';
+import { resOkData } from '../utils/handleOkResponses.js';
 import { matchedData } from 'express-validator';
-import userBusinessChecker from '../utils/userBusinessChecker';
-import { paymentMethod } from '../config/constants';
+import userBusinessChecker from '../utils/userBusinessChecker.js';
+import { paymentMethod } from '../config/constants.js';
 const {
   users_businessModel,
   products_and_servicesModel,

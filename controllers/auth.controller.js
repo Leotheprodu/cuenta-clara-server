@@ -1,6 +1,6 @@
 import { matchedData } from 'express-validator';
 import models from '../models/index.js';
-import Users from '../services/users.service.js';
+import UsersService from '../services/users.service.js';
 import { handleHttpError } from '../utils/handleError.js';
 import { PasswordCompare, PasswordEncrypt } from '../utils/handlePassword.js';
 import { resUsersSessionData, resOkData } from '../utils/handleOkResponses.js';
@@ -30,7 +30,7 @@ const {
   user_payment_methodsModel,
   balances_rechargesModel,
 } = models;
-const users = new Users();
+const users = new UsersService();
 
 const loginCtrl = async (req, res) => {
   try {

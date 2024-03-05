@@ -1,8 +1,8 @@
 import { matchedData } from 'express-validator';
-import models from '../models';
-import { handleHttpError } from '../utils/handleError';
-import { resOkData } from '../utils/handleOkResponses';
-import { createActivityLog } from '../utils/handleActivityLog';
+import models from '../models/index.js';
+import { handleHttpError } from '../utils/handleError.js';
+import { resOkData } from '../utils/handleOkResponses.js';
+import { createActivityLog } from '../utils/handleActivityLog.js';
 const { user_payment_methodsModel, payment_methodsModel, users_businessModel } =
   models;
 const paymentMethodsCtrl = async (req, res) => {

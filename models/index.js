@@ -10,14 +10,18 @@ const removeExtension = (fileName) => {
 };
 
 // Lee los archivos de la carpeta y crea un modelo por cada uno
-readdirSync(PATH_MODELS).forEach(async (file) => {
+readdirSync(PATH_MODELS).forEach((file) => {
+  const name = removeExtension(file);
   if (file.endsWith('.js')) {
-    const name = removeExtension(file);
     // Importa el archivo de modelo dinámicamente
-    const module = await import(`./mysql/${file}`);
-    // Agrega el modelo al objeto models
-    models[`${name}Model`] = module.default;
+    import(`./mysql/${file}`)
+      .then((module) => {
+        // Agrega el modelo al objeto models
+        models[`${name}Model`] = module.default;
+      })
+      .catch((err) => {
+        console.error(`Error importing model file ${file}:`, err);
+      });
   }
 });
-
 export default models;

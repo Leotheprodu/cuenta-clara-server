@@ -1,11 +1,12 @@
 import models from '../models/index.js';
 const { usersModel, employeesModel } = models;
-class Users {
+class UsersService {
   async findUserWithPasswordByEmail(email) {
+    console.log(models);
     const userData = await usersModel.scope('withPassword').findOne({
       where: { email },
     });
-    return userData;
+    return await userData;
   }
   async findEmployeeWithPasswordByUsername(username) {
     const userData = await employeesModel.scope('withPassword').findOne({
@@ -15,4 +16,4 @@ class Users {
   }
 }
 
-export default Users;
+export default UsersService;

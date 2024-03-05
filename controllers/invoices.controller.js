@@ -1,16 +1,16 @@
 import { matchedData } from 'express-validator';
-import models from '../models';
-import { handleHttpError } from '../utils/handleError';
-import { resOkData } from '../utils/handleOkResponses';
-import Balances from '../services/balances.service';
-import Invoices from '../services/invoices.service';
+import models from '../models/index.js';
+import { handleHttpError } from '../utils/handleError.js';
+import { resOkData } from '../utils/handleOkResponses.js';
+import Balances from '../services/balances.service.js';
+import Invoices from '../services/invoices.service.js';
 import {
   invoicesStatus,
   paymentStatus,
   paymentMethod,
-} from '../config/constants';
-import dateNow from '../utils/handleDate';
-import { createActivityLog } from '../utils/handleActivityLog';
+} from '../config/constants.js';
+import dateNow from '../utils/handleDate.js';
+import { createActivityLog } from '../utils/handleActivityLog.js';
 const { invoicesModel, invoice_detailsModel, transactionsModel, clientsModel } =
   models;
 const invoices = new Invoices();
@@ -91,7 +91,6 @@ const createInvoiceCtrl = async (req, res) => {
           total * -1,
           createInvoice.id,
         );
-        console.log(createInvoice);
         await balances.updateBalance(clientBalance, total * -1);
       }
 

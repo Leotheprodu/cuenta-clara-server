@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import { invoicesStatus } from '../config/constants';
+import { invoicesStatus } from '../config/constants.js';
 import models from '../models/index.js';
 const {
   invoicesModel,

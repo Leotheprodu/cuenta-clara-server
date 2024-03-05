@@ -1,4 +1,4 @@
-import { BusinessConfigInfo, billingPrice } from '../config/constants';
+import { BusinessConfigInfo, billingPrice } from '../config/constants.js';
 import models from '../models/index.js';
 const { clientsModel, balancesModel, balances_updatesModel } = models;
 class Balances {

@@ -1,14 +1,14 @@
 import { matchedData } from 'express-validator';
-import models from '../models';
-import { handleHttpError } from '../utils/handleError';
-import { resOkData } from '../utils/handleOkResponses';
+import models from '../models/index.js';
+import { handleHttpError } from '../utils/handleError.js';
+import { resOkData } from '../utils/handleOkResponses.js';
 import {
   findBalancesToDelete,
   findBalancesToCreate,
   deleteBalances,
   createBalances,
-} from '../services/clients';
-import { createActivityLog } from '../utils/handleActivityLog';
+} from '../services/clients.js';
+import { createActivityLog } from '../utils/handleActivityLog.js';
 const {
   clientsModel,
   balancesModel,

@@ -1,7 +1,7 @@
 import { matchedData } from 'express-validator';
-import models from '../models';
-import { handleHttpError } from '../utils/handleError';
-import { resOkData } from '../utils/handleOkResponses';
+import models from '../models/index.js';
+import { handleHttpError } from '../utils/handleError.js';
+import { resOkData } from '../utils/handleOkResponses.js';
 const { products_and_servicesModel, users_businessModel } = models;
 const productsAndServicesByClientCtrl = async (req, res) => {
   const { business_id } = matchedData(req);
