@@ -1,6 +1,9 @@
+/* eslint-disable class-methods-use-this */
+/* eslint-disable camelcase */
 import { Op } from 'sequelize';
 import { invoicesStatus } from '../config/constants.js';
 import models from '../models/index.js';
+
 class Invoices {
   async findInvoicesofUserByClient(client_id, parent_user_id, page, perPage) {
     // Condiciones de búsqueda
@@ -15,7 +18,7 @@ class Invoices {
       paginationOptions.offset = (page - 1) * perPage;
       paginationOptions.limit = perPage;
     }
-    return await models.invoicesModel.findAll({
+    return models.invoicesModel.findAll({
       where: whereConditions,
       attributes: {
         exclude: [
@@ -76,13 +79,14 @@ class Invoices {
       ...paginationOptions,
     });
   }
+
   async findInvoicebyIDforTransactions(invoice_id) {
     // Condiciones de búsqueda
     const whereConditions = {
       id: invoice_id,
     };
 
-    return await models.invoicesModel.findOne({
+    return models.invoicesModel.findOne({
       where: whereConditions,
       attributes: ['id', 'status', 'total_amount'],
       include: [
@@ -113,13 +117,14 @@ class Invoices {
       ],
     });
   }
+
   async findInvoicebyIDforDetails(invoice_id) {
     // Condiciones de búsqueda
     const whereConditions = {
       id: invoice_id,
     };
 
-    return await models.invoicesModel.findOne({
+    return models.invoicesModel.findOne({
       where: whereConditions,
       attributes: ['id', 'status', 'total_amount'],
       include: [
@@ -138,6 +143,7 @@ class Invoices {
       ],
     });
   }
+
   async findInvoicesofUserByToken(client_id, parent_user_id, page, perPage) {
     // Condiciones de búsqueda
     const whereConditions = {
@@ -154,7 +160,7 @@ class Invoices {
       paginationOptions.offset = (page - 1) * perPage;
       paginationOptions.limit = perPage;
     }
-    return await models.invoicesModel.findAll({
+    return models.invoicesModel.findAll({
       where: whereConditions,
       attributes: {
         exclude: [
@@ -179,8 +185,9 @@ class Invoices {
       ...paginationOptions,
     });
   }
+
   async findInvoice(invoice_id) {
-    return await models.invoicesModel.findByPk(invoice_id, {
+    return models.invoicesModel.findByPk(invoice_id, {
       attributes: {
         exclude: [
           'client_id',

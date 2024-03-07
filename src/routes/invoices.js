@@ -1,5 +1,4 @@
 import express from 'express';
-const router = express.Router();
 import { isLoggedInTrue } from '../middleware/isLoggedIn.js';
 import {
   createInvoiceCtrl,
@@ -23,6 +22,7 @@ import {
   validatorDashboardTransactions,
 } from '../validators/clients.js';
 
+const router = express.Router();
 router.get(
   '/:id',
   isLoggedInTrue,

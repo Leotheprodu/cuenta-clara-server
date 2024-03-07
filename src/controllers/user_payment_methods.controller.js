@@ -1,8 +1,10 @@
+/* eslint-disable camelcase */
 import { matchedData } from 'express-validator';
 import models from '../models/index.js';
-import { handleHttpError } from '../utils/handleError.js';
+import handleHttpError from '../utils/handleError.js';
 import { resOkData } from '../utils/handleOkResponses.js';
-import { createActivityLog } from '../utils/handleActivityLog.js';
+import createActivityLog from '../utils/handleActivityLog.js';
+
 const paymentMethodsCtrl = async (req, res) => {
   const { business_id } = matchedData(req);
   try {
@@ -21,7 +23,6 @@ const paymentMethodsCtrl = async (req, res) => {
     });
     resOkData(res, paymentMethods);
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al obtener los métodos de pago del negocio');
   }
 };
@@ -29,7 +30,7 @@ const createPaymentMethodsCtrl = async (req, res) => {
   const resp = matchedData(req);
   const data = {
     ...resp,
-    business_id: parseInt(resp.id),
+    business_id: parseInt(resp.id, 10),
     id: undefined,
   };
   try {
@@ -42,7 +43,6 @@ const createPaymentMethodsCtrl = async (req, res) => {
     );
     resOkData(res, newPaymentMethod);
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al crear el método de pago');
   }
 };

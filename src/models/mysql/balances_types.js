@@ -1,5 +1,6 @@
-import { sequelize } from '../../config/mysql.js';
+/* eslint-disable camelcase */
 import { DataTypes } from 'sequelize';
+import { sequelize } from '../../config/mysql.js';
 
 const Balances_types = sequelize.define('balances_types', {
   id: {

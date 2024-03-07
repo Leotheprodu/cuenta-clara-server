@@ -1,8 +1,8 @@
-import { handleHttpError } from '../utils/handleError.js';
+import handleHttpError from '../utils/handleError.js';
 import { resUsersSessionData } from '../utils/handleOkResponses.js';
 
 const isLoggedInTrue = (req, res, next) => {
-  const isLoggedIn = req.session.isLoggedIn;
+  const { isLoggedIn } = req.session;
 
   if (isLoggedIn === true) {
     next();
@@ -12,7 +12,7 @@ const isLoggedInTrue = (req, res, next) => {
 };
 
 const isLoggedInFalse = async (req, res, next) => {
-  const isLoggedIn = req.session.isLoggedIn;
+  const { isLoggedIn } = req.session;
 
   if (isLoggedIn === false || isLoggedIn === undefined) {
     next();

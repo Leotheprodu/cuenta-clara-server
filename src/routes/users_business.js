@@ -1,5 +1,4 @@
 import express from 'express';
-const router = express.Router();
 import {
   businessByUserCtrl,
   favoriteBusinessCtrl,
@@ -16,6 +15,7 @@ import {
 } from '../validators/business.js';
 import checkBusinessOfUser from '../middleware/checkBusinessOfUser.js';
 
+const router = express.Router();
 router.get('/', isLoggedInTrue, validatorGetBussiness, businessByUserCtrl);
 router.post('/', isLoggedInTrue, validatorCreateBusiness, createBusinessCtrl);
 router.get(

@@ -2,8 +2,9 @@ import { BusinessConfigInfo } from '../config/constants.js';
 import models from '../models/index.js';
 import { refreshUserRoles } from './handleRoles.js';
 import userBusinessChecker from './userBusinessChecker.js';
+
 const RefreshSessionData = async (req) => {
-  const id = req.session.user.id;
+  const { id } = req.session.user;
   const client =
     (await models.clientsModel.findAll({
       where: { user_id: id },
@@ -40,7 +41,7 @@ const RefreshSessionData = async (req) => {
     };
   }
   const appClient = client.find(
-    (client) => client.parent_user_id === BusinessConfigInfo.userId,
+    (thisClient) => thisClient.parent_user_id === BusinessConfigInfo.userId,
   );
   req.session.roles = await refreshUserRoles(id);
   const balance = req.session.roles.includes(1)
@@ -51,4 +52,4 @@ const RefreshSessionData = async (req) => {
   await userBusinessChecker(req, id);
 };
 
-export { RefreshSessionData };
+export default RefreshSessionData;

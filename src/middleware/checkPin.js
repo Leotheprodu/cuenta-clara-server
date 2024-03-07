@@ -1,7 +1,7 @@
-import { handleHttpError } from '../utils/handleError.js';
+import handleHttpError from '../utils/handleError.js';
 import models from '../models/index.js';
 
-const checkPin = async (req, res, next) => {
+export const checkPin = async (req, res, next) => {
   const { token } = req.params;
   const { pin } = req.body;
   const clientData = await models.clientsModel.scope('withPin').findOne({
@@ -11,11 +11,12 @@ const checkPin = async (req, res, next) => {
   if (!clientData.pin && !pin) {
     handleHttpError(res, 'No PIN');
     return;
-  } else if (clientData.pin && !pin) {
+  }
+  if (clientData.pin && !pin) {
     handleHttpError(res, 'Si PIN');
   } else {
     next();
   }
 };
 
-export { checkPin };
+export default checkPin;

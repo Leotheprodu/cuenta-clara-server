@@ -1,6 +1,6 @@
-import models from '../models/index.js';
-import { handleHttpError } from '../utils/handleError.js';
 import { matchedData } from 'express-validator';
+import models from '../models/index.js';
+import handleHttpError from '../utils/handleError.js';
 
 const checkClientOfUser = async (req, res, next) => {
   try {
@@ -19,7 +19,6 @@ const checkClientOfUser = async (req, res, next) => {
       );
     }
   } catch (error) {
-    console.error(error);
     handleHttpError(
       res,
       'Error al verificar si el cliente pertenece al usuario',

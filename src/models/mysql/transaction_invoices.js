@@ -1,5 +1,6 @@
-import { sequelize } from '../../config/mysql.js';
+/* eslint-disable camelcase */
 import { DataTypes } from 'sequelize';
+import { sequelize } from '../../config/mysql.js';
 import Transactions from './transactions.js';
 import Invoices from './invoices.js';
 

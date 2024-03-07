@@ -1,6 +1,7 @@
+/* eslint-disable camelcase */
 import { matchedData } from 'express-validator';
 import models from '../models/index.js';
-import { handleHttpError } from '../utils/handleError.js';
+import handleHttpError from '../utils/handleError.js';
 import { resOkData } from '../utils/handleOkResponses.js';
 import Balances from '../services/balances.service.js';
 import Invoices from '../services/invoices.service.js';
@@ -10,7 +11,8 @@ import {
   paymentMethod,
 } from '../config/constants.js';
 import dateNow from '../utils/handleDate.js';
-import { createActivityLog } from '../utils/handleActivityLog.js';
+import createActivityLog from '../utils/handleActivityLog.js';
+
 const invoices = new Invoices();
 const balances = new Balances();
 const createInvoiceCtrl = async (req, res) => {
@@ -26,10 +28,11 @@ const createInvoiceCtrl = async (req, res) => {
   } = data;
   const user_id = req.session.user.id;
   try {
-    //por cada elemento del array invoice_details cambiar en code por la concatenacion de user_id, business_id y code
-    invoice_details.forEach((element) => {
-      element.code = `${user_id}-${business_id}-${element.code}`;
-    });
+    // por cada elemento del array invoice_details cambiar en code por la concatenacion de user_id, business_id y code
+    const updatedInvoiceDetails = invoice_details.map((element) => ({
+      ...element,
+      code: `${user_id}-${business_id}-${element.code}`,
+    }));
 
     const createInvoice = await models.invoicesModel.create({
       parent_user_id: user_id,
@@ -42,65 +45,59 @@ const createInvoiceCtrl = async (req, res) => {
     if (!createInvoice) {
       handleHttpError(res, 'Error al crear factura');
       return;
-    } else {
-      const createInvoicesDetailsPromises = invoice_details.map(
-        async (invoiceDetail) => {
-          try {
-            await models.invoice_detailsModel.create({
-              invoiceId: createInvoice.id,
-              description: invoiceDetail.description,
-              quantity: invoiceDetail.quantity,
-              unit_price: invoiceDetail.unit_price,
-              code: invoiceDetail.code,
-              subtotal: invoiceDetail.subtotal,
-            });
-          } catch (error) {
-            console.error(error);
-            handleHttpError(res, 'Error al crear detalles de factura');
-          }
-        },
-      );
-      await Promise.all(createInvoicesDetailsPromises);
-      const balance = await balances.updateBalancebyInvoice(
-        user_id,
+    }
+    const createInvoicesDetailsPromises = updatedInvoiceDetails.map(
+      async (invoiceDetail) => {
+        try {
+          await models.invoice_detailsModel.create({
+            invoiceId: createInvoice.id,
+            description: invoiceDetail.description,
+            quantity: invoiceDetail.quantity,
+            unit_price: invoiceDetail.unit_price,
+            code: invoiceDetail.code,
+            subtotal: invoiceDetail.subtotal,
+          });
+        } catch (error) {
+          handleHttpError(res, 'Error al crear detalles de factura');
+        }
+      },
+    );
+    await Promise.all(createInvoicesDetailsPromises);
+    const balance = await balances.updateBalancebyInvoice(
+      user_id,
+      total * -1,
+      createInvoice.id,
+    );
+    req.session.balance = balance;
+
+    if (status === invoicesStatus.paid) {
+      const transaction = await models.transactionsModel.create({
+        amount: total,
+        status_id: paymentStatus.completed.id,
+        payment_method_id,
+        parent_user_id: user_id,
+        client_id: id,
+        date,
+        description: 'Pago realizado inmediatamente al crear factura',
+      });
+      await createInvoice.addTransaction(transaction);
+    } else if (invoicesStatus.pending) {
+      const clientBalance = await balances.getBalanceOfClient(id, business_id);
+      await balances.createBalanceUpdate(
+        clientBalance,
         total * -1,
         createInvoice.id,
       );
-      req.session.balance = balance;
-
-      if (status === invoicesStatus.paid) {
-        const transaction = await models.transactionsModel.create({
-          amount: total,
-          status_id: paymentStatus.completed.id,
-          payment_method_id,
-          parent_user_id: user_id,
-          client_id: id,
-          date,
-          description: 'Pago realizado inmediatamente al crear factura',
-        });
-        await createInvoice.addTransaction(transaction);
-      } else if (invoicesStatus.pending) {
-        const clientBalance = await balances.getBalanceOfClient(
-          id,
-          business_id,
-        );
-        await balances.createBalanceUpdate(
-          clientBalance,
-          total * -1,
-          createInvoice.id,
-        );
-        await balances.updateBalance(clientBalance, total * -1);
-      }
-
-      await createActivityLog(req, 'invoice-create', createInvoice.id);
-      resOkData(res, {
-        createInvoice,
-        invoice_details,
-        newUserBalance: balance,
-      });
+      await balances.updateBalance(clientBalance, total * -1);
     }
+
+    await createActivityLog(req, 'invoice-create', createInvoice.id);
+    resOkData(res, {
+      createInvoice,
+      invoice_details,
+      newUserBalance: balance,
+    });
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al crear factura');
   }
 };
@@ -113,11 +110,9 @@ const getInvoicesByClientCtrl = async (req, res) => {
     if (!result) {
       handleHttpError(res, 'Error al obtener facturas');
       return;
-    } else {
-      resOkData(res, result);
     }
+    resOkData(res, result);
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al obtener facturas');
   }
 };
@@ -137,11 +132,9 @@ const getInvoicesByTokenCtrl = async (req, res) => {
     if (!result) {
       handleHttpError(res, 'Error al obtener facturas');
       return;
-    } else {
-      resOkData(res, result);
     }
+    resOkData(res, result);
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al obtener facturas');
   }
 };
@@ -161,11 +154,9 @@ const getTransactionsDashboardCtrl = async (req, res) => {
     if (!result) {
       handleHttpError(res, 'Error al obtener trasacciones');
       return;
-    } else {
-      resOkData(res, result);
     }
+    resOkData(res, result);
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al obtener transacciones');
   }
 };
@@ -185,11 +176,9 @@ const getDetailsDashboardCtrl = async (req, res) => {
     if (!result) {
       handleHttpError(res, 'Error al obtener trasacciones');
       return;
-    } else {
-      resOkData(res, result);
     }
+    resOkData(res, result);
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al obtener transacciones');
   }
 };
@@ -230,7 +219,6 @@ const deleteInvoicesByClientCtrl = async (req, res) => {
     await createActivityLog(req, 'invoice-delete', result.id);
     resOkData(res, { status: invoicesStatus.cancelled });
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al obtener facturas');
   }
 };
@@ -247,9 +235,10 @@ const addTransactionCtrl = async (req, res) => {
     }
     const balanceInvoice =
       invoice.total_amount -
-      invoice.transactions.reduce((acc, transaction) => {
-        return acc + parseFloat(transaction.amount);
-      }, 0);
+      invoice.transactions.reduce(
+        (acc, transaction) => acc + parseFloat(transaction.amount),
+        0,
+      );
     if (balanceInvoice <= 0) {
       handleHttpError(res, 'La factura ya ha sido pagada');
       return;
@@ -271,7 +260,7 @@ const addTransactionCtrl = async (req, res) => {
     await invoice.addTransaction(transaction);
     await balances.createBalanceUpdate(clientBalance, data.amount, invoice.id);
     await balances.updateBalance(clientBalance, data.amount);
-    //actualiza el status de la factura
+
     if (balanceInvoice === data.amount && transaction) {
       await invoice.update({ status: invoicesStatus.paid });
     } else if (balanceInvoice > data.amount && transaction) {
@@ -282,7 +271,6 @@ const addTransactionCtrl = async (req, res) => {
       data,
     });
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al crear transaccion');
   }
 };

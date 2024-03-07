@@ -1,8 +1,8 @@
 import { typeOfRoles } from '../config/constants.js';
-import { handleHttpError } from '../utils/handleError.js';
+import handleHttpError from '../utils/handleError.js';
 
 const isAdmin = (req, res, next) => {
-  const roles = req.session.roles;
+  const { roles } = req.session;
 
   if (roles.includes(typeOfRoles.admin.id)) {
     next();
@@ -11,4 +11,4 @@ const isAdmin = (req, res, next) => {
   }
 };
 
-export { isAdmin };
+export default isAdmin;

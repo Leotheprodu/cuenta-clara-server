@@ -15,7 +15,7 @@ import {
   validatorRechargeBalance,
 } from '../validators/balances.js';
 import checkClientOfUser from '../middleware/checkClientOfUser.js';
-import { isAdmin } from '../middleware/isAdmin.js';
+import isAdmin from '../middleware/isAdmin.js';
 
 const router = express.Router();
 

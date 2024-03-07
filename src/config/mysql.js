@@ -1,18 +1,19 @@
 import { Sequelize } from 'sequelize';
 import credentials from './credentials.js';
+
 const { user, password, database, host, port } = credentials;
 
 const sequelize = new Sequelize(database, user, password, {
   host,
   dialect: 'mysql',
-  port: port,
+  port,
 });
 
 const dbConnectMySql = async () => {
   try {
     await sequelize.authenticate();
-    console.log('MYSQL Successfull Connection');
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.log('MYSQL Error Connection', e);
   }
 };
@@ -23,8 +24,10 @@ const dbSync = async () => {
       await sequelize.sync();
     }
 
+    // eslint-disable-next-line no-console
     console.log('All models were synchronized successfully.');
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.log('Error Synchronizing models', e);
   }
 };

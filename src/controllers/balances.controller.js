@@ -1,10 +1,10 @@
 import { matchedData } from 'express-validator';
 import models from '../models/index.js';
-import { handleHttpError } from '../utils/handleError.js';
+import handleHttpError from '../utils/handleError.js';
 import { resOkData } from '../utils/handleOkResponses.js';
 import { BusinessConfigInfo, appName, emailUser } from '../config/constants.js';
-import { sendAEmail } from '../utils/handleSendEmail.js';
-import { createActivityLog } from '../utils/handleActivityLog.js';
+import sendAEmail from '../utils/handleSendEmail.js';
+import createActivityLog from '../utils/handleActivityLog.js';
 
 const balanceByClientCtrl = async (req, res) => {
   const { id } = matchedData(req);
@@ -15,7 +15,6 @@ const balanceByClientCtrl = async (req, res) => {
     });
     resOkData(res, balance);
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al intentar mostrar el balance del cliente');
   }
 };
@@ -52,7 +51,6 @@ const rechargeBalancesCtrl = async (req, res) => {
     await createActivityLog(req, 'user-rechargeBalance', balance.id);
     resOkData(res, balance);
   } catch (error) {
-    console.error(error);
     handleHttpError(
       res,
       'Error al intentar crear recarga de balance del cliente',
@@ -100,7 +98,6 @@ const applyBalanceRechargeCtrl = async (req, res) => {
     await createActivityLog(req, 'user-applyBalance', balanceRecharge.id);
     resOkData(res, { status: 'completed', balance: balance.amount });
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al intentar aplicar el saldo al cliente');
   }
 };
@@ -116,7 +113,6 @@ const cancelBalanceRechargeCtrl = async (req, res) => {
     await createActivityLog(req, 'user-cancelBalance', balanceRecharge.id);
     resOkData(res, { status: 'cancelled' });
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al intentar cancelar la recarga del cliente');
   }
 };
@@ -173,7 +169,6 @@ const balancesRechargesCtrl = async (req, res) => {
     });
     resOkData(res, recharges);
   } catch (error) {
-    console.error(error);
     handleHttpError(
       res,
       'Error al intentar crear recarga de balance del cliente',
@@ -188,7 +183,6 @@ const getBalanceTypeCtrl = async (req, res) => {
     const balance = await models.balances_typesModel.findByPk(id);
     resOkData(res, balance);
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al intentar mostrar el plan de Recarga');
   }
 };
@@ -202,7 +196,6 @@ const ClientBalancesCtrl = async (req, res) => {
 
     resOkData(res, balances);
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al intentar mostrar los balances');
   }
 };
@@ -213,7 +206,6 @@ const getBalancesTypesCtrl = async (req, res) => {
 
     resOkData(res, balancesTypes);
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al intentar mostrar los planes de Recarga');
   }
 };

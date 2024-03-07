@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import models from '../models/index.js';
 
 const createActivityLog = async (req, action, reference_id) => {
@@ -11,8 +12,9 @@ const createActivityLog = async (req, action, reference_id) => {
       reference_id,
       parent_user_id: user.id,
     };
-    return await models.activity_logsModel.create(log);
+    return models.activity_logsModel.create(log);
   }
+  return null;
 };
 
-export { createActivityLog };
+export default createActivityLog;

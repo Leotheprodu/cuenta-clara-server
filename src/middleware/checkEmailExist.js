@@ -1,6 +1,6 @@
 import { matchedData } from 'express-validator';
 import models from '../models/index.js';
-import { handleHttpError } from '../utils/handleError.js';
+import handleHttpError from '../utils/handleError.js';
 
 const checkEmailExist = async (req, res, next) => {
   const body = matchedData(req);

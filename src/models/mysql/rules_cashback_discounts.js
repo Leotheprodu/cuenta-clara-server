@@ -1,5 +1,6 @@
-import { sequelize } from '../../config/mysql.js';
+/* eslint-disable camelcase */
 import { DataTypes } from 'sequelize';
+import { sequelize } from '../../config/mysql.js';
 import Users from './users.js';
 
 const Rules_cashback_discounts = sequelize.define('rules_cashback_discounts', {

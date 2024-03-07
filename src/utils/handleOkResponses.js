@@ -1,5 +1,5 @@
-import { handleHttpError } from './handleError.js';
-import { RefreshSessionData } from './handleRefreshSessionData.js';
+import handleHttpError from './handleError.js';
+import RefreshSessionData from './handleRefreshSessionData.js';
 
 /**
  * Respuesta para enviar toda la informacion de la sesion actual del usuario

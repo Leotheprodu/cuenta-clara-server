@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+
 const saltRounds = 10;
 
 /**
@@ -15,8 +16,7 @@ const PasswordEncrypt = async (passwordPlain) => {
  * @param {*} passwordPlain
  * @param {*} hashPassword
  */
-const PasswordCompare = async (passwordPlain, hashPassword) => {
-  return await bcrypt.compare(passwordPlain, hashPassword);
-};
+const PasswordCompare = async (passwordPlain, hashPassword) =>
+  bcrypt.compare(passwordPlain, hashPassword);
 
 export { PasswordCompare, PasswordEncrypt };

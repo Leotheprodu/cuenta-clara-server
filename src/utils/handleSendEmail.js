@@ -1,6 +1,7 @@
 import ejs from 'ejs';
 import path from 'path';
 import transporter from '../config/nodemailer/transporter.js';
+
 const filePath = new URL(import.meta.url).pathname;
 const PATH_ROUTES = path.normalize(path.dirname(filePath)).substring(1);
 /**
@@ -11,15 +12,9 @@ const PATH_ROUTES = path.normalize(path.dirname(filePath)).substring(1);
  * @param {*} to
  * @param {*} subject
  */
-export const sendAEmail = async (
-  templateName,
-  dataToEJS,
-  from,
-  to,
-  subject,
-) => {
+const sendAEmail = async (templateName, dataToEJS, from, to, subject) => {
   await ejs.renderFile(
-    PATH_ROUTES + `/../config/nodemailer/templates/${templateName}.ejs`,
+    `${PATH_ROUTES}/../config/nodemailer/templates/${templateName}.ejs`,
     dataToEJS,
     (error, data) => {
       if (error) {
@@ -32,6 +27,7 @@ export const sendAEmail = async (
           html: data, // Contenido HTML generado a partir de la plantilla
         };
 
+        // eslint-disable-next-line no-shadow
         transporter.sendMail(mailOptions, (error, info) => {
           if (error) {
             console.log(error);
@@ -42,8 +38,10 @@ export const sendAEmail = async (
 
             return message;
           }
+          return null;
         });
       }
     },
   );
 };
+export default sendAEmail;

@@ -1,11 +1,11 @@
 import { matchedData } from 'express-validator';
 import models from '../models/index.js';
 import UsersService from '../services/users.service.js';
-import { handleHttpError } from '../utils/handleError.js';
+import handleHttpError from '../utils/handleError.js';
 import { PasswordCompare, PasswordEncrypt } from '../utils/handlePassword.js';
 import { resUsersSessionData, resOkData } from '../utils/handleOkResponses.js';
 import { createTempToken, newToken } from '../utils/handleTempToken.js';
-import { sendAEmail } from '../utils/handleSendEmail.js';
+import sendAEmail from '../utils/handleSendEmail.js';
 import idGenerator from '../utils/idGenerator.js';
 import {
   initialBalance,
@@ -17,8 +17,9 @@ import {
   paymentStatus,
 } from '../config/constants.js';
 import userBusinessChecker from '../utils/userBusinessChecker.js';
-import { cookieSessionInject } from '../utils/handleCookie.js';
-import { createActivityLog } from '../utils/handleActivityLog.js';
+import cookieSessionInject from '../utils/handleCookie.js';
+import createActivityLog from '../utils/handleActivityLog.js';
+
 const users = new UsersService();
 
 const loginCtrl = async (req, res) => {
@@ -54,7 +55,6 @@ const loginCtrl = async (req, res) => {
     };
     resUsersSessionData(req, res);
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error durante el inicio de sesion');
   }
 };
@@ -96,7 +96,6 @@ const employeeLoginCtrl = async (req, res) => {
     await createActivityLog(req, 'employee-login', employeeData.id);
     resUsersSessionData(req, res);
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error durante el inicio de sesion');
   }
 };
@@ -106,16 +105,15 @@ const logoutCtrl = async (req, res) => {
     req.session.isLoggedIn = false;
     resUsersSessionData(req, res, 'El Usuario ha cerrado sesion');
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al cerrar sesion');
   }
 };
 
 const signUpCtrl = async (req, res) => {
   try {
-    req = matchedData(req);
-    const { address, ...restOfReq } = req;
-    const password = await PasswordEncrypt(req.password);
+    const reqData = matchedData(req);
+    const { address, ...restOfReq } = reqData;
+    const password = await PasswordEncrypt(reqData.password);
     const body = { ...restOfReq, password };
     const { username, email } = body;
     const data = await models.usersModel.create(body);
@@ -146,7 +144,7 @@ const signUpCtrl = async (req, res) => {
       user_id: data.id,
       parent_user_id: BusinessConfigInfo.userId,
       country: data.country,
-      address: address,
+      address,
     };
     const userClient = {
       username: 'Cliente 1',
@@ -212,14 +210,13 @@ const signUpCtrl = async (req, res) => {
     await createActivityLog(req, 'user-signup', data.id);
     resOkData(res, data);
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error creando usuario');
   }
 };
 
 const emailVerifyCtrl = async (req, res) => {
   const { token } = matchedData(req);
-  const tempToken = async (token) => {
+  const tempToken = async () => {
     try {
       const result = await models.temp_token_poolModel.findOne({
         where: { token, type: 'sign_up' },
@@ -227,6 +224,7 @@ const emailVerifyCtrl = async (req, res) => {
       return result;
     } catch (error) {
       handleHttpError(res, 'Token invalido');
+      return null;
     }
   };
   try {
@@ -246,7 +244,6 @@ const emailVerifyCtrl = async (req, res) => {
     await models.role_usersModel.create({ user_id: userData.id, role_id: 2 });
     resOkData(res, userData);
   } catch (error) {
-    console.log(error);
     handleHttpError(res, 'Error verificando correo electronico');
   }
 };
@@ -259,7 +256,6 @@ const ckeckSessCtrl = async (req, res) => {
       handleHttpError(res, 'El usuario no ha iniciado sesion');
     }
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al verificar sesion');
   }
 };

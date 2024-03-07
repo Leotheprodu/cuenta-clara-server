@@ -12,5 +12,6 @@ const validateResults = (req, res, next) => {
       message: 'Revisa que los datos sean correctos',
     });
   }
+  return null;
 };
 export default validateResults;

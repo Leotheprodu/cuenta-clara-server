@@ -29,5 +29,6 @@ module.exports = {
         mjs: 'never',
       },
     ],
+    'no-console': 'off',
   },
 };

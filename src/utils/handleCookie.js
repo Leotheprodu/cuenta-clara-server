@@ -17,4 +17,4 @@ const cookieSessionInject = (req, res) => {
   }
 };
 
-export { cookieSessionInject };
+export default cookieSessionInject;

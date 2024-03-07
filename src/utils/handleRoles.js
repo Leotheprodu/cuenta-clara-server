@@ -1,4 +1,6 @@
+/* eslint-disable camelcase */
 import models from '../models/index.js';
+
 const refreshUserRoles = async (user_id) => {
   const results = await models.role_usersModel.findAll({
     where: { user_id },
@@ -18,9 +20,8 @@ const refreshUserRoles = async (user_id) => {
     return results2
       .map((obj) => obj.role_id)
       .filter((val) => val !== undefined);
-  } else {
-    return results.map((obj) => obj.role_id).filter((val) => val !== undefined);
   }
+  return results.map((obj) => obj.role_id).filter((val) => val !== undefined);
 };
 /**
  * los roles se necesitan crudos, directo desde el body de la solicitud, los rolesModificables es un array con los roles que se peude modificar
@@ -40,13 +41,13 @@ const addUserRoles = async (user_id, rolesBody, rolesModificables) => {
   const promises = rolesReq.map(async (role) => {
     if (!rolesModificables.includes(role) || rolesBD.includes(role)) {
       return null; // El rol no se puede modificar
-    } else {
-      // El rol no está asignado, agregarlo
-      await models.role_usersModel.create(
-        { user_id, role_id: role },
-        { ignoreDuplicates: true },
-      );
     }
+    // El rol no está asignado, agregarlo
+    await models.role_usersModel.create(
+      { user_id, role_id: role },
+      { ignoreDuplicates: true },
+    );
+
     return role;
   });
 
@@ -71,6 +72,7 @@ const addUserRoles = async (user_id, rolesBody, rolesModificables) => {
       .map((obj) => obj.role_id)
       .filter((val) => val !== undefined);
   }
+  return null;
 };
 
 export { refreshUserRoles, addUserRoles };

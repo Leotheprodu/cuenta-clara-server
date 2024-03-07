@@ -1,5 +1,6 @@
-import { sequelize } from '../../config/mysql.js';
+/* eslint-disable camelcase */
 import { DataTypes } from 'sequelize';
+import { sequelize } from '../../config/mysql.js';
 import Users from './users.js';
 import Payment_methods from './payment_methods.js';
 import Payment_status from './payment_status.js';

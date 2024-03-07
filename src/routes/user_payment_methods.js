@@ -1,5 +1,4 @@
 import express from 'express';
-const router = express.Router();
 import { isLoggedInTrue } from '../middleware/isLoggedIn.js';
 import { validatorGetProductsAndServicesByClient } from '../validators/products_and_services.js';
 import {
@@ -9,6 +8,7 @@ import {
 import { validatorCreateUserPaymentMethods } from '../validators/user_payment_methods.js';
 import checkBusinessOfUser from '../middleware/checkBusinessOfUser.js';
 
+const router = express.Router();
 router.get(
   '/:business_id',
   validatorGetProductsAndServicesByClient,

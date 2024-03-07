@@ -1,6 +1,7 @@
+/* eslint-disable camelcase */
 import { matchedData } from 'express-validator';
 import models from '../models/index.js';
-import { handleHttpError } from '../utils/handleError.js';
+import handleHttpError from '../utils/handleError.js';
 import { resOkData } from '../utils/handleOkResponses.js';
 import {
   findBalancesToDelete,
@@ -8,7 +9,8 @@ import {
   deleteBalances,
   createBalances,
 } from '../services/clients.js';
-import { createActivityLog } from '../utils/handleActivityLog.js';
+import createActivityLog from '../utils/handleActivityLog.js';
+
 const clientsCtrl = async (req, res) => {
   const { active } = matchedData(req);
   try {
@@ -36,7 +38,6 @@ const clientsCtrl = async (req, res) => {
     const clientsData = await models.clientsModel.findAll(filtro);
     resOkData(res, clientsData);
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al intentar mostrar clientes');
   }
 };
@@ -48,7 +49,6 @@ const clientCtrl = async (req, res) => {
     });
     resOkData(res, clientsData);
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al intentar mostrar el cliente');
   }
 };
@@ -74,7 +74,8 @@ const dashboardClientCtrl = async (req, res) => {
       clientData.update({ pin: pinData });
       handleHttpError(res, 'New PIN');
       return;
-    } else if (pin !== pinData) {
+    }
+    if (pin !== pinData) {
       handleHttpError(res, 'Invalid PIN');
       return;
     }
@@ -115,20 +116,19 @@ const dashboardClientCtrl = async (req, res) => {
     });
     resOkData(res, { client, balances });
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al intentar mostrar datos del cliente');
   }
 };
 const createClientsCtrl = async (req, res) => {
   const data = matchedData(req);
-  const { id_business } = data;
+  const { idBusiness } = data;
   try {
     const clientData = await models.clientsModel.create({
       ...data,
       parent_user_id: req.session.user.id,
     });
 
-    const createBalancesPromises = id_business.map(async (id) => {
+    const createBalancesPromises = idBusiness.map(async (id) => {
       try {
         await models.balancesModel.create({
           client_id: clientData.id,
@@ -136,7 +136,6 @@ const createClientsCtrl = async (req, res) => {
           amount: 0,
         });
       } catch (error) {
-        console.error(error);
         handleHttpError(res, 'Error al crear balances en el negocio');
       }
     });
@@ -145,7 +144,6 @@ const createClientsCtrl = async (req, res) => {
     await createActivityLog(req, 'client-create', clientData.id);
     resOkData(res, clientData);
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al intentar crear cliente');
   }
 };
@@ -163,7 +161,8 @@ const updateClientsCtrl = async (req, res) => {
     if (!clientData) {
       handleHttpError(res, 'El cliente no existe', 404);
       return;
-    } else if (clientData.parent_user_id !== req.session.user.id) {
+    }
+    if (clientData.parent_user_id !== req.session.user.id) {
       handleHttpError(res, 'No tienes permisos para editar este cliente', 403);
       return;
     }
@@ -183,6 +182,7 @@ const updateClientsCtrl = async (req, res) => {
       existingBalances,
       id_business,
     );
+
     // Realizar la eliminación de balances (solo si amount es igual a 0)
     await deleteBalances(balancesToDelete);
 
@@ -191,7 +191,6 @@ const updateClientsCtrl = async (req, res) => {
     await createActivityLog(req, 'client-update', clientId);
     resOkData(res, { message: 'Cliente actualizado correctamente' });
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al actualizar cliente');
   }
 };
@@ -201,30 +200,28 @@ const deactivateClientsCtrl = async (req, res) => {
 
   try {
     const client = await models.clientsModel.findOne({ where: { id } });
-    const active = client.active;
+    const { active } = client;
     const [updatedRowCount] = await models.clientsModel.update(
-      { active: active == 0 ? 1 : 0 },
+      { active: active === 0 ? 1 : 0 },
       { where: { id } },
     );
     if (updatedRowCount === 0) {
       handleHttpError(
         res,
-        active == 0
+        active === 0
           ? 'No se pudo activar el cliente'
           : 'No se pudo desactivar el cliente',
       );
       return;
-    } else {
-      await createActivityLog(req, 'client-deactivate', client.id);
-      resOkData(res, {
-        message:
-          active == 0
-            ? 'Cliente activado correctamente'
-            : 'Cliente desactivado correctamente',
-      });
     }
+    await createActivityLog(req, 'client-deactivate', client.id);
+    resOkData(res, {
+      message:
+        active === 0
+          ? 'Cliente activado correctamente'
+          : 'Cliente desactivado correctamente',
+    });
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al intentar activar/desactivar cliente');
   }
 };

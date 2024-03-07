@@ -1,5 +1,7 @@
+/* eslint-disable camelcase */
 import crypto from 'crypto';
 import models from '../models/index.js';
+
 const newToken = async () => {
   try {
     return crypto.randomBytes(32).toString('hex');
@@ -51,10 +53,6 @@ const deleteTempToken = async (token, user_email, type) => {
     if (!temp_token) return;
 
     await temp_token.destroy();
-    const message = {
-      message: 'token temporal eliminado existosamente',
-    };
-    return message;
   } catch (error) {
     console.log(error);
   }
@@ -67,10 +65,6 @@ const deleteTempNoToken = async (user_email, type) => {
     if (!temp_token) return;
 
     await temp_token.destroy();
-    const message = {
-      message: 'token temporal eliminado existosamente',
-    };
-    return message;
   } catch (error) {
     console.log(error);
   }

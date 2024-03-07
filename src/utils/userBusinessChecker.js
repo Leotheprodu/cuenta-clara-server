@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import models from '../models/index.js';
 
 const userBusinessChecker = async (req, user_id) => {

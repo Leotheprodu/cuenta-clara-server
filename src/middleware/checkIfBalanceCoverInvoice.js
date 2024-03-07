@@ -1,5 +1,5 @@
 import { matchedData } from 'express-validator';
-import { handleHttpError } from '../utils/handleError.js';
+import handleHttpError from '../utils/handleError.js';
 import { billingPrice } from '../config/constants.js';
 
 const checkIfBalanceCoverInvoice = (req, res, next) => {
@@ -23,7 +23,6 @@ const checkIfBalanceCoverInvoice = (req, res, next) => {
         2,
       )} y el total a deducir es ${(total * billingPrice).toFixed(2)}`,
     );
-    return;
   }
 };
 export default checkIfBalanceCoverInvoice;

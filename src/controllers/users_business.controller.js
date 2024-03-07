@@ -1,16 +1,22 @@
-import models from '../models/index.js';
-import { handleHttpError } from '../utils/handleError.js';
-import { resOkData } from '../utils/handleOkResponses.js';
+/* eslint-disable camelcase */
 import { matchedData } from 'express-validator';
+import models from '../models/index.js';
+import handleHttpError from '../utils/handleError.js';
+import { resOkData } from '../utils/handleOkResponses.js';
 import userBusinessChecker from '../utils/userBusinessChecker.js';
 import { paymentMethod } from '../config/constants.js';
+
+const businessSelected = async (business, id) =>
+  business.find((item) => item.id === id);
+const oldDefaultBusiness = async (business) =>
+  business.find((item) => item.default === true);
 
 const businessByUserCtrl = async (req, res) => {
   const { active } = matchedData(req);
   const whereData = {
     user_id: req.session.user.id,
   };
-  if (parseInt(active) === 1) {
+  if (parseInt(active, 10) === 1) {
     whereData.active = true;
   }
   try {
@@ -23,7 +29,6 @@ const businessByUserCtrl = async (req, res) => {
     }
     resOkData(res, business);
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al buscar los negocios del usuario');
   }
 };
@@ -34,7 +39,7 @@ const createBusinessCtrl = async (req, res) => {
   try {
     const newUserBusiness = await models.users_businessModel.create({
       user_id: req.session.user.id,
-      name: name,
+      name,
       default: false,
       active: true,
     });
@@ -58,7 +63,6 @@ const createBusinessCtrl = async (req, res) => {
     });
     resOkData(res, { message: 'Negocio creado correctamente' });
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al crear el negocio del usuario');
   }
 };
@@ -95,7 +99,6 @@ const favoriteBusinessCtrl = async (req, res) => {
 
     resOkData(res, business);
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al seleccionar negocio');
   }
 };
@@ -109,19 +112,19 @@ const deactivateBusinessCtrl = async (req, res) => {
     if (!business) {
       handleHttpError(res, `el negocio id: ${id} no pertenece al usuario`, 404);
       return;
-    } else if (business.default) {
+    }
+    if (business.default) {
       handleHttpError(res, 'No se puede desactivar el negocio predeterminado');
       return;
     }
     await business.update({
-      active: business.active ? false : true,
+      active: !business.active,
     });
     resOkData(res, {
       id: business.id,
-      active: business.active ? false : true,
+      active: !business.active,
     });
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al seleccionar negocio');
   }
 };
@@ -144,15 +147,8 @@ const updateBusinessCtrl = async (req, res) => {
       message: 'Negocio actualizado correctamente',
     });
   } catch (error) {
-    console.error(error);
     handleHttpError(res, 'Error al actualizar negocio');
   }
-};
-const businessSelected = async (business, id) => {
-  return await business.find((item) => item.id == id);
-};
-const oldDefaultBusiness = async (business) => {
-  return await business.find((item) => item.default === true);
 };
 export {
   businessByUserCtrl,

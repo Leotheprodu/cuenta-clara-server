@@ -1,5 +1,8 @@
+/* eslint-disable class-methods-use-this */
+/* eslint-disable camelcase */
 import { BusinessConfigInfo, billingPrice } from '../config/constants.js';
 import models from '../models/index.js';
+
 class Balances {
   async getBalanceOfUser(user_id) {
     try {
@@ -11,10 +14,10 @@ class Balances {
         (balance) => balance.business_id === BusinessConfigInfo.businessId,
       );
     } catch (error) {
-      console.error(error);
       throw new Error('Error al obtener balance');
     }
   }
+
   async getBalanceOfClient(id, business_id) {
     try {
       const client = await models.clientsModel.findOne({
@@ -25,10 +28,10 @@ class Balances {
         (balance) => balance.business_id === business_id,
       );
     } catch (error) {
-      console.error(error);
       throw new Error('Error al obtener balance');
     }
   }
+
   async createBalanceUpdate(balance, amount, invoiceId = null) {
     try {
       const newBalanceUpdate = await models.balances_updatesModel.create({
@@ -39,7 +42,6 @@ class Balances {
       });
       return newBalanceUpdate;
     } catch (error) {
-      console.error(error);
       throw new Error('Error al crear recarga de balance');
     }
   }
@@ -54,7 +56,6 @@ class Balances {
       );
       return newBalance;
     } catch (error) {
-      console.error(error);
       throw new Error('Error al recargar balance');
     }
   }
@@ -69,8 +70,6 @@ class Balances {
 
       return newBalance;
     } catch (error) {
-      console.error(error);
-
       throw new Error('Error al actualizar balance por factura');
     }
   }

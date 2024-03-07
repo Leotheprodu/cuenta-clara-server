@@ -43,4 +43,5 @@ const validatorCreateUserPaymentMethods = [
   (req, res, next) => validateResults(req, res, next),
 ];
 
+// eslint-disable-next-line import/prefer-default-export
 export { validatorCreateUserPaymentMethods };

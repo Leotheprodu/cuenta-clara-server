@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import models from '../models/index.js';
 
 // Función para identificar los balances a borrar
@@ -19,25 +20,29 @@ async function findBalancesToCreate(existingBalances, id_business) {
 
 // Función para eliminar balances
 async function deleteBalances(balancesToDelete) {
-  for (const balance of balancesToDelete) {
-    await models.balancesModel.update(
-      { active: false },
-      {
-        where: { id: balance, amount: 0 },
-      },
-    );
-  }
+  await Promise.all(
+    balancesToDelete.map(async (balance) => {
+      await models.balancesModel.update(
+        { active: false },
+        {
+          where: { id: balance, amount: 0 },
+        },
+      );
+    }),
+  );
 }
 
 // Función para crear nuevos balances
 async function createBalances(clientId, balancesToCreate) {
-  for (const businessId of balancesToCreate) {
-    await models.balancesModel.create({
-      client_id: clientId,
-      business_id: businessId,
-      amount: 0,
-    });
-  }
+  await Promise.all(
+    balancesToCreate.map(async (business_id) => {
+      await models.balancesModel.create({
+        client_id: clientId,
+        business_id,
+        amount: 0,
+      });
+    }),
+  );
 }
 export {
   findBalancesToDelete,

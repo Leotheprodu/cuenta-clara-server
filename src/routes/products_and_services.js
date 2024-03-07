@@ -1,5 +1,4 @@
 import express from 'express';
-const router = express.Router();
 import { isLoggedInTrue } from '../middleware/isLoggedIn.js';
 import {
   validatorGetProductsAndServicesByClient,
@@ -13,6 +12,7 @@ import {
   productsAndServicesDefaultUpdateCtrl,
 } from '../controllers/products_and_services.controller.js';
 
+const router = express.Router();
 router.get(
   '/:business_id',
   isLoggedInTrue,
