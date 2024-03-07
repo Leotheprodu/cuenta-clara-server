@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "app web para controlar saldos de cuentas con clientes",
   "main": "app.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon ./app.js"
+    "dev": "nodemon ./src/app.js"
   },
   "author": "Leonardo Serrano",
   "license": "ISC",
@@ -23,8 +24,10 @@
     "sequelize": "6.33.0"
   },
   "devDependencies": {
-    "eslint": "8.50.0",
+    "eslint": "8.57.0",
+    "eslint-config-airbnb-base": "15.0.0",
     "eslint-config-prettier": "9.0.0",
+    "eslint-plugin-import": "2.29.1",
     "nodemon": "3.0.1",
     "prettier": "3.0.3"
   }
