@@ -1,13 +1,12 @@
-import express from 'express';
-import path from 'path';
+import { Router } from 'express';
+import { dirname } from 'path';
 import { readdirSync } from 'fs';
+import { fileURLToPath } from 'url';
 
-const router = express.Router();
-const filePath = new URL(import.meta.url).pathname;
-const PATH_ROUTES = path.normalize(path.dirname(filePath)).substring(1);
-
+const router = Router();
+const filePath = fileURLToPath(import.meta.url);
+const PATH_ROUTES = dirname(filePath);
 const removeExtension = (fileName) => fileName.split('.').shift();
-
 readdirSync(PATH_ROUTES).forEach((file) => {
   const name = removeExtension(file);
   if (name !== 'index') {
