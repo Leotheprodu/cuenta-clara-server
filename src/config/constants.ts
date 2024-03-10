@@ -22,25 +22,25 @@ export const emailHost = process.env.EMAIL_HOST;
 export const emailUser = process.env.EMAIL_USER;
 export const emailPass = process.env.EMAIL_PASS;
 
-/* ------------------------------------ Database --------------------------------------------------*/
-export const user = process.env.DB_USER;
-export const password = process.env.DB_PASSWORD;
-export const database = process.env.DB_NAME;
-export const host = process.env.DB_HOST;
-export const port = process.env.DB_PORT;
+/* ------------------------------------ Database -------------------------------------------------- */
+export const user: string = process.env.DB_USER ?? '';
+export const password: string = process.env.DB_PASSWORD ?? '';
+export const database: string = process.env.DB_NAME ?? '';
+export const host: string = process.env.DB_HOST ?? '';
+export const port: number = parseInt(process.env.DB_PORT ?? '');
 
-/* ------------------------------------ Config --------------------------------------------------*/
-export const PORT = process.env.PORT || 5000;
-export const ORIGIN_CORS = process.env.URL_CORS.split(',');
-export const secret = process.env.SECRET_EXPRESS_SESSION;
+/* ------------------------------------ Config -------------------------------------------------- */
+export const PORT = process.env.PORT != null || 5000;
+export const ORIGIN_CORS = process.env.URL_CORS?.split(',');
+export const secret = process.env.SECRET_EXPRESS_SESSION ?? '';
 export const environment = process.env.NODE_ENV;
-export const FrontendDomain = process.env.FRONTEND_DOMAIN;
+export const FrontendDomain = process.env.FRONTEND_DOMAIN ?? '';
 
-/* ------------------------------------ FrontendLinks --------------------------------------------------*/
+/* ------------------------------------ FrontendLinks -------------------------------------------------- */
 
 export const verifyEmailLink = `${FrontendDomain}sesion/verificar-email/`;
 
-/* ------------------------------------ Dictionaries --------------------------------------------------*/
+/* ------------------------------------ Dictionaries -------------------------------------------------- */
 export const typeOfRoles = {
   admin: {
     id: 1,

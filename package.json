@@ -4,10 +4,12 @@
   "description": "app web para controlar saldos de cuentas con clientes",
   "main": "app.js",
   "type": "module",
+  "module": "es2020",
   "scripts": {
+    "tsc": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon ./src/app.js",
-    "start": "node ./src/app.js"
+    "dev": "ts-node-dev src/app.ts",
+    "start": "node ./dist/app.js"
   },
   "author": "Leonardo Serrano",
   "license": "ISC",
@@ -25,11 +27,26 @@
     "sequelize": "6.33.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "5.0.2",
+    "@types/cors": "2.8.17",
+    "@types/dotenv": "8.2.0",
+    "@types/ejs": "3.1.5",
+    "@types/express": "4.17.21",
+    "@types/express-mysql-session": "3.0.3",
+    "@types/express-session": "1.18.0",
+    "@types/express-validator": "3.0.0",
+    "@types/node": "20.11.25",
+    "@types/nodemailer": "6.4.14",
+    "@types/sequelize": "4.28.20",
+    "@typescript-eslint/eslint-plugin": "6.21.0",
     "eslint": "8.57.0",
-    "eslint-config-airbnb-base": "15.0.0",
     "eslint-config-prettier": "9.0.0",
+    "eslint-config-standard-with-typescript": "43.0.1",
     "eslint-plugin-import": "2.29.1",
-    "nodemon": "3.0.1",
-    "prettier": "3.0.3"
+    "eslint-plugin-n": "16.6.2",
+    "eslint-plugin-promise": "6.1.1",
+    "prettier": "3.0.3",
+    "ts-node-dev": "2.0.0",
+    "typescript": "5.4.2"
   }
 }

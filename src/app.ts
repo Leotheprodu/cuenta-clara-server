@@ -30,9 +30,8 @@ app.use(session(sess));
 app.use(express.json());
 app.use('/api', router);
 const server = app.listen(PORT, () => {
-  // eslint-disable-next-line no-console
   console.log(`The server is listening on port ${PORT}...`);
 });
 
 server.timeout = 30000;
-dbConnectMySql();
+void dbConnectMySql();

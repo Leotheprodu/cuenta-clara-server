@@ -3,7 +3,7 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: ['airbnb-base', 'prettier'],
+  extends: ['standard-with-typescript', 'prettier'],
   overrides: [
     {
       env: {
@@ -19,16 +19,5 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  rules: {
-    'import/extensions': [
-      'error',
-      'ignorePackages',
-      {
-        js: 'always',
-        jsx: 'never',
-        mjs: 'never',
-      },
-    ],
-    'no-console': 'off',
-  },
+  rules: {},
 };
