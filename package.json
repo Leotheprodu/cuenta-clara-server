@@ -8,8 +8,10 @@
   "scripts": {
     "tsc": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev src/app.ts",
-    "start": "node ./dist/app.js"
+    "compile": "tsc",
+    "dev": "nodemon --watch src -e ts,js --exec \"npm run build && npm start\"",
+    "build": "tsc",
+    "start": "node dist/app.js"
   },
   "author": "Leonardo Serrano",
   "license": "ISC",
@@ -46,7 +48,6 @@
     "eslint-plugin-n": "16.6.2",
     "eslint-plugin-promise": "6.1.1",
     "prettier": "3.0.3",
-    "ts-node-dev": "2.0.0",
     "typescript": "5.4.2"
   }
 }

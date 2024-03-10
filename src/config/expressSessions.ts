@@ -5,7 +5,6 @@ import credentials from './credentials.js';
 import { secret, environment } from './constants.js';
 
 const connection = mysql2.createPool(credentials);
-console.log('connection', connection);
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 const sessionStore = new (MySQLStoreCreator.default(session))({}, connection);
