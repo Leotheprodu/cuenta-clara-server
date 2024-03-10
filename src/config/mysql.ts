@@ -9,7 +9,7 @@ const sequelize = new Sequelize(database, user, password, {
   port,
 });
 
-const dbConnectMySql = async () => {
+const dbConnectMySql = async (): Promise<void> => {
   try {
     await sequelize.authenticate();
   } catch (e) {
@@ -17,8 +17,8 @@ const dbConnectMySql = async () => {
     console.log('MYSQL Error Connection', e);
   }
 };
-const dbSync = async () => {
-  const env = process.env.NODE_ENV || 'development';
+const dbSync = async (): Promise<void> => {
+  const env = process.env.NODE_ENV ?? 'development';
   try {
     if (env === 'development') {
       await sequelize.sync();
