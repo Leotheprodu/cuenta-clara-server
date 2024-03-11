@@ -1,9 +1,10 @@
 import ejs from 'ejs';
-import path from 'path';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 import transporter from '../config/nodemailer/transporter.js';
 
-const filePath = new URL(import.meta.url).pathname;
-const PATH_ROUTES = path.normalize(path.dirname(filePath)).substring(1);
+const filePath = fileURLToPath(import.meta.url);
+const PATH_ROUTES = dirname(filePath);
 /**
  * el nombre del template que debe estar en configuracion, dataToEJS es la data que ocupa el template es un objeto, from es un objeto con el nombre quien envia y el correo, to es el correo del destinatario, y subjet es el asunto del correo.
  * @param {*} templateName
@@ -12,12 +13,18 @@ const PATH_ROUTES = path.normalize(path.dirname(filePath)).substring(1);
  * @param {*} to
  * @param {*} subject
  */
-const sendAEmail = async (templateName, dataToEJS, from, to, subject) => {
-  await ejs.renderFile(
-    `${PATH_ROUTES}/../config/nodemailer/templates/${templateName}.ejs`,
+const sendAEmail = async (
+  templateName: string,
+  dataToEJS: object,
+  from: { name: string; email: string },
+  to: string,
+  subject: string,
+): Promise<any> => {
+  ejs.renderFile(
+    `${PATH_ROUTES}/../../public/templates/${templateName}.ejs`,
     dataToEJS,
     (error, data) => {
-      if (error) {
+      if (error != null) {
         console.log(error);
       } else {
         const mailOptions = {
@@ -29,7 +36,7 @@ const sendAEmail = async (templateName, dataToEJS, from, to, subject) => {
 
         // eslint-disable-next-line no-shadow
         transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
+          if (error != null) {
             console.log(error);
           } else {
             const message = {
@@ -38,7 +45,7 @@ const sendAEmail = async (templateName, dataToEJS, from, to, subject) => {
 
             return message;
           }
-          return null;
+          return '';
         });
       }
     },
