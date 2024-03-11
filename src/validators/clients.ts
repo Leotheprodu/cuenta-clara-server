@@ -1,5 +1,6 @@
 import { check } from 'express-validator';
 import validateResults from '../utils/handleValidator.js';
+import { type Request, type Response, type NextFunction } from 'express';
 
 const validatorCreateClients = [
   check('username')
@@ -44,7 +45,9 @@ const validatorCreateClients = [
     .isString()
     .withMessage('detail debe ser un string'),
 
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 const validatorUpdateClients = [
   check('id').exists().notEmpty(),
@@ -79,30 +82,42 @@ const validatorUpdateClients = [
     .optional({ nullable: true, checkFalsy: true })
     .isString()
     .withMessage('detail debe ser un string'),
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 const validatorDeactivateClient = [
   check('id').exists().notEmpty(),
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 const validatorQueryClients = [
   check('active').optional().isBoolean(),
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 const validatorGetClient = [
   check('id').exists().notEmpty(),
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 const validatorDashboardClient = [
   check('token').exists().notEmpty(),
   check('pin').exists().notEmpty(),
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 const validatorDashboardTransactions = [
   check('token').exists().notEmpty(),
   check('pin').exists().notEmpty(),
   check('invoice_id').exists().notEmpty().isInt(),
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 
 export {

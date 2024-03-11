@@ -1,5 +1,6 @@
 import { check } from 'express-validator';
 import validateResults from '../utils/handleValidator.js';
+import { type Request, type Response, type NextFunction } from 'express';
 
 const validatorCreateInvoice = [
   check('date')
@@ -63,7 +64,9 @@ const validatorCreateInvoice = [
     .withMessage(
       'El subtotal en los detalles de la factura es requerido y debe ser un número.',
     ),
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 
 const validateInvoiceClientId = [
@@ -71,7 +74,9 @@ const validateInvoiceClientId = [
     .exists()
     .isInt()
     .withMessage('El ID de la factura es requerido y debe ser un número.'),
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 const validatorAddTransaction = [
   check('id')
@@ -111,14 +116,18 @@ const validatorAddTransaction = [
     .isNumeric()
     .notEmpty()
     .withMessage('El status_id es requerido y debe ser un número.'),
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 const validateQueryInvoicesOfUser = [
   check('status')
     .optional()
     .isString()
     .withMessage('El campo status debe ser un string.'),
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 export {
   validatorCreateInvoice,

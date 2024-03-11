@@ -1,6 +1,6 @@
 import { check } from 'express-validator';
 import validateResults from '../utils/handleValidator.js';
-
+import { type Request, type Response, type NextFunction } from 'express';
 const validatorSignUp = [
   check('username').exists().notEmpty().isLength({ min: 3, max: 20 }),
 
@@ -14,7 +14,9 @@ const validatorSignUp = [
 
   check('address').exists().notEmpty().isString(),
 
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 const validatorLogin = [
   check('email').exists().notEmpty().isEmail(),
@@ -23,7 +25,9 @@ const validatorLogin = [
 
   check('isEmployee').optional().isBoolean(),
 
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 const validatorLoginEmployee = [
   check('username').exists().notEmpty().isString(),
@@ -32,11 +36,15 @@ const validatorLoginEmployee = [
 
   check('isEmployee').optional().isBoolean(),
 
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 const validatorEmail = [
   check('email').exists().notEmpty().isEmail(),
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 const validatorRecoverPassword = [
   check('email').exists().notEmpty().isEmail(),
@@ -45,23 +53,31 @@ const validatorRecoverPassword = [
 
   check('pin').exists().notEmpty().isString(),
 
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 
 const validatorGetItem = [
   check('id').exists().isNumeric().notEmpty(),
 
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 const validatorGetToken = [
   check('token').exists().isString().notEmpty(),
 
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 const validatorGetEmail = [
   check('email').exists().isEmail().notEmpty(),
 
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 
 const validatorUpdateUsers = [
@@ -71,7 +87,9 @@ const validatorUpdateUsers = [
 
   check('password').optional().isString(),
 
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 export {
   validatorLogin,

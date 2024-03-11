@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/* eslint-disable @typescript-eslint/naming-convention */
 import crypto from 'crypto';
 import models from '../models/index.js';
 

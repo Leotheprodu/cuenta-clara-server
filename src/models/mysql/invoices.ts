@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../../config/mysql.js';
 import Clients from './clients.js';

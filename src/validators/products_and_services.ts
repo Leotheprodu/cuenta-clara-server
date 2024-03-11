@@ -1,15 +1,20 @@
 import { check } from 'express-validator';
 import validateResults from '../utils/handleValidator.js';
+import { type Request, type Response, type NextFunction } from 'express';
 
 const validatorGetProductsAndServicesByClient = [
   check('business_id').exists().isNumeric().notEmpty(),
 
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 const validatorProductsAndServicesUpdateDefault = [
   check('id').exists().isNumeric().notEmpty(),
 
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 const validatorGetProductsAndServicesUpdateByClient = [
   check('id').exists().isNumeric(),
@@ -23,7 +28,9 @@ const validatorGetProductsAndServicesUpdateByClient = [
   check('inventory_control').exists().isBoolean(),
   check('default').exists().isBoolean(),
   check('business_id').exists().isNumeric(),
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 
 export {

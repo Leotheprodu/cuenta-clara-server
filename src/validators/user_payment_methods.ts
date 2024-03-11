@@ -1,5 +1,6 @@
 import { check } from 'express-validator';
 import validateResults from '../utils/handleValidator.js';
+import { type Request, type Response, type NextFunction } from 'express';
 
 const validatorCreateUserPaymentMethods = [
   check('payment_method_full_name')
@@ -40,7 +41,9 @@ const validatorCreateUserPaymentMethods = [
 
   // Agrega más validaciones según tus necesidades
 
-  (req, res, next) => validateResults(req, res, next),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResults(req, res, next);
+  },
 ];
 
 // eslint-disable-next-line import/prefer-default-export

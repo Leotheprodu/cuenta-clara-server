@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../../config/mysql.js';
 import Business from './users_business.js';
@@ -26,7 +26,6 @@ const Cashback_discounts = sequelize.define('cashback_discounts', {
   type: {
     type: DataTypes.STRING,
     defaultValue: 'discount',
-    description: 'discount or cashback',
   },
 });
 Cashback_discounts.belongsTo(Business, {

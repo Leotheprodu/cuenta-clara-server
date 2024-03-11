@@ -1,9 +1,8 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../../config/mysql.js';
-import Users from './users.js';
 
-const Employees = sequelize.define(
-  'employees',
+const Users = sequelize.define(
+  'users',
   {
     id: {
       type: DataTypes.INTEGER,
@@ -11,21 +10,28 @@ const Employees = sequelize.define(
       autoIncrement: true,
     },
     username: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+    },
+    email: {
       type: DataTypes.STRING(50),
+      unique: true,
       allowNull: false,
     },
     password: {
       type: DataTypes.STRING(100),
-      select: false,
       allowNull: false,
     },
-    admin: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
+    cellphone: {
+      type: DataTypes.STRING(50),
     },
     active: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false,
+      defaultValue: true,
+    },
+    country: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
     },
   },
   {
@@ -35,12 +41,8 @@ const Employees = sequelize.define(
   },
 );
 
-Employees.addScope('withPassword', {
+Users.addScope('withPassword', {
   attributes: { include: ['password'] },
 });
-Employees.belongsTo(Users, {
-  foreignKey: { name: 'parent_user_id', allowNull: false },
-});
-Users.hasMany(Employees, { foreignKey: { name: 'parent_user_id' } });
-/* Employees.sync({ alter: true }); */
-export default Employees;
+/* Users.sync({ alter: true }); */
+export default Users;

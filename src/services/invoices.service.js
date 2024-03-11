@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-/* eslint-disable camelcase */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Op } from 'sequelize';
 import { invoicesStatus } from '../config/constants.js';
 import models from '../models/index.js';

@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { matchedData } from 'express-validator';
 import models from '../models/index.js';
 import handleHttpError from '../utils/handleError.js';

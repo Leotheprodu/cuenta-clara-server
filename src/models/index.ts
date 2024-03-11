@@ -7,7 +7,7 @@ const filePath = fileURLToPath(import.meta.url);
 const pathDir = dirname(filePath);
 const PATH_MODELS = join(pathDir, 'mysql');
 // Función que elimina la extensión del nombre de archivo
-const removeExtension = (fileName) => fileName.split('.').shift();
+const removeExtension = (fileName: string): any => fileName.split('.').shift();
 
 // Lee los archivos de la carpeta y crea un modelo por cada uno
 readdirSync(PATH_MODELS).forEach((file) => {

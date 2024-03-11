@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/* eslint-disable @typescript-eslint/naming-convention */
 import models from '../models/index.js';
 
 const refreshUserRoles = async (user_id) => {

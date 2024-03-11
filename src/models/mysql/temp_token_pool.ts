@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../../config/mysql.js';
 import Users from './users.js';
@@ -13,7 +13,6 @@ const Temp_token_pool = sequelize.define(
     },
     token: {
       type: DataTypes.STRING(100),
-      select: false,
       allowNull: false,
     },
     type: {

@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/* eslint-disable @typescript-eslint/naming-convention */
 import models from '../models/index.js';
 
 // Función para identificar los balances a borrar

@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/* eslint-disable @typescript-eslint/naming-convention */
 import models from '../models/index.js';
 
 const createActivityLog = async (req, action, reference_id) => {
