@@ -4,6 +4,11 @@ import * as mysql2 from 'mysql2/promise';
 import credentials from './credentials.js';
 import { secret, environment } from './constants.js';
 
+declare module 'express-session' {
+  interface SessionData {
+    userBusiness: number[];
+  }
+}
 const connection = mysql2.createPool(credentials);
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error

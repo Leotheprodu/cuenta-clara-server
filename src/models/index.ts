@@ -2,7 +2,7 @@ import { readdirSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
-const models = {};
+const models: any = {};
 const filePath = fileURLToPath(import.meta.url);
 const pathDir = dirname(filePath);
 const PATH_MODELS = join(pathDir, 'mysql');
