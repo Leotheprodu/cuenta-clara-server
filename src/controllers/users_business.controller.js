@@ -7,7 +7,8 @@ import userBusinessChecker from '../utils/userBusinessChecker.js';
 import { paymentMethod } from '../config/constants.js';
 
 const businessSelected = async (business, id) =>
-  business.find((item) => item.id === id);
+  business.find((item) => item.id === parseInt(id, 10));
+
 const oldDefaultBusiness = async (business) =>
   business.find((item) => item.default === true);
 
@@ -68,9 +69,10 @@ const createBusinessCtrl = async (req, res) => {
 };
 const favoriteBusinessCtrl = async (req, res) => {
   const { id } = matchedData(req);
+
   try {
     const user_id = req.session.user.id;
-    let business = await models.users_businessModel.findAll({
+    const business = await models.users_businessModel.findAll({
       where: { user_id },
     });
 
@@ -78,7 +80,6 @@ const favoriteBusinessCtrl = async (req, res) => {
       handleHttpError(res, 'El usuario no tiene negocios', 404);
       return;
     }
-
     // Encontrar el negocio con default === true
     const defaultBusiness = await oldDefaultBusiness(business);
     // Si se encontró un negocio con default === true, actualizarlo a false
@@ -88,16 +89,14 @@ const favoriteBusinessCtrl = async (req, res) => {
 
     // Encontrar el negocio correspondiente al ID de la solicitud
     const selectedBusiness = await businessSelected(business, id);
-
     // Si se encontró un negocio con el ID de la solicitud, establecerlo como predeterminado
     if (selectedBusiness) {
       await selectedBusiness.update({ default: true });
     }
-
     // Recuperar la lista actualizada de negocios
-    business = await userBusinessChecker(req, user_id);
-
-    resOkData(res, business);
+    const businessUpdated = await userBusinessChecker(req, user_id);
+    console.log(selectedBusiness);
+    resOkData(res, businessUpdated);
   } catch (error) {
     handleHttpError(res, 'Error al seleccionar negocio');
   }
