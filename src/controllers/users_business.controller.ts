@@ -5,25 +5,34 @@ import handleHttpError from '../utils/handleError.js';
 import { resOkData } from '../utils/handleOkResponses.js';
 import userBusinessChecker from '../utils/userBusinessChecker.js';
 import { paymentMethod } from '../config/constants.js';
+import { type UserBusinessResponseAttributes } from '../interfaces/users_business.interface.js';
+import { type Request, type Response } from 'express';
+const businessSelected = (
+  business: UserBusinessResponseAttributes[],
+  id: number,
+): UserBusinessResponseAttributes | null =>
+  business.find((item) => item.id === id) ?? null;
+const oldDefaultBusiness = (
+  business: UserBusinessResponseAttributes[],
+): UserBusinessResponseAttributes | null =>
+  business.find((item) => item.default) ?? null;
 
-const businessSelected = async (business, id) =>
-  business.find((item) => item.id === id);
-const oldDefaultBusiness = async (business) =>
-  business.find((item) => item.default === true);
-
-const businessByUserCtrl = async (req, res) => {
+const businessByUserCtrl = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   const { active } = matchedData(req);
-  const whereData = {
-    user_id: req.session.user.id,
+  const whereData: any = {
+    user_id: req.session.user?.id,
   };
-  if (parseInt(active, 10) === 1) {
+  if (parseInt(active as string, 10) === 1) {
     whereData.active = true;
   }
   try {
     const business = await models.users_businessModel.findAll({
       where: whereData,
     });
-    if (!business) {
+    if (business?.length === 0) {
       handleHttpError(res, 'El negocio no existe', 404);
       return;
     }
@@ -33,32 +42,35 @@ const businessByUserCtrl = async (req, res) => {
   }
 };
 
-const createBusinessCtrl = async (req, res) => {
+const createBusinessCtrl = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   const { name } = matchedData(req);
 
   try {
     const newUserBusiness = await models.users_businessModel.create({
-      user_id: req.session.user.id,
+      user_id: req.session.user?.id,
       name,
       default: false,
       active: true,
     });
     await models.products_and_servicesModel.create({
-      user_id: req.session.user.id,
+      user_id: req.session.user?.id,
       name: 'Predeterminado',
       description: 'Servicio predeterminado',
       unit: 'unidad',
       unit_price: 1,
       default: true,
       business_id: newUserBusiness.id,
-      code: `${req.session.user.id}-${newUserBusiness.id}-1`,
+      code: `${req.session.user?.id}-${newUserBusiness.id}-1`,
       type: 'service',
     });
     await models.user_payment_methodsModel.create({
       payment_method_id: paymentMethod.cash.id,
       business_id: newUserBusiness.id,
-      payment_method_cellphone: req.session.user.cellphone || null,
-      payment_method_email: req.session.user.email,
+      payment_method_cellphone: req.session.user?.cellphone,
+      payment_method_email: req.session.user?.email,
       payment_method_description: ' pago en efectivo',
     });
     resOkData(res, { message: 'Negocio creado correctamente' });
@@ -66,31 +78,39 @@ const createBusinessCtrl = async (req, res) => {
     handleHttpError(res, 'Error al crear el negocio del usuario');
   }
 };
-const favoriteBusinessCtrl = async (req, res) => {
+const favoriteBusinessCtrl = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   const { id } = matchedData(req);
   try {
-    const user_id = req.session.user.id;
-    let business = await models.users_businessModel.findAll({
-      where: { user_id },
-    });
+    const user_id = req.session.user !== undefined ? req.session.user.id : 0;
+    let business: UserBusinessResponseAttributes[] =
+      await models.users_businessModel.findAll({
+        where: { user_id },
+      });
 
-    if (!business) {
+    if (business?.length === 0) {
       handleHttpError(res, 'El usuario no tiene negocios', 404);
       return;
     }
-
+    // BUG aqui esta el error, que pasa en el frontend al cambiar negocio
     // Encontrar el negocio con default === true
-    const defaultBusiness = await oldDefaultBusiness(business);
+    const defaultBusiness = oldDefaultBusiness(business);
     // Si se encontró un negocio con default === true, actualizarlo a false
-    if (defaultBusiness) {
+    if (defaultBusiness !== null && defaultBusiness.id !== 0) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
       await defaultBusiness.update({ default: false });
     }
 
     // Encontrar el negocio correspondiente al ID de la solicitud
-    const selectedBusiness = await businessSelected(business, id);
+    const selectedBusiness = businessSelected(business, id as number);
 
     // Si se encontró un negocio con el ID de la solicitud, establecerlo como predeterminado
-    if (selectedBusiness) {
+    if (selectedBusiness !== null && selectedBusiness.id !== 0) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
       await selectedBusiness.update({ default: true });
     }
 
@@ -102,7 +122,10 @@ const favoriteBusinessCtrl = async (req, res) => {
     handleHttpError(res, 'Error al seleccionar negocio');
   }
 };
-const deactivateBusinessCtrl = async (req, res) => {
+const deactivateBusinessCtrl = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   const { id } = matchedData(req);
   try {
     const business = await models.users_businessModel.findOne({

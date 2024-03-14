@@ -1,4 +1,4 @@
-const idGenerator = (length = 20) => {
+const idGenerator = (length: number = 20): string => {
   if (length <= 0) {
     throw new Error('La longitud debe ser mayor que 0');
   }

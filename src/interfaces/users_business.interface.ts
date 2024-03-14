@@ -5,10 +5,10 @@ import {
   type InferCreationAttributes,
 } from 'sequelize';
 
-export interface Users_businessAttributes
+export interface Users_businessModelAttributes
   extends Model<
-    InferAttributes<Users_businessAttributes>,
-    InferCreationAttributes<Users_businessAttributes>
+    InferAttributes<Users_businessModelAttributes>,
+    InferCreationAttributes<Users_businessModelAttributes>
   > {
   // Some fields are optional when calling UserModel.create() or UserModel.build()
   id: CreationOptional<number>;
@@ -17,7 +17,7 @@ export interface Users_businessAttributes
   active: boolean;
 }
 
-export interface userBusinessData
-  extends InferAttributes<Users_businessAttributes> {
+export interface UserBusinessResponseAttributes
+  extends InferAttributes<Users_businessModelAttributes> {
   user_id: number;
 }

@@ -7,6 +7,16 @@ import { secret, environment } from './constants.js';
 declare module 'express-session' {
   interface SessionData {
     userBusiness: number[];
+    user: {
+      id: number;
+      username: string;
+      email: string;
+      cellphone: string;
+      active: boolean;
+      country: string;
+      createdAt: string;
+      updatedAt: string;
+    };
   }
 }
 const connection = mysql2.createPool(credentials);

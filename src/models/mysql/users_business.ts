@@ -2,8 +2,8 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../../config/mysql.js';
 import Users from './users.js';
-import { type Users_businessAttributes } from '../../interfaces/users_business.interface.js';
-const Users_business = sequelize.define<Users_businessAttributes>(
+import { type Users_businessModelAttributes } from '../../interfaces/users_business.interface.js';
+const Users_business = sequelize.define<Users_businessModelAttributes>(
   'users_business',
   {
     id: {
