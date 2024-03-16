@@ -54,6 +54,8 @@ const clientCtrl = async (req, res) => {
 };
 const dashboardClientCtrl = async (req, res) => {
   const { token, pin: pinData } = matchedData(req);
+
+  console.log(token, pinData);
   try {
     const clientData = await models.clientsModel.scope('withPin').findOne({
       where: { token },

@@ -10,12 +10,14 @@ async function findBalancesToDelete(existingBalances, id_business) {
 
 // Función para identificar los nuevos balances a crear
 async function findBalancesToCreate(existingBalances, id_business) {
-  return id_business.filter(
+  const balancesToCreate = id_business.filter(
     (id) =>
       !existingBalances.some(
         (existingBalance) => existingBalance.business_id === id,
       ),
   );
+  console.log(balancesToCreate);
+  return balancesToCreate;
 }
 
 // Función para eliminar balances
