@@ -58,6 +58,7 @@ const createInvoiceCtrl = async (req, res) => {
             subtotal: invoiceDetail.subtotal,
           });
         } catch (error) {
+          console.log(error);
           handleHttpError(res, 'Error al crear detalles de factura');
         }
       },
@@ -98,6 +99,7 @@ const createInvoiceCtrl = async (req, res) => {
       newUserBalance: balance,
     });
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al crear factura');
   }
 };
@@ -113,6 +115,7 @@ const getInvoicesByClientCtrl = async (req, res) => {
     }
     resOkData(res, result);
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al obtener facturas');
   }
 };
@@ -129,12 +132,14 @@ const getInvoicesByTokenCtrl = async (req, res) => {
       return;
     }
     const result = await invoices.findInvoicesofUserByToken(id, parent_user_id);
+    console.log('facturas Dashboard', result);
     if (!result) {
       handleHttpError(res, 'Error al obtener facturas');
       return;
     }
     resOkData(res, result);
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al obtener facturas');
   }
 };
@@ -157,6 +162,7 @@ const getTransactionsDashboardCtrl = async (req, res) => {
     }
     resOkData(res, result);
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al obtener transacciones');
   }
 };
@@ -179,6 +185,7 @@ const getDetailsDashboardCtrl = async (req, res) => {
     }
     resOkData(res, result);
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al obtener transacciones');
   }
 };
@@ -219,13 +226,13 @@ const deleteInvoicesByClientCtrl = async (req, res) => {
     await createActivityLog(req, 'invoice-delete', result.id);
     resOkData(res, { status: invoicesStatus.cancelled });
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al obtener facturas');
   }
 };
 
 const addTransactionCtrl = async (req, res) => {
   const data = matchedData(req);
-  // eslint-disable-next-line no-unused-vars
   const { id, ...transactionData } = data;
   try {
     const invoice = await invoices.findInvoice(data.invoice_id);
@@ -271,6 +278,7 @@ const addTransactionCtrl = async (req, res) => {
       data,
     });
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al crear transaccion');
   }
 };

@@ -21,6 +21,7 @@ const resUsersSessionData = async (req, res) => {
       },
     });
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al verificar sesion');
   }
 };

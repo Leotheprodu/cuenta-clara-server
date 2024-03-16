@@ -20,7 +20,6 @@ readdirSync(PATH_MODELS).forEach((file) => {
       models[`${name}Model`] = module.default;
     })
     .catch((err) => {
-      // eslint-disable-next-line no-console
       console.error(`Error importing model file ${file}:`, err);
     });
 });

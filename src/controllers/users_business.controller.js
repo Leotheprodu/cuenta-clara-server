@@ -30,6 +30,7 @@ const businessByUserCtrl = async (req, res) => {
     }
     resOkData(res, business);
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al buscar los negocios del usuario');
   }
 };
@@ -64,6 +65,7 @@ const createBusinessCtrl = async (req, res) => {
     });
     resOkData(res, { message: 'Negocio creado correctamente' });
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al crear el negocio del usuario');
   }
 };
@@ -98,6 +100,7 @@ const favoriteBusinessCtrl = async (req, res) => {
     console.log(selectedBusiness);
     resOkData(res, businessUpdated);
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al seleccionar negocio');
   }
 };
@@ -124,6 +127,7 @@ const deactivateBusinessCtrl = async (req, res) => {
       active: !business.active,
     });
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al seleccionar negocio');
   }
 };
@@ -146,6 +150,7 @@ const updateBusinessCtrl = async (req, res) => {
       message: 'Negocio actualizado correctamente',
     });
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al actualizar negocio');
   }
 };

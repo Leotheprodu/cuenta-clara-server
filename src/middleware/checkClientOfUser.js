@@ -19,6 +19,7 @@ const checkClientOfUser = async (req, res, next) => {
       );
     }
   } catch (error) {
+    console.log(error);
     handleHttpError(
       res,
       'Error al verificar si el cliente pertenece al usuario',

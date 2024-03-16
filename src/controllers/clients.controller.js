@@ -38,6 +38,7 @@ const clientsCtrl = async (req, res) => {
     const clientsData = await models.clientsModel.findAll(filtro);
     resOkData(res, clientsData);
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al intentar mostrar clientes');
   }
 };
@@ -49,6 +50,7 @@ const clientCtrl = async (req, res) => {
     });
     resOkData(res, clientsData);
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al intentar mostrar el cliente');
   }
 };
@@ -82,7 +84,7 @@ const dashboardClientCtrl = async (req, res) => {
       return;
     }
     const balances = await models.balancesModel.findAll({
-      where: { client_id: clientData.id },
+      where: { client_id: client.id, active: true },
       attributes: {
         exclude: ['client_id', 'business_id', 'createdAt', 'updatedAt'],
       },
@@ -118,6 +120,7 @@ const dashboardClientCtrl = async (req, res) => {
     });
     resOkData(res, { client, balances });
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al intentar mostrar datos del cliente');
   }
 };
@@ -138,6 +141,7 @@ const createClientsCtrl = async (req, res) => {
           amount: 0,
         });
       } catch (error) {
+        console.log(error);
         handleHttpError(res, 'Error al crear balances en el negocio');
       }
     });
@@ -146,6 +150,7 @@ const createClientsCtrl = async (req, res) => {
     await createActivityLog(req, 'client-create', clientData.id);
     resOkData(res, clientData);
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al intentar crear cliente');
   }
 };
@@ -172,7 +177,7 @@ const updateClientsCtrl = async (req, res) => {
 
     // Obtener los balances existentes del cliente
     const existingBalances = await models.balancesModel.findAll({
-      where: { client_id: clientId, active: true },
+      where: { client_id: clientId },
     });
     // Identificar los IDs de balances a borrar (amount igual a 0)
     const balancesToDelete = await findBalancesToDelete(
@@ -193,6 +198,7 @@ const updateClientsCtrl = async (req, res) => {
     await createActivityLog(req, 'client-update', clientId);
     resOkData(res, { message: 'Cliente actualizado correctamente' });
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al actualizar cliente');
   }
 };
@@ -224,6 +230,7 @@ const deactivateClientsCtrl = async (req, res) => {
           : 'Cliente desactivado correctamente',
     });
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al intentar activar/desactivar cliente');
   }
 };

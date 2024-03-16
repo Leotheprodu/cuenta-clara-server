@@ -15,7 +15,6 @@ readdirSync(PATH_ROUTES).forEach((file) => {
         router.use(`/${name}`, module.default);
       })
       .catch((err) => {
-        // eslint-disable-next-line no-console
         console.error(`Error importing route file ${file}:`, err);
       });
   }

@@ -15,6 +15,7 @@ const balanceByClientCtrl = async (req, res) => {
     });
     resOkData(res, balance);
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al intentar mostrar el balance del cliente');
   }
 };
@@ -51,6 +52,7 @@ const rechargeBalancesCtrl = async (req, res) => {
     await createActivityLog(req, 'user-rechargeBalance', balance.id);
     resOkData(res, balance);
   } catch (error) {
+    console.log(error);
     handleHttpError(
       res,
       'Error al intentar crear recarga de balance del cliente',
@@ -98,6 +100,7 @@ const applyBalanceRechargeCtrl = async (req, res) => {
     await createActivityLog(req, 'user-applyBalance', balanceRecharge.id);
     resOkData(res, { status: 'completed', balance: balance.amount });
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al intentar aplicar el saldo al cliente');
   }
 };
@@ -113,6 +116,7 @@ const cancelBalanceRechargeCtrl = async (req, res) => {
     await createActivityLog(req, 'user-cancelBalance', balanceRecharge.id);
     resOkData(res, { status: 'cancelled' });
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al intentar cancelar la recarga del cliente');
   }
 };
@@ -169,6 +173,7 @@ const balancesRechargesCtrl = async (req, res) => {
     });
     resOkData(res, recharges);
   } catch (error) {
+    console.log(error);
     handleHttpError(
       res,
       'Error al intentar crear recarga de balance del cliente',
@@ -183,6 +188,7 @@ const getBalanceTypeCtrl = async (req, res) => {
     const balance = await models.balances_typesModel.findByPk(id);
     resOkData(res, balance);
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al intentar mostrar el plan de Recarga');
   }
 };
@@ -196,6 +202,7 @@ const ClientBalancesCtrl = async (req, res) => {
 
     resOkData(res, balances);
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al intentar mostrar los balances');
   }
 };
@@ -206,6 +213,7 @@ const getBalancesTypesCtrl = async (req, res) => {
 
     resOkData(res, balancesTypes);
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al intentar mostrar los planes de Recarga');
   }
 };

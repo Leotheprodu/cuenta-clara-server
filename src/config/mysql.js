@@ -13,7 +13,6 @@ const dbConnectMySql = async () => {
   try {
     await sequelize.authenticate();
   } catch (e) {
-    // eslint-disable-next-line no-console
     console.log('MYSQL Error Connection', e);
   }
 };
@@ -24,10 +23,8 @@ const dbSync = async () => {
       await sequelize.sync();
     }
 
-    // eslint-disable-next-line no-console
     console.log('All models were synchronized successfully.');
   } catch (e) {
-    // eslint-disable-next-line no-console
     console.log('Error Synchronizing models', e);
   }
 };

@@ -21,6 +21,7 @@ const productsAndServicesByClientCtrl = async (req, res) => {
       });
     resOkData(res, products_and_services);
   } catch (error) {
+    console.log(error);
     handleHttpError(
       res,
       'Error al obtener los productos y servicios del cliente',
@@ -66,6 +67,7 @@ const productsAndServicesUpdateCtrl = async (req, res) => {
     await products_and_services.update(data);
     resOkData(res, { message: 'Producto o servicio actualizado' });
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al actualizar producto o servicio del cliente');
   }
 };
@@ -101,6 +103,7 @@ const productsAndServicesCreateCtrl = async (req, res) => {
     await models.products_and_servicesModel.create(data);
     resOkData(res, { message: 'Producto o servicio creado' });
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al crear el producto o servicio del cliente');
   }
 };
@@ -148,6 +151,7 @@ const productsAndServicesDefaultUpdateCtrl = async (req, res) => {
     });
     resOkData(res, { message: 'Producto o servicio actualizado' });
   } catch (error) {
+    console.log(error);
     handleHttpError(
       res,
       'Error al actualizar el producto o servicio del cliente',

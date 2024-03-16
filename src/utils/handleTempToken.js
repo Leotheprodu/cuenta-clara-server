@@ -6,6 +6,7 @@ const newToken = async () => {
   try {
     return crypto.randomBytes(32).toString('hex');
   } catch (error) {
+    console.log(error);
     throw new Error(`Ha habido un error al generar el token: ${error}`);
   }
 };

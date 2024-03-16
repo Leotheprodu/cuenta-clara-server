@@ -8,7 +8,11 @@ export const checkPin = async (req, res, next) => {
     where: { token },
     attributes: ['pin'],
   });
-  if (!clientData?.pin && !pin) {
+  if (!clientData) {
+    handleHttpError(res, 'Token no encontrado');
+    return;
+  }
+  if (!clientData.pin && !pin) {
     handleHttpError(res, 'No PIN');
     return;
   }

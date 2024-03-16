@@ -55,6 +55,7 @@ const loginCtrl = async (req, res) => {
     };
     resUsersSessionData(req, res);
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error durante el inicio de sesion');
   }
 };
@@ -96,6 +97,7 @@ const employeeLoginCtrl = async (req, res) => {
     await createActivityLog(req, 'employee-login', employeeData.id);
     resUsersSessionData(req, res);
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error durante el inicio de sesion');
   }
 };
@@ -105,6 +107,7 @@ const logoutCtrl = async (req, res) => {
     req.session.isLoggedIn = false;
     resUsersSessionData(req, res, 'El Usuario ha cerrado sesion');
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al cerrar sesion');
   }
 };
@@ -210,6 +213,7 @@ const signUpCtrl = async (req, res) => {
     await createActivityLog(req, 'user-signup', data.id);
     resOkData(res, data);
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error creando usuario');
   }
 };
@@ -223,6 +227,7 @@ const emailVerifyCtrl = async (req, res) => {
       });
       return result;
     } catch (error) {
+      console.log(error);
       handleHttpError(res, 'Token invalido');
       return null;
     }
@@ -244,6 +249,7 @@ const emailVerifyCtrl = async (req, res) => {
     await models.role_usersModel.create({ user_id: userData.id, role_id: 2 });
     resOkData(res, userData);
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error verificando correo electronico');
   }
 };
@@ -256,6 +262,7 @@ const ckeckSessCtrl = async (req, res) => {
       handleHttpError(res, 'El usuario no ha iniciado sesion');
     }
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al verificar sesion');
   }
 };

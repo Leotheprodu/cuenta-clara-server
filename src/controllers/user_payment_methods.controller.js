@@ -23,6 +23,7 @@ const paymentMethodsCtrl = async (req, res) => {
     });
     resOkData(res, paymentMethods);
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al obtener los métodos de pago del negocio');
   }
 };
@@ -43,6 +44,7 @@ const createPaymentMethodsCtrl = async (req, res) => {
     );
     resOkData(res, newPaymentMethod);
   } catch (error) {
+    console.log(error);
     handleHttpError(res, 'Error al crear el método de pago');
   }
 };

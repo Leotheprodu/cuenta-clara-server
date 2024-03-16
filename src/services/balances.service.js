@@ -14,6 +14,7 @@ class Balances {
         (balance) => balance.business_id === BusinessConfigInfo.businessId,
       );
     } catch (error) {
+      console.log(error);
       throw new Error('Error al obtener balance');
     }
   }
@@ -28,6 +29,7 @@ class Balances {
         (balance) => balance.business_id === business_id,
       );
     } catch (error) {
+      console.log(error);
       throw new Error('Error al obtener balance');
     }
   }
@@ -42,6 +44,7 @@ class Balances {
       });
       return newBalanceUpdate;
     } catch (error) {
+      console.log(error);
       throw new Error('Error al crear recarga de balance');
     }
   }
@@ -56,6 +59,7 @@ class Balances {
       );
       return newBalance;
     } catch (error) {
+      console.log(error);
       throw new Error('Error al recargar balance');
     }
   }
@@ -70,6 +74,7 @@ class Balances {
 
       return newBalance;
     } catch (error) {
+      console.log(error);
       throw new Error('Error al actualizar balance por factura');
     }
   }

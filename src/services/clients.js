@@ -3,20 +3,33 @@ import models from '../models/index.js';
 
 // Función para identificar los balances a borrar
 async function findBalancesToDelete(existingBalances, id_business) {
-  return existingBalances
+  const activeBalances = existingBalances.filter(
+    (balance) => balance.active === true,
+  );
+  const balancesToDelete = activeBalances
     .filter((balance) => !id_business.includes(balance.business_id))
     .map((balance) => balance.id);
+  return balancesToDelete;
 }
 
 // Función para identificar los nuevos balances a crear
 async function findBalancesToCreate(existingBalances, id_business) {
-  const balancesToCreate = id_business.filter(
+  const balancesToCreateFiltered = id_business.filter(
     (id) =>
       !existingBalances.some(
         (existingBalance) => existingBalance.business_id === id,
       ),
   );
-  console.log(balancesToCreate);
+  const balancesToActivate = id_business.filter((id) =>
+    existingBalances.some(
+      (existingBalance) =>
+        existingBalance.business_id === id && existingBalance.active === false,
+    ),
+  );
+  const balancesToCreate = {
+    toCreate: balancesToCreateFiltered,
+    toActivate: balancesToActivate,
+  };
   return balancesToCreate;
 }
 
@@ -36,13 +49,24 @@ async function deleteBalances(balancesToDelete) {
 
 // Función para crear nuevos balances
 async function createBalances(clientId, balancesToCreate) {
+  const { toCreate, toActivate } = balancesToCreate;
   await Promise.all(
-    balancesToCreate.map(async (business_id) => {
+    toCreate.map(async (business_id) => {
       await models.balancesModel.create({
         client_id: clientId,
         business_id,
         amount: 0,
       });
+    }),
+  );
+  await Promise.all(
+    toActivate.map(async (business_id) => {
+      await models.balancesModel.update(
+        {
+          active: true,
+        },
+        { where: { business_id } },
+      );
     }),
   );
 }
