@@ -126,14 +126,14 @@ const dashboardClientCtrl = async (req, res) => {
 };
 const createClientsCtrl = async (req, res) => {
   const data = matchedData(req);
-  const { idBusiness } = data;
+  const { id_business } = data;
   try {
     const clientData = await models.clientsModel.create({
       ...data,
       parent_user_id: req.session.user.id,
     });
-
-    const createBalancesPromises = idBusiness.map(async (id) => {
+    console.log(data);
+    const createBalancesPromises = id_business.map(async (id) => {
       try {
         await models.balancesModel.create({
           client_id: clientData.id,
