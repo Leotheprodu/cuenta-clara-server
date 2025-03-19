@@ -8,6 +8,7 @@ import {
   getInvoicesByTokenCtrl,
   getTransactionsDashboardCtrl,
   getDetailsDashboardCtrl,
+  getTransactionsAdminCtrl,
 } from '../controllers/invoices.controller.js';
 import {
   validatorCreateInvoice,
@@ -23,6 +24,7 @@ import {
 } from '../validators/clients.js';
 
 const router = express.Router();
+router.get('/admin-transactions', isLoggedInTrue, getTransactionsAdminCtrl);
 router.get(
   '/:id',
   isLoggedInTrue,

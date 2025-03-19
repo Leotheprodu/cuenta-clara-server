@@ -80,6 +80,54 @@ class Invoices {
     });
   }
 
+  async findTransactionsOfUser(user_id, page, perPage) {
+    // Condiciones de búsqueda
+    const whereConditions = {
+      parent_user_id: user_id,
+    };
+
+    // Opciones de paginación (solo se aplican si es necesario)
+    const paginationOptions = {};
+    if (page && perPage) {
+      paginationOptions.offset = (page - 1) * perPage;
+      paginationOptions.limit = perPage;
+    }
+    return models.transactionsModel.findAll({
+      where: whereConditions,
+      attributes: {
+        exclude: [
+          'parent_user_id',
+          'createdAt',
+          'updatedAt',
+          'client_id',
+          'payment_method_id',
+          'status_id',
+        ],
+      },
+      include: [
+        {
+          model: models.clientsModel,
+          attributes: ['id', 'username'],
+        },
+        {
+          model: models.payment_methodsModel,
+          attributes: ['name'],
+        },
+        {
+          model: models.payment_statusModel,
+          attributes: ['name'],
+        },
+        {
+          model: models.invoicesModel,
+          through: { attributes: [] },
+          attributes: ['id', 'status', 'total_amount'],
+        },
+      ],
+      order: [['date', 'DESC']],
+      ...paginationOptions,
+    });
+  }
+
   async findInvoicebyIDforTransactions(invoice_id) {
     // Condiciones de búsqueda
     const whereConditions = {

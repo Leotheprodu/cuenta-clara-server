@@ -166,6 +166,21 @@ const getTransactionsDashboardCtrl = async (req, res) => {
     handleHttpError(res, 'Error al obtener transacciones');
   }
 };
+const getTransactionsAdminCtrl = async (req, res) => {
+  const user_id = req.session.user.id;
+
+  try {
+    const result = await invoices.findTransactionsOfUser(user_id);
+    if (!result) {
+      handleHttpError(res, 'Error al obtener transacciones');
+      return;
+    }
+    resOkData(res, result);
+  } catch (error) {
+    console.log(error);
+    handleHttpError(res, 'Error al obtener transacciones');
+  }
+};
 const getDetailsDashboardCtrl = async (req, res) => {
   const { token, pin: pinData, invoice_id } = matchedData(req);
   try {
@@ -291,4 +306,5 @@ export {
   getInvoicesByTokenCtrl,
   getTransactionsDashboardCtrl,
   getDetailsDashboardCtrl,
+  getTransactionsAdminCtrl,
 };
