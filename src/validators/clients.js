@@ -104,13 +104,21 @@ const validatorDashboardTransactions = [
   check('invoice_id').exists().notEmpty().isInt(),
   (req, res, next) => validateResults(req, res, next),
 ];
-
+const validatorGetLinkInfo = [
+  check('phone')
+    .exists()
+    .notEmpty()
+    .isInt()
+    .withMessage('phone debe ser un número entero'),
+  (req, res, next) => validateResults(req, res, next),
+];
 export {
   validatorCreateClients,
   validatorDeactivateClient,
   validatorQueryClients,
   validatorUpdateClients,
   validatorGetClient,
+  validatorGetLinkInfo,
   validatorDashboardClient,
   validatorDashboardTransactions,
 };

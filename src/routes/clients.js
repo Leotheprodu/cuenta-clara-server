@@ -6,6 +6,7 @@ import {
   updateClientsCtrl,
   clientCtrl,
   dashboardClientCtrl,
+  getClientLinkInfoCtrl,
 } from '../controllers/clients.controller.js';
 import {
   validatorCreateClients,
@@ -14,6 +15,7 @@ import {
   validatorUpdateClients,
   validatorGetClient,
   validatorDashboardClient,
+  validatorGetLinkInfo,
 } from '../validators/clients.js';
 import { isLoggedInTrue } from '../middleware/isLoggedIn.js';
 import checkClientOfUser from '../middleware/checkClientOfUser.js';
@@ -44,5 +46,6 @@ router.post(
   validatorDashboardClient,
   dashboardClientCtrl,
 );
+router.post('/get-link-info', validatorGetLinkInfo, getClientLinkInfoCtrl);
 
 export default router;
