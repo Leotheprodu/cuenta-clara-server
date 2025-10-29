@@ -11,6 +11,42 @@ import {
 } from '../services/clients.js';
 import createActivityLog from '../utils/handleActivityLog.js';
 
+const getClientLinkInfoCtrl = async (req, res) => {
+  const { phone } = matchedData(req);
+  try {
+    const clientData = await models.clientsModel.scope('withPin').findOne({
+      where: { cellphone: phone },
+      attributes: {
+        exclude: [
+          'parent_user_id',
+          'createdAt',
+          'updatedAt',
+          'detail',
+          'address',
+          'id',
+          'country',
+          'email',
+          'username',
+          'active',
+          'user_id',
+          'cellphone',
+        ],
+      },
+    });
+    if (!clientData) {
+      handleHttpError(res, 'Cliente no encontrado', 404);
+      return;
+    }
+    resOkData(res, clientData);
+  } catch (error) {
+    console.log(error);
+    handleHttpError(
+      res,
+      'Error al intentar mostrar la información del cliente',
+    );
+  }
+};
+
 const clientsCtrl = async (req, res) => {
   const { active } = matchedData(req);
   try {
@@ -54,10 +90,10 @@ const clientCtrl = async (req, res) => {
     handleHttpError(res, 'Error al intentar mostrar el cliente');
   }
 };
+
 const dashboardClientCtrl = async (req, res) => {
   const { token, pin: pinData } = matchedData(req);
 
-  console.log(token, pinData);
   try {
     const clientData = await models.clientsModel.scope('withPin').findOne({
       where: { token },
@@ -132,7 +168,6 @@ const createClientsCtrl = async (req, res) => {
       ...data,
       parent_user_id: req.session.user.id,
     });
-    console.log(data);
     const createBalancesPromises = id_business.map(async (id) => {
       try {
         await models.balancesModel.create({
@@ -208,6 +243,11 @@ const deactivateClientsCtrl = async (req, res) => {
 
   try {
     const client = await models.clientsModel.findOne({ where: { id } });
+
+    if (!client) {
+      handleHttpError(res, 'El cliente no existe', 404);
+      return;
+    }
     const { active } = client;
     const [updatedRowCount] = await models.clientsModel.update(
       { active: active === 0 ? 1 : 0 },
@@ -242,4 +282,5 @@ export {
   updateClientsCtrl,
   clientCtrl,
   dashboardClientCtrl,
+  getClientLinkInfoCtrl,
 };
